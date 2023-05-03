@@ -5,12 +5,24 @@
      
 <mapper namespace="springBoot_team_pj_126.dao.CalenderMapper">
    <select id="calenderList" resultType="springBoot_team_pj_126.dto.CalenderDTO">
-      SELECT * FROM calendar_tbl ORDER BY NO DESC
+   <!--  SELECT * FROM calendar_tbl ORDER BY NO DESC --> 
+    SELECT * FROM calendar_tbl where id =#{id}
+  <!--   SELECT * FROM calendar_tbl where id =#{id} -->
    </select>
    
+   
+   <!--  SELECT * FROM calendar_tbl where id = #{id}  -->
+   
+   
+   
+   <!-- INSERT INTO calendar_tbl(calenderno,startDate,endDate,title,descriptions,color)
+		VALUES((SELECT NVL(MAX(calenderno) + 1, 1) FROM calendar_tbl),#{startDate},#{endDate},#{title},#{descriptions},#{color}) -->
+   
+   <!-- (SELECT NO FROM EMPLOYEES_TBL WHERE id = 'emp11') -->
+   
    <insert id="inserCalender" parameterType="springBoot_team_pj_126.dto.CalenderDTO">
-      INSERT INTO calendar_tbl(NO,startDate,endDate,title,descriptions,color)
-		VALUES((SELECT NVL(MAX(NO) + 1, 1) FROM calendar_tbl),#{startDate},#{endDate},#{title},#{descriptions},#{color})
+      INSERT INTO calendar_tbl
+		VALUES((SELECT NVL(MAX(calenderno) + 1, 1) FROM calendar_tbl),#{startDate},#{endDate},#{title},#{descriptions},#{color},(SELECT NO FROM EMPLOYEES_TBL WHERE id = #{id}), #{id})
    </insert>
    
    <update id="updateCalender" parameterType="springBoot_team_pj_126.dto.CalenderDTO">

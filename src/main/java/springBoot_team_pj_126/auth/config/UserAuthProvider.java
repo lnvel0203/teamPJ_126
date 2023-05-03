@@ -18,7 +18,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 import lombok.RequiredArgsConstructor;
 import springBoot_team_pj_126.auth.dto.UserDTO;
-import springBoot_team_pj_126.auth.service.UserService;
+import springBoot_team_pj_126.auth.serivce.UserService;
 
 @RequiredArgsConstructor
 @Component

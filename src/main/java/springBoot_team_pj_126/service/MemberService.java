@@ -22,7 +22,7 @@ public interface MemberService {
 //	
 	public void editEmployee(UserDTO dto) throws ServletException, IOException;
 //	
-	public void deleteMember(int id) throws ServletException, IOException;
+	public void deleteMember(String id) throws ServletException, IOException;
 //	
 //	public MemberDTO selectMember(MemberDTO dto) throws ServletException, IOException;
 	

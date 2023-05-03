@@ -16,7 +16,7 @@ public interface MemberRepository {
 	public String findPassword(String dto);
 	
 	public List<UserDTO> memberList();
-	public void deleteById(int id);
+	public void deleteById(String id);
 	public void editEmployee(UserDTO dto);
 }
 

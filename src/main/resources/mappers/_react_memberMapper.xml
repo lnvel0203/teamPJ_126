@@ -10,8 +10,8 @@
 	SELECT * FROM EMPLOYEES_TBL
 </select>
 
-<delete id="deleteById" parameterType="int">
-	delete from EMPLOYEES_TBL where no=#{no} 
+<delete id="deleteById" parameterType="String">
+	delete from EMPLOYEES_TBL where id=#{id} 
 </delete>
 
 <update id="editEmployee" parameterType="springBoot_team_pj_126.dto.UserDTO">
@@ -19,26 +19,5 @@
 </update>
 
 
-<!-- <insert id="insertMember" parameterType="com.example.react.dto.MemberDTO">
-	INSERT INTO mvc_member_tbl values((select nvl(max(id)+1,1)from mvc_member_tbl), #{password}, #{username},#{age},#{email},#{address},#{salary})
-</insert>	
-
-<update id="updateMember" parameterType="com.example.react.dto.MemberDTO">
-	update mvc_member_tbl
-	set password = #{password},
-		username = #{username},
-		age = #{age},
-		email = #{email},
-		address = #{address},
-		salary = #{salary}
-	where id=#{id}
-</update>
-
-		
-<select id="findById" parameterType="com.example.react.dto.MemberDTO" resultType="com.example.react.dto.MemberDTO">
-	select * from mvc_member_tbl where id=#{id} AND password =#{password}
-</select>
-
- -->
 
 </mapper>
