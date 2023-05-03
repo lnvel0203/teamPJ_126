@@ -24,6 +24,7 @@ const AppCustomerList = Loadable(lazy(() => import('pages/addressBook/list')));
 const AppCustomerCard = Loadable(lazy(() => import('pages/apps/customer/card')));
 const CustomLocaleText = Loadable(lazy(() => import('pages/apps/adminperson-customer/customlocaletext')));
 const CustomerListPage = Loadable(lazy(() => import('pages/apps/adminperson-customer/departloaletext')));
+const HierarchyLocaleText = Loadable(lazy(() => import('pages/apps/adminperson-customer/hierarchylocaletext')));
 
 const AppKanban = Loadable(lazy(() => import('pages/apps/kanban')));
 const AppKanbanBacklogs = Loadable(lazy(() => import('sections/apps/kanban/Backlogs')));
@@ -129,10 +130,9 @@ const MainRoutes = {
     {
       path: '/',
       element: (
-
-      //  <AuthGuard>
-      <MainLayout />
-      // </AuthGuard>
+        //  <AuthGuard>
+        <MainLayout />
+        // </AuthGuard>
       ),
       children: [
         {
@@ -326,6 +326,10 @@ const MainRoutes = {
                 {
                   path: 'departloaletext',
                   element: <CustomerListPage />
+                },
+                {
+                  path: 'hierarchylocaletext',
+                  element: <HierarchyLocaleText />
                 }
               ]
             }
