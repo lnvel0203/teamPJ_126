@@ -15,7 +15,7 @@ import springBoot_team_pj_126.dto.CalenderDTO;
 
 public interface CalenderService {
 	
-	public List<CalenderDTO> listAll(HttpServletRequest req,Model model)
+	public List<CalenderDTO> listAll(String id, HttpServletRequest req,Model model)
 			throws ServletException,IOException;
 
 	public void insertCalender(CalenderDTO calenderDTO)

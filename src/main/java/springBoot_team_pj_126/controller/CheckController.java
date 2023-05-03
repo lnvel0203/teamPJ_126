@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import springBoot_team_pj_126.dto.Address;
+import springBoot_team_pj_126.dto.CalenderDTO;
 import springBoot_team_pj_126.dto.CheckOption;
 import springBoot_team_pj_126.dto.UserDTO;
 import springBoot_team_pj_126.service.CheckService;
@@ -57,10 +57,16 @@ public class CheckController {
 		return selectCnt;
 	}
 	
+	/*
+	 * @GetMapping("/calender/{id}") public List<CalenderDTO>
+	 * calenderList(@PathVariable String id, HttpServletRequest req, Model model)
+	 */
+	
 	// 퇴근 여부 확인
-	@GetMapping("/isEndWork")
-	public int isEndWork(HttpServletRequest req, Model model) 
+	@GetMapping("/isEndWork/{id}")
+	public int isEndWork(@PathVariable String id,HttpServletRequest req, Model model) 
 			throws ServletException, IOException {
+		System.out.println("id : " + id);
 		System.out.println("근태 컨트롤러 - isEndWork");
 		int selectCnt = service.isEndWork();
 		

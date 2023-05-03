@@ -4,10 +4,10 @@
      PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
      "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
      
-<mapper namespace="springBoot_team_pj_126.dao.DocumentMapper">
+<mapper namespace="springBoot_team_pj_126.dao.MypageMapper">
 
-<select id="documentList" resultType="springBoot_team_pj_126.dto.DocumentDTO">
-		SELECT * FROM document_tbl
+<select id="memberList" resultType="springBoot_team_pj_126.dto.UserDTO">
+   SELECT * FROM EMPLOYEES_TBL where id ={id}
 </select>
 
 <!-- <insert id="insertMember" parameterType="com.example.react.dto.MemberDTO">

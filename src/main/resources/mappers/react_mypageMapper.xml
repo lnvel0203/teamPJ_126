@@ -4,10 +4,15 @@
      PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
      "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
      
-<mapper namespace="springBoot_team_pj_126.dao.DocumentMapper">
+<mapper namespace="springBoot_team_pj_126.dao.SalaryMapper">
 
-<select id="documentList" resultType="springBoot_team_pj_126.dto.DocumentDTO">
-		SELECT * FROM document_tbl
+<select id="salaryList" resultType="springBoot_team_pj_126.dto.SalaryDTO">
+		<!-- SELECT SALARYID, BASICSALARY FROM SALARY_TBL -->
+		
+		SELECT s.salaryId, e.name, s.basicSalary, s.paymentStatus, s.payDay 
+		FROM SALARY_TBL s 
+		INNER JOIN employees_tbl e ON e.no = s.no 
+		WHERE s.no = 1
 </select>
 
 <!-- <insert id="insertMember" parameterType="com.example.react.dto.MemberDTO">

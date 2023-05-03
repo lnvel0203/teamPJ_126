@@ -1,6 +1,7 @@
 package springBoot_team_pj_126.controller;
 
 import java.io.IOException;
+
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -19,26 +20,30 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import springBoot_team_pj_126.dto.DocumentDTO;
-import springBoot_team_pj_126.service.DocumentService;
+
+import springBoot_team_pj_126.dto.SalaryDTO;
+import springBoot_team_pj_126.service.SalaryService;
+
 
 
 @RequestMapping(value="/members")
 @RestController
-public class DocumentController {
+public class SalaryController {
 
+	
+	
 	@Autowired(required=true)
-	private DocumentService service;
+	private SalaryService service;
 	//http://localhost:8081/members	
 	//localhost:8080/members =>가 첫 url인데
 	
-	@GetMapping("document")
-	public List<DocumentDTO> DocumentList(HttpServletRequest req, Model model) 
+	@GetMapping("/salary")
+	public List<SalaryDTO> SalaryList(HttpServletRequest req, Model model) 
 			throws ServletException, IOException{
-		System.out.println("컨트롤러 - DocumentList");
-		List<DocumentDTO> list = service.documentList(req, model);
-		System.out.println("list : " + list);
-		return service.documentList(req, model);
+		System.out.println("컨트롤러 - Salary");
+		List<SalaryDTO> list = service.salaryList(req, model);
+		System.out.println("컨트롤러 : list : " + list);
+		return service.salaryList(req, model);
 	}
 	
 //	//RESTAPI를 쓰고있다. ? 이 매핑이 restAPI인가?
