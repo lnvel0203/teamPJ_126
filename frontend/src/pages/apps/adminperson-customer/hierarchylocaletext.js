@@ -45,7 +45,7 @@ import AlertCustomerDelete from 'sections/apps/customer/AlertCustomerDelete';
 // import makeData from 'data/react-table';
 import { renderFilterTypes, GlobalFilter } from 'utils/react-table';
 
-// assets
+// assets - a
 import { CloseOutlined, PlusOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
 
 // ==============================|| REACT TABLE ||============================== //
