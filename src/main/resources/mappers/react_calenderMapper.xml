@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+     
+<mapper namespace="springBoot_team_pj_126.dao.CalenderMapper">
+   <select id="calenderList" resultType="springBoot_team_pj_126.dto.CalenderDTO">
+      SELECT * FROM calendar_tbl ORDER BY NO DESC
+   </select>
+   
+   <insert id="inserCalender" parameterType="springBoot_team_pj_126.dto.CalenderDTO">
+      INSERT INTO calendar_tbl(NO,startDate,endDate,title,descriptions,color)
+		VALUES((SELECT NVL(MAX(NO) + 1, 1) FROM calendar_tbl),#{startDate},#{endDate},#{title},#{descriptions},#{color})
+   </insert>
+   
+   <update id="updateCalender" parameterType="springBoot_team_pj_126.dto.CalenderDTO">
+      UPDATE calendar_tbl
+      SET #{NO},#{startDate},#{endDate},#{descriptions},#{color} 
+      WHERE title=#{title}
+   </update>
+   
+   <delete id="deleteById" parameterType="String">
+      DELETE FROM calendar_tbl
+      WHERE title=#{title}
+   </delete>
+   
+   <select id="findById" parameterType="springBoot_team_pj_126.dto.CalenderDTO" resultType="springBoot_team_pj_126.dto.CalenderDTO">
+      SELECT NO,startdate,enddate,title,descriptions,color
+      FROM calendar_tbl
+      WHERE title = #{title}
+   </select>
+</mapper>

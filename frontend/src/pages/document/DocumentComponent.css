@@ -1,0 +1,76 @@
+.container {
+  margin: 0 auto;
+  padding: 20px;
+  max-width: 900px;
+}
+
+table {
+  border-collapse: collapse;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 900px;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+  font-weight: bold;
+  color: black;
+}
+
+th {
+  background-color: #f2f2f2;
+  font-size: 11px;
+  color: #000;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #000;
+}
+.col-1 {
+  width: 60px;
+  position: relative;
+}
+
+.col-2,
+.col-3,
+.col-4,
+.col-5 {
+  width: 80px;
+}
+
+.tb-2 {
+  height: 250px;
+}
+.tr-4 {
+  height: 50px;
+}
+
+.tr-1,
+.tr-3 {
+  height: 40px;
+}
+
+.add-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+.ql-header {
+  color: black;
+}
+
+.ql-header.ql-header-1 {
+  color: black;
+}
+.selectedApprovers {
+  color: black;
+}
+.selected {
+  color: rgb(38, 0, 255);
+}
