@@ -8,7 +8,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.ui.Model;
-import springBoot_team_pj_126.dto.SalaryDTO;
 import springBoot_team_pj_126.dto.UserDTO;
 
 
