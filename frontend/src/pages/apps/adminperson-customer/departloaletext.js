@@ -38,7 +38,8 @@ import {
   TableRowSelection
 } from 'components/third-party/ReactTable';
 
-import AddCustomer from 'sections/apps/customer/AddCustomer';
+// import AddCustomer from 'sections/apps/customer/AddCustomer';
+import AddDepart from 'sections/apps/customer/AddDepart';
 import CustomerView from 'sections/apps/customer/CustomerView';
 import AlertCustomerDelete from 'sections/apps/customer/AlertCustomerDelete';
 
@@ -398,7 +399,7 @@ const CustomerListPage = () => {
         sx={{ '& .MuiDialog-paper': { p: 0 }, transition: 'transform 225ms' }}
         aria-describedby="alert-dialog-slide-description"
       >
-        <AddCustomer customer={customer} onCancel={handleAdd} />
+        <AddDepart customer={customer} onCancel={handleAdd} />
       </Dialog>
     </MainCard>
   );
