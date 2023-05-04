@@ -242,6 +242,7 @@ const AddCustomer = ({ customer, onCancel }) => {
                               <ListItemText primary={status} />
                             </MenuItem>
                           ))}
+                          
                         </Select>
                       </Stack>
                     </Grid> */}
