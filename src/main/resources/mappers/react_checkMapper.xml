@@ -6,7 +6,7 @@
      
 <mapper namespace="springBoot_team_pj_126.dao.CheckMapper">
 
-	<!-- 출근 여부 확인 -->
+	<!-- 출근 여부 확인  .-->
 	<select id="isStartWork" resultType="java.sql.Timestamp">
 		SELECT STARTWORK 
 		FROM CHECK_TBL 
