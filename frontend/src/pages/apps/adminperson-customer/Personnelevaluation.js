@@ -398,7 +398,7 @@ const CustomerListPage = () => {
         sx={{ '& .MuiDialog-paper': { p: 0 }, transition: 'transform 225ms' }}
         aria-describedby="alert-dialog-slide-description"
       >
-        <AddCustomer customer={customer} onCancel={handleAdd} />
+        <AddCustomer customer={customer} onCancel={handleAdd} /> {/* AddCustomer => 인사평가와 비슷한 이름으로 컴포넌트를 만들어서 수정해야함 */}
       </Dialog>
     </MainCard>
   );
