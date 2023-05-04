@@ -33,12 +33,13 @@ import {
   CSVExport,
   HeaderSort,
   IndeterminateCheckbox,
-  SortingSelect,
+  // SortingSelect,
   TablePagination,
   TableRowSelection
 } from 'components/third-party/ReactTable';
 
-import AddCustomer from 'sections/apps/customer/AddCustomer';
+// import AddCustomer from 'sections/apps/customer/AddCustomer';
+import AddDepart from 'sections/apps/customer/AddDepart';
 import CustomerView from 'sections/apps/customer/CustomerView';
 import AlertCustomerDelete from 'sections/apps/customer/AlertCustomerDelete';
 
@@ -63,7 +64,7 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
     headerGroups,
     prepareRow,
     setHiddenColumns,
-    allColumns,
+    // allColumns,
     visibleColumns,
     rows,
     page,
@@ -72,7 +73,7 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
     state: { globalFilter, selectedRowIds, pageIndex, pageSize, expanded },
     preGlobalFilteredRows,
     setGlobalFilter,
-    setSortBy,
+    // setSortBy,
     selectedFlatRows
   } = useTable(
     {
@@ -118,7 +119,7 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
             size="small"
           />
           <Stack direction={matchDownSM ? 'column' : 'row'} alignItems="center" spacing={1}>
-            <SortingSelect sortBy={sortBy.id} setSortBy={setSortBy} allColumns={allColumns} />
+            {/* <SortingSelect sortBy={sortBy.id} setSortBy={setSortBy} allColumns={allColumns} /> */}
             <Button variant="contained" startIcon={<PlusOutlined />} onClick={handleAdd} size="small">
               Add Customer
             </Button>
@@ -330,37 +331,24 @@ const CustomerListPage = () => {
         disableSortBy: true
       },
       {
-        Header: '#',
+        Header: '번호',
         accessor: 'id',
         className: 'cell-center'
       },
       {
-        Header: 'User Name',
+        Header: '부서이름',
         accessor: 'fatherName',
-        Cell: CustomCell
+        className: 'cell-center'
       },
       {
-        Header: 'Email',
-        accessor: 'email'
+        Header: '부서장',
+        accessor: 'birth',
+        className: 'cell-center'
       },
       {
-        Header: 'Contact',
+        Header: '설립일',
         accessor: 'contact',
-        Cell: NumberFormatCell
-      },
-      {
-        Header: 'Age',
-        accessor: 'age',
-        className: 'cell-right'
-      },
-      {
-        Header: 'Country',
-        accessor: 'country'
-      },
-      {
-        Header: 'Status',
-        accessor: 'status',
-        Cell: StatusCell
+        className: 'cell-center'
       },
       {
         Header: 'Actions',
@@ -398,7 +386,7 @@ const CustomerListPage = () => {
         sx={{ '& .MuiDialog-paper': { p: 0 }, transition: 'transform 225ms' }}
         aria-describedby="alert-dialog-slide-description"
       >
-        <AddCustomer customer={customer} onCancel={handleAdd} />
+        <AddDepart customer={customer} onCancel={handleAdd} />
       </Dialog>
     </MainCard>
   );

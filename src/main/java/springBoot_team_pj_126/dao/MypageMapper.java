@@ -15,9 +15,6 @@ public interface MypageMapper {
 	//김재인
 	public List<UserDTO> mypageList();
 	
-	
-	
-	
 }
 
 

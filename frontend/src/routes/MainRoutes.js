@@ -16,7 +16,7 @@ const WidgetData = Loadable(lazy(() => import('pages/widget/data')));
 const WidgetChart = Loadable(lazy(() => import('pages/widget/chart')));
 
 // render - applications
-const AppChat = Loadable(lazy(() => import('pages/apps/chat')));
+// const AppChat = Loadable(lazy(() => import('pages/apps/chat')));
 
 // 캘린더 변경
 const AppCalendar = Loadable(lazy(() => import('pages/calendar/Calender1')));
@@ -24,6 +24,8 @@ const AppCustomerList = Loadable(lazy(() => import('pages/addressBook/list')));
 const AppCustomerCard = Loadable(lazy(() => import('pages/apps/customer/card')));
 const CustomLocaleText = Loadable(lazy(() => import('pages/apps/adminperson-customer/customlocaletext')));
 const CustomerListPage = Loadable(lazy(() => import('pages/apps/adminperson-customer/departloaletext')));
+const HierarchyLocaleText = Loadable(lazy(() => import('pages/apps/adminperson-customer/hierarchylocaletext')));
+const Personnelevaluation = Loadable(lazy(() => import('pages/apps/adminperson-customer/Personnelevaluation')));
 
 const AppKanban = Loadable(lazy(() => import('pages/apps/kanban')));
 const AppKanbanBacklogs = Loadable(lazy(() => import('sections/apps/kanban/Backlogs')));
@@ -129,10 +131,9 @@ const MainRoutes = {
     {
       path: '/',
       element: (
-
-      //  <AuthGuard>
-      <MainLayout />
-      // </AuthGuard>
+        //  <AuthGuard>
+        <MainLayout />
+        // </AuthGuard>
       ),
       children: [
         {
@@ -172,10 +173,10 @@ const MainRoutes = {
               path: 'main-page',
               element: <MainPage />
             },
-            {
-              path: 'chat',
-              element: <AppChat />
-            },
+            // {
+            //   path: 'chat',
+            //   element: <AppChat />
+            // },
             {
               path: 'calendar',
               element: <AppCalendar />
@@ -326,6 +327,15 @@ const MainRoutes = {
                 {
                   path: 'departloaletext',
                   element: <CustomerListPage />
+                },
+                {
+                  path: 'hierarchylocaletext',
+                  element: <HierarchyLocaleText />
+                },
+                {
+                  //2023-05-04 추가
+                  path: 'Personnelevaluation',
+                  element: <Personnelevaluation />
                 }
               ]
             }
