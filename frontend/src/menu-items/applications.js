@@ -175,6 +175,13 @@ const applications = {
           title: <FormattedMessage id="직급관리" />,
           type: 'item',
           url: '/apps/adminperson-customer/hierarchylocaletext'
+        },
+        {
+          // 인사평가 추가(2023-05-04 김희수)
+          id: 'Personnelevaluation',
+          title: <FormattedMessage id="인사평가" />,
+          type: 'item',
+          url: '/apps/adminperson-customer/Personnelevaluation'
         }
       ]
     }
