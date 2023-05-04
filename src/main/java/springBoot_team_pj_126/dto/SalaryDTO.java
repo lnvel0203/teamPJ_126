@@ -9,7 +9,6 @@ import javax.persistence.Table;
 import lombok.Data;
 
 
-
 @Entity
 @Table(name="salary_tbl")
 @Data
