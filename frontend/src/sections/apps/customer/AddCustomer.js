@@ -16,12 +16,12 @@ import {
   FormLabel,
   Grid,
   InputLabel,
-  ListItemText,
-  MenuItem,
-  Select,
+  // ListItemText,
+  // MenuItem,
+  // Select,
   Stack,
-  TextField,
-  Typography
+  TextField
+  // Typography
 } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -33,18 +33,18 @@ import { useFormik, Form, FormikProvider } from 'formik';
 
 // project imports
 import AlertCustomerDelete from './AlertCustomerDelete';
-import Avatar from 'components/@extended/Avatar';
+// import Avatar from 'components/@extended/Avatar';
 import { openSnackbar } from 'store/reducers/snackbar';
 
 // actions
 // import { createCustomer } from 'actions/customerActions';
 
 // assets
-import { CameraOutlined } from '@ant-design/icons';
+// import { CameraOutlined } from '@ant-design/icons';
 
 import { createCustomer } from './customerActions';
 
-const avatarImage = require.context('assets/images/users', true);
+// const avatarImage = require.context('assets/images/users', true);
 
 // constant
 const getInitialValues = (customer) => {
@@ -64,7 +64,7 @@ const getInitialValues = (customer) => {
   return newCustomer;
 };
 
-const allStatus = ['Complicated', 'Single', 'Relationship'];
+// const allStatus = ['Complicated', 'Single', 'Relationship'];
 
 // ==============================|| CUSTOMER ADD / EDIT / DELETE ||============================== //
 
@@ -78,10 +78,10 @@ const AddCustomer = ({ customer, onCancel }) => {
 
   const theme = useTheme();
   const dispatch = useDispatch();
-  const isCreating = !customer;
+  // const isCreating = !customer;
 
   const [selectedImage, setSelectedImage] = useState(undefined);
-  const [avatar, setAvatar] = useState(avatarImage(`./avatar-${isCreating && !customer?.avatar ? 1 : customer.avatar}.png`));
+  // const [avatar, setAvatar] = useState(avatarImage(`./avatar-${isCreating && !customer?.avatar ? 1 : customer.avatar}.png`));
 
   useEffect(() => {
     if (selectedImage) {
@@ -155,7 +155,7 @@ const AddCustomer = ({ customer, onCancel }) => {
                         cursor: 'pointer'
                       }}
                     >
-                      <Avatar alt="Avatar 1" src={avatar} sx={{ width: 72, height: 72, border: '1px dashed' }} />
+                      {/* <Avatar alt="Avatar 1" src={avatar} sx={{ width: 72, height: 72, border: '1px dashed' }} /> */}
                       <Box
                         sx={{
                           position: 'absolute',
@@ -170,10 +170,10 @@ const AddCustomer = ({ customer, onCancel }) => {
                           justifyContent: 'center'
                         }}
                       >
-                        <Stack spacing={0.5} alignItems="center">
+                        {/* <Stack spacing={0.5} alignItems="center">
                           <CameraOutlined style={{ color: theme.palette.secondary.lighter, fontSize: '2rem' }} />
                           <Typography sx={{ color: 'secondary.lighter' }}>Upload</Typography>
-                        </Stack>
+                        </Stack> */}
                       </Box>
                     </FormLabel>
                     <TextField
@@ -186,48 +186,48 @@ const AddCustomer = ({ customer, onCancel }) => {
                     />
                   </Stack>
                 </Grid>
-                <Grid item xs={12} md={8}>
-                  <Grid container spacing={3}>
-                    <Grid item xs={12}>
+                <Grid item xs={9} md={8}>
+                  <Grid container spacing={5}>
+                    <Grid item xs={9}>
                       <Stack spacing={1.25}>
-                        <InputLabel htmlFor="customer-name">Name</InputLabel>
+                        <InputLabel htmlFor="customer-name">부서번호</InputLabel>
                         <TextField
                           fullWidth
                           id="customer-name"
-                          placeholder="Enter Customer Name"
+                          placeholder="Enter Department Number"
                           {...getFieldProps('name')}
                           error={Boolean(touched.name && errors.name)}
                           helperText={touched.name && errors.name}
                         />
                       </Stack>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={9}>
                       <Stack spacing={1.25}>
-                        <InputLabel htmlFor="customer-email">Email </InputLabel>
+                        <InputLabel htmlFor="customer-email">부서명</InputLabel>
                         <TextField
                           fullWidth
                           id="customer-email"
-                          placeholder="Enter Customer Email"
+                          placeholder="Enter Department Name"
                           {...getFieldProps('email')}
                           error={Boolean(touched.email && errors.email)}
                           helperText={touched.email && errors.email}
                         />
                       </Stack>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={9}>
                       <Stack spacing={1.25}>
-                        <InputLabel htmlFor="customer-location">Location</InputLabel>
+                        <InputLabel htmlFor="customer-location">설립일</InputLabel>
                         <TextField
                           fullWidth
                           id="customer-location"
-                          placeholder="Enter Customer Location"
+                          placeholder="Enter Department Establishment Date"
                           {...getFieldProps('location')}
                           error={Boolean(touched.location && errors.location)}
                           helperText={touched.location && errors.location}
                         />
                       </Stack>
                     </Grid>
-                    <Grid item xs={12}>
+                    {/* <Grid item xs={12}>
                       <Stack spacing={1.25}>
                         <InputLabel htmlFor="customer-orderStatus">Order Status</InputLabel>
                         <Select
@@ -244,7 +244,7 @@ const AddCustomer = ({ customer, onCancel }) => {
                           ))}
                         </Select>
                       </Stack>
-                    </Grid>
+                    </Grid> */}
                   </Grid>
                 </Grid>
               </Grid>

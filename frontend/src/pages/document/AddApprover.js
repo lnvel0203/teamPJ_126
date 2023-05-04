@@ -224,12 +224,6 @@ const ApproverList = () => {
   const onApproversSelected = useCallback((selectedRows) => {
     const approvers = selectedRows.map((row) => row.original);
     setSelectedApprovers(approvers);
-    setUserData((prevUserData) => {
-      const newData = prevUserData.map((item) =>
-        approvers.find((approver) => approver.no === item.no) ? { ...item, selected: true } : item
-      );
-      return newData;
-    });
   }, []);
 
   const theme = useTheme();
@@ -293,8 +287,22 @@ const ApproverList = () => {
     [theme]
   );
 
-  const aaaaa = () => {
+  // const aaaaa = () => {
+  //   console.log(selectedApprovers);
+  // };
+
+  const handleRegisterButtonClick = () => {
     console.log(selectedApprovers);
+
+    // sendDataToParentWindow 함수 정의
+    const sendDataToParentWindow = (selectedApprovers) => {
+      if (window.opener && !window.opener.closed) {
+        window.opener.receiveSelectedApprovers(selectedApprovers);
+      }
+    };
+
+    // sendDataToParentWindow 함수 호출
+    sendDataToParentWindow(selectedApprovers);
   };
 
   const renderRowSubComponent = useCallback(({ row }) => <CustomerView data={data[row.id]} />, [data]);
@@ -307,9 +315,9 @@ const ApproverList = () => {
           handleAdd={handleAdd}
           getHeaderProps={(column) => column.getSortByToggleProps()}
           renderRowSubComponent={renderRowSubComponent}
-          onSelectedRowsChange={onApproversSelected}
+          onSelectedRowsChange={(selectedRows) => onApproversSelected(selectedRows)}
         />
-        <Button variant="contained" onClick={aaaaa}>
+        <Button variant="contained" onClick={handleRegisterButtonClick}>
           등록
         </Button>
       </ScrollX>

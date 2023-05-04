@@ -16,7 +16,7 @@ const WidgetData = Loadable(lazy(() => import('pages/widget/data')));
 const WidgetChart = Loadable(lazy(() => import('pages/widget/chart')));
 
 // render - applications
-const AppChat = Loadable(lazy(() => import('pages/apps/chat')));
+// const AppChat = Loadable(lazy(() => import('pages/apps/chat')));
 
 // 캘린더 변경
 const AppCalendar = Loadable(lazy(() => import('pages/calendar/Calender1')));
@@ -172,10 +172,10 @@ const MainRoutes = {
               path: 'main-page',
               element: <MainPage />
             },
-            {
-              path: 'chat',
-              element: <AppChat />
-            },
+            // {
+            //   path: 'chat',
+            //   element: <AppChat />
+            // },
             {
               path: 'calendar',
               element: <AppCalendar />
