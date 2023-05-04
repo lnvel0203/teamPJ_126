@@ -38,9 +38,14 @@ const InvoiceItem = ({ id, name, description, qty, price, onDeleteItem, onEditIt
       placeholder: 'Description',
       label: 'Description',
       name: `invoice_detail.${index}.description`,
-      type: 'text',
+      type: 'select',
       id: id,
-      value: description
+      value: description,
+      options: [
+        { value: 'option1', label: 'Option 1' },
+        { value: 'option2', label: 'Option 2' },
+        { value: 'option3', label: 'Option 3' }
+      ]
     },
     { placeholder: '', label: 'Qty', type: 'number', name: `invoice_detail.${index}.qty`, id: id, value: qty },
     { placeholder: '', label: 'price', type: 'number', name: `invoice_detail.${index}.price`, id: id, value: price }
