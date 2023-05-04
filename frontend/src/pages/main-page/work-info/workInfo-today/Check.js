@@ -7,28 +7,29 @@ import Button from '@mui/material/Button';
 // 컴포넌트
 import Clock from './Clock';
 
+// 세션 아이디
+const id = localStorage.getItem('id');
+
 const items = [
-  { text: '출근', id: 'start-work' },
-  { text: '회의', id: 'meeting' },
-  { text: '외출', id: 'go-out' },
-  { text: '외근', id: 'field-work' },
-  { text: '퇴근', id: 'end-work' },
-  { text: '교육', id: 'education' },
-  { text: '출장', id: 'business-trip' },
-  { text: '휴식', id: 'rest' }
+  { text: '출근', status: 'start-work' },
+  { text: '회의', status: 'meeting' },
+  { text: '외출', status: 'go-out' },
+  { text: '외근', status: 'field-work' },
+  { text: '퇴근', status: 'end-work' },
+  { text: '교육', status: 'education' },
+  { text: '출장', status: 'business-trip' },
+  { text: '휴식', status: 'rest' }
 ];
-//이거로 아이디
-const userid = localStorage.getItem('id');
 
 export default function Check(props) {
   const [isOut, setIsOut] = useState(false);
   const [isEndWork, setIsEndWork] = useState(false);
 
-  const handleClick = async (id) => {
+  const handleClick = async (status) => {
     // 퇴근 상태 확인
     const checkEndWorkStatus = async () => {
       try {
-        const response = await axios.get('http://localhost:8081/members/isEndWork'+"/"+userid);
+        const response = await axios.get(`http://localhost:8081/members/isEndWork?id=${id}`);
         setIsEndWork(response.data === 1);
       } catch (error) {
         console.error(error);
@@ -37,15 +38,15 @@ export default function Check(props) {
 
     await checkEndWorkStatus();
 
-    if (isEndWork && (id !== 'end-work' || id === 'go-out')) {
+    if (isEndWork && (status !== 'end-work' || status === 'go-out')) {
       alert('퇴근한 상태입니다.');
       return;
     }
 
     // 출근 상태
-    if (id === 'start-work') {
+    if (status === 'start-work') {
       try {
-        const response = await axios.get('http://localhost:8081/members/isStartWork');
+        const response = await axios.get(`http://localhost:8081/members/isStartWork?id=${id}`);
         if (response.data == 1) {
           alert('이미 출근 한 상태입니다.');
           return;
@@ -60,27 +61,27 @@ export default function Check(props) {
     }
 
     // 외출 상태이고 '복귀' 버튼을 누르지 않았을 때 경고 메시지 표시
-    if (isOut && id !== 'return-work') {
+    if (isOut && status !== 'return-work') {
       alert('복귀 버튼을 먼저 누르세요.');
       return;
     }
 
-    if (id === 'end-work' && !window.confirm('퇴근하시겠습니까?')) {
+    if (status === 'end-work' && !window.confirm('퇴근하시겠습니까?')) {
       return;
     }
 
     axios
-      .post('http://localhost:8081/members/attendanceCheck', { id: id })
+      .post('http://localhost:8081/members/attendanceCheck', { id: id, status: status })
       .then((response) => {
         console.log(response);
         props.onUpdate(); // 상태 변경
 
         // '외출' 버튼을 누른 경우 외출 상태를 업데이트
-        if (id === 'go-out') {
+        if (status === 'go-out') {
           setIsOut(true);
         }
         // '복귀' 버튼을 누른 경우 외출 상태를 다시 확인
-        else if (id === 'return-work') {
+        else if (status === 'return-work') {
           checkOutStatus();
         }
       })
@@ -88,10 +89,11 @@ export default function Check(props) {
         console.error(error);
       });
   };
+
   // 백엔드에서 외출 상태를 확인하는 함수
   const checkOutStatus = async () => {
     try {
-      const response = await axios.get('http://localhost:8081/members/checkOutStatus');
+      const response = await axios.get(`http://localhost:8081/members/checkOutStatus?id=${id}`);
       setIsOut(response.data === 1);
     } catch (error) {
       console.error(error);
@@ -134,7 +136,7 @@ export default function Check(props) {
           <Box justifyContent="center" width={280}>
             <Grid container spacing={1}>
               {items.map((item) => {
-                if (item.id === 'go-out') {
+                if (item.status === 'go-out') {
                   return outOrReturnButton();
                 } else {
                   return (
@@ -147,7 +149,7 @@ export default function Check(props) {
                           color: '#263238',
                           boxShadow: 'none'
                         }}
-                        onClick={() => handleClick(item.id)}
+                        onClick={() => handleClick(item.status)}
                       >
                         {item.text}
                       </Button>

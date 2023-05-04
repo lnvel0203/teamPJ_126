@@ -4,7 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,9 +20,6 @@ public class User {
 
     
     @Id
-	private int no;
-   
-    @Size(max = 100)
     // id은 중복값이 있으면 안됨. (회원가입할때 아이디중복이 안되는것)
 	private String id;
 	private String name;
