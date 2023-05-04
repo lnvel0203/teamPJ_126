@@ -125,12 +125,6 @@ const applications = {
           type: 'item',
           url: '/apps/invoice/create'
         },
-        {
-          id: 'details',
-          title: <FormattedMessage id="급여상세" />,
-          type: 'item',
-          url: '/apps/invoice/details/1'
-        },
 
         {
           id: 'edit',
@@ -152,13 +146,6 @@ const applications = {
           title: <FormattedMessage id="내정보 수정" />,
           type: 'item',
           url: '/apps/profiles/user/personal',
-          breadcrumbs: false
-        },
-        {
-          id: 'account-profile',
-          title: <FormattedMessage id="admin_사원정보수정" />,
-          type: 'item',
-          url: '/apps/profiles/account/basic',
           breadcrumbs: false
         }
       ]

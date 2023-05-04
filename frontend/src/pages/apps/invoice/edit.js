@@ -434,7 +434,7 @@ const Create = () => {
                                   <TableCell>지급액</TableCell>
                                   <TableCell>공제내역</TableCell>
                                   <TableCell>공제액</TableCell>
-                                  <TableCell align="right">차인지급액</TableCell>
+                                  {/* <TableCell align="right">차인지급액</TableCell> */}
                                   <TableCell align="right">Action</TableCell>
                                 </TableRow>
                               </TableHead>

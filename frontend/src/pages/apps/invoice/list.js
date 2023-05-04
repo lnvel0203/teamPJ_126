@@ -389,7 +389,7 @@ const List = () => {
         Header: '이름',
         accessor: 'name',
         disableFilters: true,
-        Cell: CustomerCell
+        className: 'cell-center'
       },
       {
         Header: 'Avatar',
