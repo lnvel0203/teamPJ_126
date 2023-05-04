@@ -10,9 +10,12 @@ export default function Attendance() {
   const [earlyDeparture, EarlyDeparture] = useState(null);
   const [unchecked, setUnchecked] = useState(null);
 
+  // 세션 아이디
+  const id = localStorage.getItem('id');
+
   useEffect(() => {
     axios
-      .get('http://localhost:8081/members/attendance')
+      .get(`http://localhost:8081/members/attendance?id=${id}`)
       .then((response) => {
         setTardy(response.data.tardy);
         setAbsenteeism(response.data.absenteeism);
