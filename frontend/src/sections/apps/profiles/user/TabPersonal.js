@@ -76,7 +76,7 @@ const TabPersonal = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get('http://localhost:8081/members/address/userInfo');
+        const response = await axios.get('http://localhost:8081/members/userInfoDetail');
         setFetchedData(response.data);
         setIsLoading(false); // 추가 폼 렌더링 관련
         // console.log(response.data.name);
@@ -88,6 +88,24 @@ const TabPersonal = () => {
 
     fetchData();
   }, []);
+
+  // axios 수정사항 업데이트
+  function getInvoiceUpdate(NewLists) {
+    return async (dispatch) => {
+      try {
+        console.log('NewLists:', JSON.stringify(NewLists, null, 2));
+        const response = await axios.post('http://localhost:8081/members/userInfoUpdate', NewLists, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        console.log('결과' + response);
+        dispatch(invoice.actions.UpdateInvoice(response.data));
+      } catch (error) {
+        dispatch(invoice.actions.hasError(error));
+      }
+    };
+  }
   // ===============================================================================
 
   const inputRef = useInputRef();
@@ -115,21 +133,25 @@ const TabPersonal = () => {
             }}
             // 유효성 검사
             validationSchema={Yup.object().shape({
-              firstname: Yup.string().max(255).required('First Name is required.'),
-              lastname: Yup.string().max(255).required('Last Name is required.'),
-              email: Yup.string().email('Invalid email address.').max(255).required('Email is required.'),
-              dob: Yup.date().max(maxDate, 'Age should be 18+ years.').required('Date of birth is requird.'),
-              contact: Yup.number()
-                .test('len', 'Contact should be exactly 10 digit', (val) => val?.toString().length === 10)
-                .required('Phone number is required'),
-              designation: Yup.string().required('Designation is required'),
-              address: Yup.string().min(50, 'Address to short.').required('Address is required'),
-              country: Yup.string().required('Country is required'),
-              state: Yup.string().required('State is required'),
-              note: Yup.string().min(150, 'Not shoulde be more then 150 char.')
+              // firstname: Yup.string().max(255).required('First Name is required.'),
+              // lastname: Yup.string().max(255).required('Last Name is required.'),
+              // email: Yup.string().email('Invalid email address.').max(255).required('Email is required.'),
+              // dob: Yup.date().max(maxDate, 'Age should be 18+ years.').required('Date of birth is requird.'),
+              // contact: Yup.number()
+              //   .test('len', 'Contact should be exactly 10 digit', (val) => val?.toString().length === 10)
+              //   .required('Phone number is required'),
+              // designation: Yup.string().required('Designation is required'),
+              // address: Yup.string().min(50, 'Address to short.').required('Address is required'),
+              // country: Yup.string().required('Country is required'),
+              // state: Yup.string().required('State is required'),
+              // note: Yup.string().min(150, 'Not shoulde be more then 150 char.')
             })}
-            onSubmit={(values, { setErrors, setStatus, setSubmitting }) => {
+            onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
               try {
+                // 서버에 수정된 내용 전송
+                dispatch(getInvoiceUpdate(values));
+
+                // 성공 메시지 표시
                 dispatch(
                   openSnackbar({
                     open: true,
@@ -158,8 +180,8 @@ const TabPersonal = () => {
                     {/* First Name 시작 */}
                     <Grid item xs={12} sm={6}>
                       <Stack spacing={1.25}>
-                        <InputLabel htmlFor="personal-first-name">Name</InputLabel>
-                        {console.log('values:', values)}
+                        <InputLabel htmlFor="personal-first-name">First Name</InputLabel>
+                        {/* {console.log('values:', values)} */}
 
                         <TextField
                           fullWidth
@@ -168,7 +190,7 @@ const TabPersonal = () => {
                           name="name"
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          placeholder="이름"
+                          placeholder="First Name"
                           autoFocus
                           inputRef={inputRef}
                         />
