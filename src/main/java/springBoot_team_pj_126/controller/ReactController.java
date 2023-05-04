@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import springBoot_team_pj_126.dto.UserDTO;
 import springBoot_team_pj_126.service.MemberService;
 
-//이 어노테이션이 무엇인지 조사하기.
-//필터 패키지 
 //@CrossOrigin(origins = {"**"}, maxAge=3600)
 
 //@CrossOrigin(origins = {"http://localhost:8081"}, maxAge=3600)

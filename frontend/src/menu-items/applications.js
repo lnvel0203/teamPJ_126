@@ -59,11 +59,11 @@ const applications = {
       id: 'chat',
       title: <FormattedMessage id="chat" />,
       type: 'item',
-      url: '/apps/chat',
+      url: 'http://192.168.0.27:5000/',
       icon: icons.MessageOutlined,
-      breadcrumbs: false
-      // external: true,
-      // target: true
+      breadcrumbs: false,
+      external: true,
+      target: true
     },
     {
       id: 'calendar',
@@ -125,7 +125,6 @@ const applications = {
           type: 'item',
           url: '/apps/invoice/create'
         },
-
         {
           id: 'edit',
           title: <FormattedMessage id="급여수정" />,
@@ -176,6 +175,13 @@ const applications = {
           title: <FormattedMessage id="직급관리" />,
           type: 'item',
           url: '/apps/adminperson-customer/hierarchylocaletext'
+        },
+        {
+          // 인사평가 추가(2023-05-04 김희수)
+          id: 'Personnelevaluation',
+          title: <FormattedMessage id="인사평가" />,
+          type: 'item',
+          url: '/apps/adminperson-customer/Personnelevaluation'
         }
       ]
     }

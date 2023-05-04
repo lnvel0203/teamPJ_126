@@ -30,7 +30,7 @@ import ScrollX from 'components/ScrollX';
 import IconButton from 'components/@extended/IconButton';
 import { PopupTransition } from 'components/@extended/Transitions';
 import {
-  //   CSVExport,
+  CSVExport,
   HeaderSort,
   IndeterminateCheckbox,
   //   SortingSelect,
@@ -51,27 +51,28 @@ import { CloseOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-desi
 // ==============================|| REACT TABLE ||============================== //
 // const customerId = 11;
 
-// function handleClick() {
-//   alert({id});
-
-//     try {
-//       const response = axios.post('http://localhost:8081/members/editEmployee',{row: id}); //컨트롤러 url로 변경
-//       setUserData(response.data);
-//     } catch (error) {
-//       console.error(error);
-//     }
-
-// }
-
 // # axios 승인 요청
+// const handleClick = (no) => {
+//   alert('id' + no);
+//   axios
+//     .post('http://localhost:8081/members/editEmployee', {
+//       no: no
+//     })
+//     .then((response) => {
+//       console.log(response);
+//     })
+//     .catch((error) => {
+//       console.error(error);
+//     });
+// };
+
 const handleClick = (no) => {
-  alert('id' + no);
+  //미승인 상태 사원 -> 승인상태로 변경 및 승인버튼 삭제
   axios
-    .post('http://localhost:8081/members/editEmployee', {
-      no: no
-    })
+    .put(`http://localhost:8081/members/editEmployee/${no}`, no)
     .then((response) => {
-      console.log(response);
+      console.log(response.data); // logs the updated user data
+      window.location.reload(); // 자동 새로고침
     })
     .catch((error) => {
       console.error(error);
@@ -99,9 +100,9 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent }) {
     setPageSize,
     state: { globalFilter, selectedRowIds, pageIndex, pageSize, expanded },
     preGlobalFilteredRows,
-    setGlobalFilter
+    setGlobalFilter,
     // setSortBy,
-    // selectedFlatRows
+    selectedFlatRows
   } = useTable(
     {
       columns,
@@ -145,13 +146,13 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent }) {
             setGlobalFilter={setGlobalFilter}
             size="small"
           />
-          {/* <Stack direction={matchDownSM ? 'column' : 'row'} alignItems="center" spacing={1}>
-            <SortingSelect sortBy={sortBy.id} setSortBy={setSortBy} allColumns={allColumns} /> */}
-          {/* <Button variant="contained" startIcon={<PlusOutlined />} onClick={handleAdd} size="small">
+          <Stack direction={matchDownSM ? 'column' : 'row'} alignItems="center" spacing={1}>
+            {/* <SortingSelect sortBy={sortBy.id} setSortBy={setSortBy} allColumns={allColumns} /> */}
+            {/* <Button variant="contained" startIcon={<PlusOutlined />} onClick={handleAdd} size="small">
             Add Customer
           </Button> */}
-          {/* <CSVExport data={selectedFlatRows.length > 0 ? selectedFlatRows.map((d) => d.original) : data} filename={'customer-list.csv'} />
-          </Stack> */}
+            <CSVExport data={selectedFlatRows.length > 0 ? selectedFlatRows.map((d) => d.original) : data} filename={'customer-list.csv'} />
+          </Stack>
         </Stack>
 
         <Table {...getTableProps()}>
@@ -277,7 +278,7 @@ const ActionCell = (row, setCustomer, setCustomerDeleteId, handleClose, theme) =
           onClick={(e) => {
             e.stopPropagation();
             // setCustomer(row.values); // 이동
-            handleClick(row.values.id);
+            handleClick(row.values.no);
           }}
         >
           <EditTwoTone twoToneColor={theme.palette.primary.main} />
@@ -289,7 +290,7 @@ const ActionCell = (row, setCustomer, setCustomerDeleteId, handleClose, theme) =
           onClick={(e) => {
             e.stopPropagation();
             handleClose();
-            setCustomerDeleteId(row.values.fatherName);
+            setCustomerDeleteId(row.values.id);
           }}
         >
           <DeleteTwoTone twoToneColor={theme.palette.error.main} />
@@ -366,17 +367,17 @@ const CustomerListPage = () => {
         disableSortBy: true
       },
       {
-        Header: 'No',
+        Header: '번호',
         accessor: 'no',
         className: 'cell-center'
       },
       {
-        Header: 'Id',
+        Header: '계정',
         accessor: 'id',
         className: 'cell-center'
       },
       {
-        Header: 'User Name',
+        Header: '이름',
         accessor: 'name',
         className: 'cell-center'
       },
@@ -386,17 +387,17 @@ const CustomerListPage = () => {
         className: 'cell-center'
       },
       {
-        Header: 'Birth',
+        Header: '생년월일',
         accessor: 'birth',
         className: 'cell-center'
       },
       {
-        Header: 'Address',
+        Header: '주소',
         accessor: 'address',
         className: 'cell-center'
       },
       {
-        Header: 'Role',
+        Header: '승인여부',
         accessor: 'role',
         className: 'cell-center'
       },

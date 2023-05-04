@@ -38,8 +38,7 @@ import {
   TableRowSelection
 } from 'components/third-party/ReactTable';
 
-// import AddCustomer from 'sections/apps/customer/AddCustomer';
-import AddDepart from 'sections/apps/customer/AddDepart';
+import AddCustomer from 'sections/apps/customer/AddCustomer';
 import CustomerView from 'sections/apps/customer/CustomerView';
 import AlertCustomerDelete from 'sections/apps/customer/AlertCustomerDelete';
 
@@ -331,24 +330,37 @@ const CustomerListPage = () => {
         disableSortBy: true
       },
       {
-        Header: '번호',
+        Header: '#',
         accessor: 'id',
         className: 'cell-center'
       },
       {
-        Header: '부서이름',
+        Header: 'User Name',
         accessor: 'fatherName',
-        className: 'cell-center'
+        Cell: CustomCell
       },
       {
-        Header: '부서장',
-        accessor: 'birth',
-        className: 'cell-center'
+        Header: 'Email',
+        accessor: 'email'
       },
       {
-        Header: '설립일',
+        Header: 'Contact',
         accessor: 'contact',
-        className: 'cell-center'
+        Cell: NumberFormatCell
+      },
+      {
+        Header: 'Age',
+        accessor: 'age',
+        className: 'cell-right'
+      },
+      {
+        Header: 'Country',
+        accessor: 'country'
+      },
+      {
+        Header: 'Status',
+        accessor: 'status',
+        Cell: StatusCell
       },
       {
         Header: 'Actions',
@@ -386,7 +398,7 @@ const CustomerListPage = () => {
         sx={{ '& .MuiDialog-paper': { p: 0 }, transition: 'transform 225ms' }}
         aria-describedby="alert-dialog-slide-description"
       >
-        <AddDepart customer={customer} onCancel={handleAdd} />
+        <AddCustomer customer={customer} onCancel={handleAdd} /> {/* AddCustomer => 인사평가와 비슷한 이름으로 컴포넌트를 만들어서 수정해야함 */}
       </Dialog>
     </MainCard>
   );
