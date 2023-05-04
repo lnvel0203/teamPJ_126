@@ -75,22 +75,23 @@ const applications = {
     //전자결재
     {
       id: 'approval',
-      title: <FormattedMessage id="approval" />,
+      title: <FormattedMessage id="전자결재" />,
       type: 'collapse',
       icon: icons.EditOutlined,
       children: [
         {
           id: 'document-write',
-          title: <FormattedMessage id="document-write" />,
+          title: <FormattedMessage id="작성" />,
           type: 'item',
-          url: '/apps/document/documentWrite'
+          url: '/apps/document/documentWrite',
         },
         {
           id: 'document-list',
-          title: <FormattedMessage id="document-list" />,
+          title: <FormattedMessage id="목록" />,
           type: 'item',
           url: '/apps/document/documentList'
-        }
+        },
+        
       ]
     },
     // {
@@ -103,6 +104,7 @@ const applications = {
 
     // 전승연(수정 - 230428)
     {
+      
       id: 'customer',
       title: <FormattedMessage id="customer" />,
       type: 'item',
@@ -175,6 +177,13 @@ const applications = {
           title: <FormattedMessage id="직급관리" />,
           type: 'item',
           url: '/apps/adminperson-customer/hierarchylocaletext'
+        },
+        {
+          // 인사평가 추가(2023-05-04 김희수)
+          id: 'Personnelevaluation',
+          title: <FormattedMessage id="인사평가" />,
+          type: 'item',
+          url: '/apps/adminperson-customer/Personnelevaluation'
         }
       ]
     }

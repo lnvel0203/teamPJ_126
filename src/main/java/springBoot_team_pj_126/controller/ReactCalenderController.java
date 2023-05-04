@@ -6,12 +6,10 @@ import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,10 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import springBoot_team_pj_126.dto.CalenderDTO;
 import springBoot_team_pj_126.service.CalenderServiceImpl;
-
-
-
-
 
 @RestController
 @RequestMapping(value="/members")
