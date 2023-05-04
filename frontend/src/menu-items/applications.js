@@ -14,7 +14,8 @@ import {
   UserOutlined,
   AppstoreAddOutlined,
   RobotOutlined,
-  PartitionOutlined
+  PartitionOutlined,
+  EditOutlined
 } from '@ant-design/icons';
 
 // icons
@@ -30,7 +31,8 @@ const icons = {
   AppstoreAddOutlined,
   RobotOutlined,
   FileTextOutlined,
-  PartitionOutlined
+  PartitionOutlined,
+  EditOutlined
 };
 // ==============================|| MENU ITEMS - APPLICATIONS ||============================== //
 
