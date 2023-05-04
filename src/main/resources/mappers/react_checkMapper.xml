@@ -8,116 +8,125 @@
 
 	<!-- 출근 여부 확인 -->
 	<select id="isStartWork" resultType="java.sql.Timestamp">
-		SELECT STARTWORK FROM CHECK_TBL WHERE TRUNC(CHECKDATE) = TRUNC(SYSDATE) AND CHECKID = 1
+		SELECT STARTWORK 
+		FROM CHECK_TBL 
+		HERE TRUNC(CHECKDATE) = TRUNC(SYSDATE) 
+		AND ID = #{id}
 	</select>
 	
 	<!-- 퇴근 여부 확인 -->
 	<select id="isEndWork" resultType="java.sql.Timestamp">
-		SELECT ENDWORK FROM CHECK_TBL WHERE TRUNC(CHECKDATE) = TRUNC(SYSDATE) AND CHECKID = 1
+		SELECT ENDWORK 
+		FROM CHECK_TBL 
+		WHERE TRUNC(CHECKDATE) = TRUNC(SYSDATE) 
+		AND ID = #{id}
 	</select>
 
 	<!-- 근무 현황 리스트 -->
 	<select id="attendanceList" resultType="springBoot_team_pj_126.dto.CheckDTO">
 		SELECT *
 		FROM CHECK_TBL
-		WHERE CHECKID = 1
+		WHERE ID = #{id}
 		AND TRUNC(CHECKDATE) = TRUNC(SYSDATE)
 	</select>
 
 	<!-- 근무 체크 메서드 ============================================================== -->
 	<!-- 출근  -->
-	<!-- #TODO - NO 부분이 고정되어있음, 나중에 로그인 정보를 가져와서 insert하기 -->
-	<insert id="startWork">
+	<insert id="startWork" parameterType="String">
 		INSERT INTO CHECK_TBL
-		(CHECKID, NO, STARTWORK, CHECKDATE)
-		VALUES((select nvl(max(checkId)+1,1) from CHECK_TBL), 1, sysdate, sysdate)
+		(CHECKID, ID, STARTWORK, CHECKDATE)
+		VALUES((select nvl(max(checkId)+1,1) FROM CHECK_TBL), #{id}, sysdate, sysdate)
 	</insert>
 
-	<!-- #TODO - CHECKID 부분도 고정되어있음, 로그인 정보로 전부 수정 -->
 	<!-- 회의  -->
-	<update id="meeting">
+	<update id="meeting" parameterType="String">
 		UPDATE CHECK_TBL
 		SET METTING = SYSDATE 
-		WHERE CHECKID = 1
+		WHERE ID = #{id}
 	</update>
 	
 	<!-- 외출  -->
-	<update id="goOut">
+	<update id="goOut" parameterType="String">
 		UPDATE CHECK_TBL
 		SET goOut = SYSDATE 
-		WHERE CHECKID = 1
+		WHERE ID = #{id}
 	</update>
 	
 	<!-- 외근  -->
-	<update id="fieldWork">
+	<update id="fieldWork" parameterType="String">
 		UPDATE CHECK_TBL
 		SET FIELDWORK = SYSDATE 
-		WHERE CHECKID = 1
+		WHERE ID = #{id}
 	</update>
 	
 	<!-- 퇴근  -->
-	<update id="endWork">
+	<update id="endWork" parameterType="String">
 		UPDATE CHECK_TBL
 		SET ENDWORK = SYSDATE 
-		WHERE CHECKID = 1
+		WHERE ID = #{id}
 	</update>
 	
 	<!-- 교육   -->
-	<update id="education">
+	<update id="education" parameterType="String">
 		UPDATE CHECK_TBL
 		SET EDUCATION = SYSDATE 
-		WHERE CHECKID = 1
+		WHERE ID = #{id}
 	</update>
 	
 	<!-- 출장 -->
-	<update id="businessTrip">
+	<update id="businessTrip" parameterType="String">
 		UPDATE CHECK_TBL
 		SET BUSINESSTRIP = SYSDATE 
-		WHERE CHECKID = 1
+		WHERE ID = #{id}
 	</update>
 	
 	<!-- 휴식 -->
-	<update id="rest">
+	<update id="rest" parameterType="String">
 		UPDATE CHECK_TBL
 		SET REST = SYSDATE 
-		WHERE CHECKID = 1
+		WHERE ID = #{id}
 	</update>
 	
 	<!-- 복귀 -->
-	<update id="returnWork">
+	<update id="returnWork" parameterType="String">
 		UPDATE CHECK_TBL
 		SET RETURNWORK = SYSDATE 
-		WHERE CHECKID = 1
+		WHERE ID = #{id}
 	</update>
 	
 	<!-- ========================================================================= -->
 	
 	<!-- 총 날짜 -->
-	<select id="totalDays" resultType="int">
-		SELECT COUNT(STARTWORK) FROM CHECK_TBL WHERE NO = 1
+	<select id="totalDays" parameterType="String" resultType="int">
+		SELECT COUNT(STARTWORK) 
+		FROM CHECK_TBL 
+		WHERE ID = #{id}
 	</select>
 	
 	<!-- 총 시간 -->
-	<select id="totalHours" resultType="int">
+	<select id="totalHours" parameterType="String" resultType="int">
 		SELECT NVL(SUM((ROUND((ENDWORK - STARTWORK) - NVL((RETURNWORK - GOOUT), 0), 1) * 24)), 0) as total_time
-		FROM CHECK_TBL WHERE NO = 1
+		FROM CHECK_TBL 
+		WHERE ID = #{id}
 	</select>
 	
 	<!-- 지각 횟수 -->
-	<select id="tardy" resultType="int">
+	<select id="tardy" parameterType="String" resultType="int">
 		SELECT COUNT(CHECKDATE)
 		FROM CHECK_TBL
 		WHERE STARTWORK > TO_DATE('09:00:00', 'HH24:MI:SS')
+		AND ID = #{id}
 	</select>
 	
 	<!-- 결근 횟수 -->
 	
 	<!-- 조기 퇴근 횟수 -->
-	<select id="earlyDeparture" resultType="int">
+	<select id="earlyDeparture" parameterType="String" resultType="int">
 		<![CDATA[
 			SELECT COUNT(CHECKDATE)
 			FROM CHECK_TBL
 			WHERE TO_CHAR(ENDWORK, 'HH24:MI:SS') < ('23:00:00')
+			AND ID = #{id}
 		]]>
 	</select>
 	
@@ -125,6 +134,7 @@
 	<select id="unchecked" resultType="int">
 		SELECT COUNT(CASE WHEN ENDWORK IS NULL THEN 1 END)
 		FROM CHECK_TBL
+		WHERE ID = #{id}
 	</select>
 	
 </mapper>
