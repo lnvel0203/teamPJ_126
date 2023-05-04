@@ -19,7 +19,7 @@ import springBoot_team_pj_126.dao.MemberRepository;
 import springBoot_team_pj_126.dto.MemberDTO;
 import springBoot_team_pj_126.dto.UserDTO;
 
-
+//사원관리용 서비스 생성(2023-04-27)
 @Component
 @Service
 public class MemberServiceImpl implements MemberService{
