@@ -367,17 +367,17 @@ const CustomerListPage = () => {
         disableSortBy: true
       },
       {
-        Header: 'No',
+        Header: '번호',
         accessor: 'no',
         className: 'cell-center'
       },
       {
-        Header: 'Id',
+        Header: '계정',
         accessor: 'id',
         className: 'cell-center'
       },
       {
-        Header: 'User Name',
+        Header: '이름',
         accessor: 'name',
         className: 'cell-center'
       },
@@ -387,17 +387,17 @@ const CustomerListPage = () => {
         className: 'cell-center'
       },
       {
-        Header: 'Birth',
+        Header: '생년월일',
         accessor: 'birth',
         className: 'cell-center'
       },
       {
-        Header: 'Address',
+        Header: '주소',
         accessor: 'address',
         className: 'cell-center'
       },
       {
-        Header: 'Role',
+        Header: '승인여부',
         accessor: 'role',
         className: 'cell-center'
       },
