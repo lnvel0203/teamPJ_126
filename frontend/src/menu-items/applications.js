@@ -104,6 +104,7 @@ const applications = {
 
     // 전승연(수정 - 230428)
     {
+      
       id: 'customer',
       title: <FormattedMessage id="customer" />,
       type: 'item',
