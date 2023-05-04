@@ -331,37 +331,24 @@ const CustomerListPage = () => {
         disableSortBy: true
       },
       {
-        Header: '#',
+        Header: '번호',
         accessor: 'id',
         className: 'cell-center'
       },
       {
-        Header: 'User Name',
+        Header: '부서이름',
         accessor: 'fatherName',
-        Cell: CustomCell
+        className: 'cell-center'
       },
       {
-        Header: 'Email',
-        accessor: 'email'
+        Header: '부서장',
+        accessor: 'birth',
+        className: 'cell-center'
       },
       {
-        Header: 'Contact',
+        Header: '설립일',
         accessor: 'contact',
-        Cell: NumberFormatCell
-      },
-      {
-        Header: 'Age',
-        accessor: 'age',
-        className: 'cell-right'
-      },
-      {
-        Header: 'Country',
-        accessor: 'country'
-      },
-      {
-        Header: 'Status',
-        accessor: 'status',
-        Cell: StatusCell
+        className: 'cell-center'
       },
       {
         Header: 'Actions',

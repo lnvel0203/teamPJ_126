@@ -14,10 +14,10 @@ import lombok.Data;
 @Builder
 @Data
 public class DeptDTO {
-	@Id
-	private int deptid;
-	private String deptname;
-	private Date deptdate;
-	private String deptreadername;
-	
+   @Id
+   private int deptid;
+   private String deptname;
+   private Date deptdate;
+   private String deptreadername;
+   
 }

@@ -18,5 +18,8 @@ public interface MemberRepository {
 	public List<UserDTO> memberList();
 	public void deleteById(String id);
 	public void editEmployee(UserDTO dto);
+	
+	//김성훈 5월 4일 추가
+	public List<UserDTO> memberPosition();
 }
 

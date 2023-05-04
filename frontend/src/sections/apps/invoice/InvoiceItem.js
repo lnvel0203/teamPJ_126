@@ -1,18 +1,21 @@
 import PropTypes from 'prop-types';
-
-// material-ui
-import { Box, Button, Stack, TableCell, Tooltip, Typography } from '@mui/material';
-
-// third-party
+import { Select, TableCell, MenuItem } from '@mui/material';
 import { getIn } from 'formik';
-
-// project import
 import InvoiceField from './InvoiceField';
-
-// assets
 import { DeleteOutlined } from '@ant-design/icons';
 
-// ==============================|| INVOICE - ITEMS ||============================== //
+const descriptionOptions = [
+  { value: 'option1', label: 'Option 1' },
+  { value: 'option2', label: 'Option 2' },
+  { value: 'option3', label: 'Option 3' }
+];
+
+const qtyOptions = [
+  { value: '1', label: 'Option 1' },
+  { value: '2', label: 'Option 1' },
+  { value: '3', label: 'Option 1' },
+  { value: '4', label: 'Option 1' }
+];
 
 const InvoiceItem = ({ id, name, description, qty, price, onDeleteItem, onEditItem, index, Blur, errors, touched }) => {
   const deleteItemHandler = () => {
@@ -23,67 +26,72 @@ const InvoiceItem = ({ id, name, description, qty, price, onDeleteItem, onEditIt
   const touchedName = getIn(touched, Name);
   const errorName = getIn(errors, Name);
 
-  const textFieldItem = [
-    {
-      placeholder: 'Item name',
-      label: 'Item Name',
-      name: `invoice_detail.${index}.name`,
-      type: 'text',
-      id: id,
-      value: name,
-      errors: errorName,
-      touched: touchedName
-    },
-    {
-      placeholder: 'Description',
-      label: 'Description',
-      name: `invoice_detail.${index}.description`,
-      type: 'select',
-      id: id,
-      value: description,
-      options: [
-        { value: 'option1', label: 'Option 1' },
-        { value: 'option2', label: 'Option 2' },
-        { value: 'option3', label: 'Option 3' }
-      ]
-    },
-    { placeholder: '', label: 'Qty', type: 'number', name: `invoice_detail.${index}.qty`, id: id, value: qty },
-    { placeholder: '', label: 'price', type: 'number', name: `invoice_detail.${index}.price`, id: id, value: price }
-  ];
+
+  const Description = `invoice_detail[${index}].description`;
+  const touchedDescription = getIn(touched, Description);
+  const errorDescription = getIn(errors, Description);
 
   return (
     <>
-      {textFieldItem.map((item) => {
-        return (
-          <InvoiceField
-            onEditItem={(event) => onEditItem(event)}
-            onBlur={(event) => Blur(event)}
-            cell={{
-              placeholder: item.placeholder,
-              name: item.name,
-              type: item.type,
-              id: item.id,
-              value: item.value,
-              errors: item.errors,
-              touched: item.touched
-            }}
-            key={item.label}
-          />
-        );
-      })}
       <TableCell>
-        <Stack direction="column" justifyContent="flex-end" alignItems="flex-end" spacing={2}>
-          <Box sx={{ pr: 2, pl: 2 }}>
-            <Typography>${(price * qty).toFixed(2)}</Typography>
-          </Box>
-        </Stack>
+        <Select
+          label="Description"
+          name={`invoice_detail.${index}.description`}
+          id={id}
+          value={description}
+          onChange={onEditItem}
+          error={Boolean(errorDescription && touchedDescription)}
+        >
+          {descriptionOptions.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </TableCell>
+
+      <TableCell>
+        <InvoiceField
+          onEditItem={onEditItem}
+          onBlur={Blur}
+          cell={{
+            placeholder: 'Item name',
+            name: `invoice_detail.${index}.name`,
+            type: 'text',
+            id: id,
+            value: name,
+            errors: errorName,
+            touched: touchedName
+          }}
+        />
+      </TableCell>
+
+      <TableCell>
+        <Select label="Qty" name={`invoice_detail.${index}.qty`} id={id} value={qty} onChange={onEditItem}>
+          {qtyOptions.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </TableCell>
+
+      <TableCell>
+        <InvoiceField
+          onEditItem={onEditItem}
+          onBlur={Blur}
+          cell={{
+            placeholder: '',
+            label: 'price',
+            type: 'number',
+            name: `invoice_detail.${index}.price`,
+            id: id,
+            value: price
+          }}
+        />
       </TableCell>
       <TableCell>
-        <Tooltip title="Remove Item">
-          <Button color="error" onClick={deleteItemHandler}>
-            <DeleteOutlined />
-          </Button>
-        </Tooltip>
+        <DeleteOutlined onClick={deleteItemHandler} />
       </TableCell>
     </>
   );

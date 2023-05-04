@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useState, Fragment } from 'react';
 // material-ui
 import { alpha, useTheme } from '@mui/material/styles';
 import {
-  Button,
+  // Button,
   Chip,
   Dialog,
   Stack,
@@ -33,7 +33,9 @@ import {
   CSVExport,
   HeaderSort,
   IndeterminateCheckbox,
-  // SortingSelect,
+
+  //5월4일 김성훈 수정
+
   TablePagination,
   TableRowSelection
 } from 'components/third-party/ReactTable';
@@ -46,11 +48,17 @@ import AlertCustomerDelete from 'sections/apps/customer/AlertCustomerDelete';
 import { renderFilterTypes, GlobalFilter } from 'utils/react-table';
 
 // assets
-import { CloseOutlined, PlusOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
+//5월 4일 김성훈 PlusQutlined,삭제
+//import { CloseOutlined, PlusOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
+
+import { CloseOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
+
 
 // ==============================|| REACT TABLE ||============================== //
+//5월 4일 김성훈 handleAdd,삭제
+//function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, handleAdd })
 
-function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, handleAdd }) {
+function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,}) {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -63,7 +71,9 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
     headerGroups,
     prepareRow,
     setHiddenColumns,
-    // allColumns,
+
+    //5월 4일 김성훈 수정 
+
     visibleColumns,
     rows,
     page,
@@ -72,7 +82,9 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
     state: { globalFilter, selectedRowIds, pageIndex, pageSize, expanded },
     preGlobalFilteredRows,
     setGlobalFilter,
-    // setSortBy,
+
+    //5월 4일 김성훈 수정
+
     selectedFlatRows
   } = useTable(
     {
@@ -119,9 +131,12 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
           />
           <Stack direction={matchDownSM ? 'column' : 'row'} alignItems="center" spacing={1}>
             {/* <SortingSelect sortBy={sortBy.id} setSortBy={setSortBy} allColumns={allColumns} /> */}
-            <Button variant="contained" startIcon={<PlusOutlined />} onClick={handleAdd} size="small">
+
+            {/*  5월 4일 김성훈 Add Custorme 제거 */ }
+            {/* <Button variant="contained" startIcon={<PlusOutlined />} onClick={handleAdd} size="small">
+
               Add Customer
-            </Button>
+            </Button> */}
             <CSVExport data={selectedFlatRows.length > 0 ? selectedFlatRows.map((d) => d.original) : data} filename={'customer-list.csv'} />
           </Stack>
         </Stack>
@@ -293,7 +308,7 @@ const CustomerListPage = () => {
   // 서버에서 회원 정보를 패치해옴
   const fetchUserData = useCallback(async () => {
     try {
-      const response = await axios.get('http://localhost:8081/'); //컨트롤러 주소
+      const response = await axios.get('http://localhost:8081/members/position'); //컨트롤러 주소
       setUserData(response.data);
     } catch (error) {
       console.error(error);
@@ -320,6 +335,7 @@ const CustomerListPage = () => {
     setOpen(!open);
   };
 
+  //5월 4일 김성훈 내용 수정 
   const columns = useMemo(
     () => [
       {
@@ -329,41 +345,46 @@ const CustomerListPage = () => {
         Cell: SelectionCell,
         disableSortBy: true
       },
+      
       {
-        Header: '#',
+        Header: '아이디',
         accessor: 'id',
         className: 'cell-center'
       },
       {
-        Header: 'User Name',
-        accessor: 'fatherName',
-        Cell: CustomCell
+        Header: '이름',
+        accessor: 'name',
+        className: 'cell-center'
       },
       {
-        Header: 'Email',
-        accessor: 'email'
+        Header: '입사날짜',
+        accessor: 'hireDate',
+        className: 'cell-center'
       },
       {
-        Header: 'Contact',
-        accessor: 'contact',
-        Cell: NumberFormatCell
+        Header: '상태',
+        accessor: 'state',
+        className: 'cell-center'
       },
       {
-        Header: 'Age',
-        accessor: 'age',
+        Header: '부서',
+        accessor: 'deptname',
         className: 'cell-right'
       },
       {
-        Header: 'Country',
-        accessor: 'country'
+        Header: '직급',
+        accessor: 'positionname',
+        className: 'cell-center'
       },
+
+      //5월 4일 수정 김성훈 
+      // {
+      //   Header: 'Status',
+      //   accessor: 'status',
+      //   Cell: StatusCell
+      // },
       {
-        Header: 'Status',
-        accessor: 'status',
-        Cell: StatusCell
-      },
-      {
-        Header: 'Actions',
+        Header: '변경',
         className: 'cell-center',
         disableSortBy: true,
         Cell: ({ row }) => ActionCell(row, setCustomer, setCustomerDeleteId, handleClose, theme)

@@ -1,9 +1,5 @@
 package springBoot_team_pj_126.dto;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -36,6 +32,12 @@ public class UserDTO {
 	private String salaryId;
 	private String thingNo;
 	private String role;	//ROLE_USER, ROLE_ADMIN, ROLE_MANAGER
+	
+	
+	//김성훈
+	private String deptname;
+	private String positionname;
+	
 	
 
 }
