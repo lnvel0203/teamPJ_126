@@ -59,11 +59,11 @@ const applications = {
       id: 'chat',
       title: <FormattedMessage id="chat" />,
       type: 'item',
-      url: '/apps/chat',
+      url: 'http://192.168.0.27:5000/',
       icon: icons.MessageOutlined,
-      breadcrumbs: false
-      // external: true,
-      // target: true
+      breadcrumbs: false,
+      external: true,
+      target: true
     },
     {
       id: 'calendar',
@@ -126,13 +126,6 @@ const applications = {
           url: '/apps/invoice/create'
         },
         {
-          id: 'details',
-          title: <FormattedMessage id="급여상세" />,
-          type: 'item',
-          url: '/apps/invoice/details/1'
-        },
-
-        {
           id: 'edit',
           title: <FormattedMessage id="급여수정" />,
           type: 'item',
@@ -152,13 +145,6 @@ const applications = {
           title: <FormattedMessage id="내정보 수정" />,
           type: 'item',
           url: '/apps/profiles/user/personal',
-          breadcrumbs: false
-        },
-        {
-          id: 'account-profile',
-          title: <FormattedMessage id="admin_사원정보수정" />,
-          type: 'item',
-          url: '/apps/profiles/account/basic',
           breadcrumbs: false
         }
       ]

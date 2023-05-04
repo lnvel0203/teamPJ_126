@@ -33,7 +33,7 @@ import {
   CSVExport,
   HeaderSort,
   IndeterminateCheckbox,
-  SortingSelect,
+  // SortingSelect,
   TablePagination,
   TableRowSelection
 } from 'components/third-party/ReactTable';
@@ -63,7 +63,7 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
     headerGroups,
     prepareRow,
     setHiddenColumns,
-    allColumns,
+    // allColumns,
     visibleColumns,
     rows,
     page,
@@ -72,7 +72,7 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
     state: { globalFilter, selectedRowIds, pageIndex, pageSize, expanded },
     preGlobalFilteredRows,
     setGlobalFilter,
-    setSortBy,
+    // setSortBy,
     selectedFlatRows
   } = useTable(
     {
@@ -118,7 +118,7 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
             size="small"
           />
           <Stack direction={matchDownSM ? 'column' : 'row'} alignItems="center" spacing={1}>
-            <SortingSelect sortBy={sortBy.id} setSortBy={setSortBy} allColumns={allColumns} />
+            {/* <SortingSelect sortBy={sortBy.id} setSortBy={setSortBy} allColumns={allColumns} /> */}
             <Button variant="contained" startIcon={<PlusOutlined />} onClick={handleAdd} size="small">
               Add Customer
             </Button>

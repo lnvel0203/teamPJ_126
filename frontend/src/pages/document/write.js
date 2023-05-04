@@ -35,8 +35,15 @@ class DocumentWritePage extends Component {
     this.setState({ securityLevel: event.target.value });
   };
 
+  // handleAddButtonClick = () => {
+  //   window.open('/apps/document/AddApprover', '_blank', 'width=800,height=600,top=300,left=300');
+  // };
+
   handleAddButtonClick = () => {
-    window.open('/apps/document/AddApprover', '_blank', 'width=800,height=600,top=300,left=300');
+    const newWindow = window.open('/apps/document/AddApprover', '_blank', 'width=800,height=600,top=300,left=300');
+    newWindow.openerData = {
+      sendSelectedApprovers: this.handleSelectedApprovers
+    };
   };
 
   handleFileUpload = (event) => {
@@ -54,14 +61,19 @@ class DocumentWritePage extends Component {
   render() {
     const { documentType, author, retentionPeriod, securityLevel, approvers } = this.state;
 
+    // function receiveSelectedApprovers(selectedApprovers) {
+    //   console.log('Selected Approvers:', selectedApprovers);
+    //   // 선택된 결재자들을 처리하는 코드 추가
+    // }
+
     return (
       <div style={{ marginLeft: '' }}>
-        <h1>기본 설정</h1>
-        <table>
+        <h1 className="write-h1">기본 설정</h1>
+        <table className="tb-1">
           <tbody>
             <tr>
-              <td>문서 종류</td>
-              <td>
+              <td className="write-td">문서 종류</td>
+              <td className="write-td">
                 <select value={documentType} onChange={this.handleDocumentTypeChange}>
                   <option value="">-- 선택하세요 --</option>
                   <option value="보고서">보고서</option>
@@ -70,14 +82,14 @@ class DocumentWritePage extends Component {
                   <option value="기타">기타</option>
                 </select>
               </td>
-              <td>작성자</td>
-              <td>
+              <td className="write-td">작성자</td>
+              <td className="write-td">
                 <input type="text" value={author} onChange={this.handleAuthorChange} />
               </td>
             </tr>
             <tr>
-              <td>보존 연한</td>
-              <td>
+              <td className="write-td">보존 연한</td>
+              <td className="write-td">
                 <select value={retentionPeriod} onChange={this.handleRetentionPeriodChange}>
                   <option value="">-- 선택하세요 --</option>
                   <option value="1년">1년</option>
@@ -87,8 +99,8 @@ class DocumentWritePage extends Component {
                   <option value="영구">영구</option>
                 </select>
               </td>
-              <td>보안등급</td>
-              <td>
+              <td className="write-td">보안등급</td>
+              <td className="write-td">
                 <select value={securityLevel} onChange={this.handleSecurityLevelChange}>
                   <option value="">-- 선택하세요 --</option>
                   <option value="일반">일반</option>
@@ -101,7 +113,7 @@ class DocumentWritePage extends Component {
         </table>
         <br />
         <br />
-        <h1>결제선</h1>
+        <h1 className="write-h1">결제선</h1>
         <table className="tb-2">
           <tbody>
             <tr className="tr-1">
@@ -137,7 +149,7 @@ class DocumentWritePage extends Component {
           </tbody>
         </table>
         <br />
-        <h1>상세 입력</h1>
+        <h1 className="write-h1">상세 입력</h1>
         <Form onSubmit={this.handleSubmit} />
       </div>
     );
