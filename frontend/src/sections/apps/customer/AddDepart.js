@@ -190,7 +190,7 @@ const AddCustomer = ({ customer, onCancel }) => {
                   <Grid container spacing={5}>
                     <Grid item xs={9}>
                       <Stack spacing={1.25}>
-                        <InputLabel htmlFor="customer-name">직급번호</InputLabel>
+                        <InputLabel htmlFor="customer-name">부서번호</InputLabel>
                         <TextField
                           fullWidth
                           id="customer-name"
@@ -203,7 +203,7 @@ const AddCustomer = ({ customer, onCancel }) => {
                     </Grid>
                     <Grid item xs={9}>
                       <Stack spacing={1.25}>
-                        <InputLabel htmlFor="customer-email">직급명</InputLabel>
+                        <InputLabel htmlFor="customer-email">부서명</InputLabel>
                         <TextField
                           fullWidth
                           id="customer-email"
@@ -214,9 +214,9 @@ const AddCustomer = ({ customer, onCancel }) => {
                         />
                       </Stack>
                     </Grid>
-                    {/* <Grid item xs={9}>
+                    <Grid item xs={9}>
                       <Stack spacing={1.25}>
-                        <InputLabel htmlFor="customer-location"></InputLabel>
+                        <InputLabel htmlFor="customer-location">설립일</InputLabel>
                         <TextField
                           fullWidth
                           id="customer-location"
@@ -226,7 +226,7 @@ const AddCustomer = ({ customer, onCancel }) => {
                           helperText={touched.location && errors.location}
                         />
                       </Stack>
-                    </Grid> */}
+                    </Grid>
                     {/* <Grid item xs={12}>
                       <Stack spacing={1.25}>
                         <InputLabel htmlFor="customer-orderStatus">Order Status</InputLabel>
