@@ -11,7 +11,7 @@ import springBoot_team_pj_126.dto.CalenderDTO;
 @Mapper
 public interface CalenderMapper {
 	
-	public List<CalenderDTO> calenderList();
+	public List<CalenderDTO> calenderList(String id);
 	
 	public void inserCalender(CalenderDTO calenderDTO);
 	

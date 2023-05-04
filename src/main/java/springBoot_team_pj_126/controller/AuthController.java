@@ -14,7 +14,7 @@ import springBoot_team_pj_126.auth.config.UserAuthProvider;
 import springBoot_team_pj_126.auth.dto.CredentialsDTO;
 import springBoot_team_pj_126.auth.dto.SignDTO;
 import springBoot_team_pj_126.auth.entities.User;
-import springBoot_team_pj_126.auth.service.UserService;
+import springBoot_team_pj_126.auth.serivce.UserService;
 
 @RequiredArgsConstructor
 @RequestMapping(value="/members")

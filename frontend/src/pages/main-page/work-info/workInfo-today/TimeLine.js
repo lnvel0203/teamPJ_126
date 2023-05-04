@@ -3,12 +3,15 @@ import { Timeline } from 'antd';
 import { Box } from '@mui/system';
 import axios from 'axios';
 
+// 세션 아이디
+const id = localStorage.getItem('id');
+
 const TimeLine = ({ update }) => {
   const [attendance, setAttendance] = useState({});
 
   useEffect(() => {
     axios
-      .get('http://localhost:8081/members/attendanceList')
+      .get(`http://localhost:8081/members/attendanceList?id=${id}`)
       .then((response) => {
         setAttendance(response.data);
       })

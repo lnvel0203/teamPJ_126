@@ -21,14 +21,20 @@ public class CalenderServiceImpl implements CalenderService{
 
 	@Autowired
 	private CalenderMapper dao;
-	
 
 	@Override
-	public List<CalenderDTO> listAll(HttpServletRequest req, Model model) 
+	public List<CalenderDTO> listAll(String id, HttpServletRequest req, Model model) 
 			throws ServletException,IOException {
-		System.out.println("서비스 -listAll ");
+		System.out.println("서비스 -calenderlistAll ");
 		
-		List<CalenderDTO> list = dao.calenderList();
+		
+	
+		
+		List<CalenderDTO> list = dao.calenderList(id);
+
+		
+		System.out.println("list" + list);
+		
 		return list;
 	}
 

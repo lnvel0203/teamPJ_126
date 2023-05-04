@@ -38,12 +38,15 @@ public class ReactCalenderController {
 	
 	// localhost:8081/calender
 	
-	@GetMapping("/calender")
-	public List<CalenderDTO> calenderList(HttpServletRequest req, Model model)
+	@GetMapping("/calender/{id}")
+	public List<CalenderDTO> calenderList(@PathVariable String id, HttpServletRequest req, Model model)
 		throws ServletException ,IOException{
 		logger.info("<<<url - calenderList()>>>");
 
-		return service.listAll(req, model);
+		
+		System.out.println(id);
+		
+		return service.listAll(id,req, model);
 		
 	}
 	
@@ -52,6 +55,8 @@ public class ReactCalenderController {
 			throws ServletException ,IOException{
 		logger.info("<<<url - calenderInsert()>>>");
 		
+		
+		System.out.println("id" +calenderDTO.getId() );
 		System.out.println("여기요~" +calenderDTO );
 		
 		

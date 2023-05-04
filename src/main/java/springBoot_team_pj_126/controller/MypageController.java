@@ -1,15 +1,15 @@
 package springBoot_team_pj_126.controller;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
-import java.util.jar.Attributes;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.eclipse.jdt.internal.compiler.codegen.AttributeNamesConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import springBoot_team_pj_126.dto.MemberDTO;
 import springBoot_team_pj_126.dto.UserDTO;
@@ -36,44 +35,32 @@ import springBoot_team_pj_126.service.MemberService;
 //@CrossOrigin(origins = {"http://localhost:8081"}, maxAge=3600)
 @RequestMapping(value="/members")
 @RestController
-public class ReactController {
+public class MypageController {
 
 	@Autowired(required=true)
 	private MemberService service;
-	//http://localhost:8081/members	
-	//  =>가 첫 url인데
-	//
+
 	
-	@GetMapping
-	public List<UserDTO> memberList(HttpServletRequest req, Model model) 
+	@GetMapping("/mypage")
+	public List<UserDTO> mypageList(HttpServletRequest req, Model model) 
 			throws ServletException, IOException{
-		System.out.println("컨트롤러 - memberList");
+		System.out.println("컨트롤러 - mypage");
 		return service.listAll(req, model);
 	}
 	
-//	@PostMapping("/editEmployee")
-	@PutMapping("/editEmployee/{no}") //-> @PathVariale로 받는다
-//	@GetMapping
-	public void memberUpdate(UserDTO dto, Model model) 
-			throws ServletException, IOException{ //@RequestBody ==> req.getParameter("dto");
-		//리스트 데이터를 넘긴다. -- 리액트에 넘긴다, 주소는 jsp나 타입리프에 넘기는것이다. 지금은 리액트 화면에 넘기기위해 데이터만 넘긴다.
-		System.out.println("컨트롤러 - memberUpdate");
-		System.out.println(dto);
-		service.editEmployee(dto);
-	
-		System.out.println("update [성공]");
-	}
+	// 백엔드 테스트용 컨트롤러
+	@GetMapping("/address/userInfo")
+	public ResponseEntity<Map<String, Object>> getTestAddress() {
+		System.out.println("요청이 오나요?");
+		
+		Map<String, Object> testData = new HashMap<>();
+		testData.put("name", "김인간");
+        testData.put("email", "kim.human@example.com");
 
-	//주의 사항 - 엑소시오 의 능력과 restAPI에 대해서 알아보기
-	@DeleteMapping("/deleteEmployee/{id}") 
-	public void memberDelete(@PathVariable String id) throws ServletException, IOException{
-		
-		System.out.println("컨트롤러 - delete");
-		service.deleteMember(id);
-		
-		System.out.println("delete [성공]");
-		
+	    return ResponseEntity.ok(testData);
 	}
+	
+
 
 	
 }

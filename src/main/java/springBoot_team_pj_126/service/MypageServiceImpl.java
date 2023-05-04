@@ -1,6 +1,8 @@
 package springBoot_team_pj_126.service;
 
 import java.io.IOException;
+
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,24 +16,25 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import springBoot_team_pj_126.dao.DocumentMapper;
-import springBoot_team_pj_126.dao.MemberMapper;
-import springBoot_team_pj_126.dto.DocumentDTO;
+import springBoot_team_pj_126.dao.MypageMapper;
+import springBoot_team_pj_126.dto.UserDTO;
 
 
 @Component
 @Service
-public class DocumentServiceImpl implements DocumentService{
+public class MypageServiceImpl implements MypageService{
 
 	@Autowired
-	private DocumentMapper mapper;
+	private MypageMapper mapper;
 
 	@Override
-	public List<DocumentDTO> documentList(HttpServletRequest req, Model model) 
+	public List<UserDTO> mypageList(HttpServletRequest req, Model model) 
 			throws ServletException, IOException {
 		System.out.println("서비스 - list");
-		List<DocumentDTO> list = mapper.documentList();
-		System.out.println(list);
+		
+		
+		List<UserDTO> list = mapper.mypageList();
+		System.out.println("서비스 : list : " + list);
 		
 		model.addAttribute("list", list);
 		return list;

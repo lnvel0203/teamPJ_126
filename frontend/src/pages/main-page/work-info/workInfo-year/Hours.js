@@ -8,9 +8,12 @@ export default function Hours() {
   const [totalHours, setTotalHours] = useState(null);
   const [totalDays, setTotalDays] = useState(null);
 
+  // 세션 아이디
+  const id = localStorage.getItem('id');
+
   useEffect(() => {
     axios
-      .get('http://localhost:8081/members/getDate')
+      .get(`http://localhost:8081/members/getDate?id=${id}`)
       .then((response) => {
         setTotalHours(response.data.totalHours);
         setTotalDays(response.data.totalDays);
@@ -23,7 +26,7 @@ export default function Hours() {
   const items = [
     { text: '근무 일수', number: totalDays + ' 일' },
     { text: '총 시간', number: totalHours + ' 시간' },
-    { text: '평균 시간', number: totalHours / totalDays !== null ? Math.round(totalHours / totalDays) + ' 시간' : '-' }
+    { text: '평균 시간', number: totalDays === 0 ? '-' : Math.round(totalHours / totalDays) + ' 시간' }
   ];
 
   return (

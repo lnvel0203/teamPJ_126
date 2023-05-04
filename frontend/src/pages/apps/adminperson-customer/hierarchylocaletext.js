@@ -5,7 +5,20 @@ import { useCallback, useEffect, useMemo, useState, Fragment } from 'react';
 
 // material-ui
 import { alpha, useTheme } from '@mui/material/styles';
-import { Chip, Stack, Table, Button, TableBody, TableCell, TableHead, TableRow, Typography, useMediaQuery } from '@mui/material';
+import {
+  Button,
+  Chip,
+  Dialog,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Tooltip,
+  Typography,
+  useMediaQuery
+} from '@mui/material';
 
 // third-party
 import NumberFormat from 'react-number-format';
@@ -14,23 +27,35 @@ import { useFilters, useExpanded, useGlobalFilter, useRowSelect, useSortBy, useT
 // project import
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
-import { HeaderSort, IndeterminateCheckbox, TablePagination, TableRowSelection } from 'components/third-party/ReactTable';
+import IconButton from 'components/@extended/IconButton';
+import { PopupTransition } from 'components/@extended/Transitions';
+import {
+  CSVExport,
+  HeaderSort,
+  IndeterminateCheckbox,
+  SortingSelect,
+  TablePagination,
+  TableRowSelection
+} from 'components/third-party/ReactTable';
 
+import AddCustomer from 'sections/apps/customer/AddCustomer';
 import CustomerView from 'sections/apps/customer/CustomerView';
+import AlertCustomerDelete from 'sections/apps/customer/AlertCustomerDelete';
 
 // import makeData from 'data/react-table';
 import { renderFilterTypes, GlobalFilter } from 'utils/react-table';
 
 // assets
+import { CloseOutlined, PlusOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
 
 // ==============================|| REACT TABLE ||============================== //
 
-function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent }) {
+function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, handleAdd }) {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'));
 
   const filterTypes = useMemo(() => renderFilterTypes, []);
-  const sortBy = { id: 'documentNo', desc: false };
+  const sortBy = { id: 'fatherName', desc: false };
 
   const {
     getTableProps,
@@ -38,6 +63,7 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent }) {
     headerGroups,
     prepareRow,
     setHiddenColumns,
+    allColumns,
     visibleColumns,
     rows,
     page,
@@ -45,7 +71,9 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent }) {
     setPageSize,
     state: { globalFilter, selectedRowIds, pageIndex, pageSize, expanded },
     preGlobalFilteredRows,
-    setGlobalFilter
+    setGlobalFilter,
+    setSortBy,
+    selectedFlatRows
   } = useTable(
     {
       columns,
@@ -63,11 +91,6 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent }) {
     useRowSelect
   );
 
-  //   이 Hook은 함수형 컴포넌트에서 마운트, 언마운트, 업데이트와 관련된 작업을 수행할 때 사용됩니다. 이 예시에서는 matchDownSM이라는 상태 변수가 변경될 때마다 실행됩니다.
-  // 이 useEffect 함수의 목적은, 미디어 쿼리를 사용하여 현재 브라우저 창의 크기가 작은 경우에는 테이블에서 일부 열을 숨기고, 큰 경우에는 모든 열을 표시하는 것입니다.
-  // 첫 번째 if문에서, matchDownSM 변수가 true인 경우 setHiddenColumns 함수를 사용하여 열을 숨기는 데 필요한 상태를 업데이트합니다. 두 번째 else문에서는 matchDownSM이 false인 경우 또 다른 setHiddenColumns 함수를 사용하여 다른 열을 숨깁니다.
-  // useEffect의 두 번째 인자로 [matchDownSM]이 전달되는데, 이는 useEffect가 실행되는 조건입니다. 만약 matchDownSM 값이 변경되지 않았다면, useEffect 함수는 실행되지 않습니다. 이렇게 하면 불필요한 렌더링이 발생하지 않아서 성능이 개선됩니다.
-  // 마지막으로, eslint-disable-next-line 주석이 있습니다. 이는 ESLint에서 경고를 비활성화하는 주석으로, 이 코드에서는 특정 규칙을 적용하지 않도록 설정하는 용도로 사용됩니다.
   useEffect(() => {
     if (matchDownSM) {
       setHiddenColumns(['age', 'contact', 'visits', 'email', 'status', 'avatar']);
@@ -77,27 +100,30 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent }) {
     // eslint-disable-next-line
   }, [matchDownSM]);
 
-  //  이 코드는 React로 작성된 컴포넌트의 JSX 코드입니다. 이 컴포넌트는 테이블을 렌더링하며, react-table 라이브러리를 사용하여 구현되었습니다.
-  // 컴포넌트의 return문에서는 Fragment와 JSX 코드를 사용하여 테이블을 구성합니다. JSX 코드는 다음과 같은 구성요소로 이루어져 있습니다
-
   return (
     <>
-      <TableRowSelection selected={Object.keys(selectedRowIds).length} />{' '}
-      {/* TableRowSelection: 테이블에서 선택된 행의 수를 표시하는 구성요소입니다.  */}
+      <TableRowSelection selected={Object.keys(selectedRowIds).length} />
       <Stack spacing={3}>
-        <Stack /* Stack: 다른 구성요소들을 감싸고 정렬하는 컨테이너 역할을 하는 구성요소입니다. */
+        <Stack
           direction={matchDownSM ? 'column' : 'row'}
           spacing={1}
           justifyContent="space-between"
           alignItems="center"
           sx={{ p: 3, pb: 0 }}
         >
-          <GlobalFilter /*// GlobalFilter: 전역 필터를 구현하는 구성요소입니다. */
+          <GlobalFilter
             preGlobalFilteredRows={preGlobalFilteredRows}
             globalFilter={globalFilter}
             setGlobalFilter={setGlobalFilter}
             size="small"
           />
+          <Stack direction={matchDownSM ? 'column' : 'row'} alignItems="center" spacing={1}>
+            <SortingSelect sortBy={sortBy.id} setSortBy={setSortBy} allColumns={allColumns} />
+            <Button variant="contained" startIcon={<PlusOutlined />} onClick={handleAdd} size="small">
+              Add Customer
+            </Button>
+            <CSVExport data={selectedFlatRows.length > 0 ? selectedFlatRows.map((d) => d.original) : data} filename={'customer-list.csv'} />
+          </Stack>
         </Stack>
 
         <Table {...getTableProps()}>
@@ -136,11 +162,9 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent }) {
                 </Fragment>
               );
             })}
-            {/* 우측 하단 화살표 */}
             <TableRow sx={{ '&:hover': { bgcolor: 'transparent !important' } }}>
               <TableCell sx={{ p: 2, py: 3 }} colSpan={9}>
                 <TablePagination gotoPage={gotoPage} rows={rows} setPageSize={setPageSize} pageSize={pageSize} pageIndex={pageIndex} />
-                {/* // TablePagination: 테이블에서 페이지네이션을 구현하는 구성요소입니다. */}
               </TableCell>
             </TableRow>
           </TableBody>
@@ -166,8 +190,6 @@ const SelectionHeader = ({ getToggleAllPageRowsSelectedProps }) => (
   <IndeterminateCheckbox indeterminate {...getToggleAllPageRowsSelectedProps()} />
 );
 
-// React-Table에서 사용되는 구성 요소 중 하나인 CustomCell 구성 요소입니다.
-// 이 구성 요소는 각 셀에서 렌더링되는 콘텐츠를 커스터마이징하기 위해 사용됩니다.
 const CustomCell = ({ row }) => {
   const { values } = row;
   return (
@@ -196,7 +218,52 @@ const StatusCell = ({ value }) => {
   }
 };
 
-// React Table을 사용하여 만들어진 테이블에서, 각 셀의 내용을 렌더링하기 위해 사용되는 여러 개의 컴포넌트들입니다.
+const ActionCell = (row, setCustomer, setCustomerDeleteId, handleClose, theme) => {
+  const collapseIcon = row.isExpanded ? (
+    <CloseOutlined style={{ color: theme.palette.error.main }} />
+  ) : (
+    <EyeTwoTone twoToneColor={theme.palette.secondary.main} />
+  );
+  return (
+    <Stack direction="row" alignItems="center" justifyContent="center" spacing={0}>
+      <Tooltip title="View">
+        <IconButton
+          color="secondary"
+          onClick={(e) => {
+            e.stopPropagation();
+            row.toggleRowExpanded();
+          }}
+        >
+          {collapseIcon}
+        </IconButton>
+      </Tooltip>
+      <Tooltip title="Edit">
+        <IconButton
+          color="primary"
+          onClick={(e) => {
+            e.stopPropagation();
+            setCustomer(row.values);
+            handleAdd();
+          }}
+        >
+          <EditTwoTone twoToneColor={theme.palette.primary.main} />
+        </IconButton>
+      </Tooltip>
+      <Tooltip title="Delete">
+        <IconButton
+          color="error"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleClose();
+            setCustomerDeleteId(row.values.fatherName);
+          }}
+        >
+          <DeleteTwoTone twoToneColor={theme.palette.error.main} />
+        </IconButton>
+      </Tooltip>
+    </Stack>
+  );
+};
 
 StatusCell.propTypes = {
   value: PropTypes.number
@@ -218,24 +285,16 @@ SelectionHeader.propTypes = {
   getToggleAllPageRowsSelectedProps: PropTypes.func
 };
 
-const ApproverList = () => {
-  const [selectedApprovers, setSelectedApprovers] = useState([]);
-
-  const onApproversSelected = useCallback((selectedRows) => {
-    const approvers = selectedRows.map((row) => row.original);
-    setSelectedApprovers(approvers);
-  }, []);
-
+const CustomerListPage = () => {
   const theme = useTheme();
 
   const [userData, setUserData] = useState([]);
 
-  // Fetch user data from the server
+  // 서버에서 회원 정보를 패치해옴
   const fetchUserData = useCallback(async () => {
     try {
-      const response = await axios.get('http://localhost:8081/members/approver');
-      const fetchedData = response.data.map((item) => ({ ...item, selected: false }));
-      setUserData(fetchedData);
+      const response = await axios.get('http://localhost:8081/'); //컨트롤러 주소
+      setUserData(response.data);
     } catch (error) {
       console.error(error);
     }
@@ -246,15 +305,22 @@ const ApproverList = () => {
   }, [fetchUserData]);
 
   const data = useMemo(() => userData, [userData]);
-  console.log(data);
+
+  const [add, setAdd] = useState(false);
+  const [open, setOpen] = useState(false);
   const [customer, setCustomer] = useState();
+  const [customerDeleteId, setCustomerDeleteId] = useState();
 
   const handleAdd = () => {
     setAdd(!add);
     if (customer && !add) setCustomer(null);
   };
 
-  const approver = useMemo(
+  const handleClose = () => {
+    setOpen(!open);
+  };
+
+  const columns = useMemo(
     () => [
       {
         title: 'Row Selection',
@@ -264,65 +330,78 @@ const ApproverList = () => {
         disableSortBy: true
       },
       {
-        Header: 'no',
-        accessor: 'no',
-        className: 'cell-left'
+        Header: '#',
+        accessor: 'id',
+        className: 'cell-center'
       },
       {
-        Header: 'name',
-        accessor: 'name',
-        className: 'cell-left'
+        Header: 'User Name',
+        accessor: 'fatherName',
+        Cell: CustomCell
       },
       {
-        Header: 'deptName',
-        accessor: 'deptName'
+        Header: 'Email',
+        accessor: 'email'
       },
       {
-        Header: 'stemp',
-        accessor: 'stemp',
-        className: 'cell-left'
+        Header: 'Contact',
+        accessor: 'contact',
+        Cell: NumberFormatCell
+      },
+      {
+        Header: 'Age',
+        accessor: 'age',
+        className: 'cell-right'
+      },
+      {
+        Header: 'Country',
+        accessor: 'country'
+      },
+      {
+        Header: 'Status',
+        accessor: 'status',
+        Cell: StatusCell
+      },
+      {
+        Header: 'Actions',
+        className: 'cell-center',
+        disableSortBy: true,
+        Cell: ({ row }) => ActionCell(row, setCustomer, setCustomerDeleteId, handleClose, theme)
       }
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [theme]
   );
 
-  // const aaaaa = () => {
-  //   console.log(selectedApprovers);
-  // };
-
-  const handleRegisterButtonClick = () => {
-    console.log(selectedApprovers);
-
-    // sendDataToParentWindow 함수 정의
-    const sendDataToParentWindow = (selectedApprovers) => {
-      if (window.opener && !window.opener.closed) {
-        window.opener.receiveSelectedApprovers(selectedApprovers);
-      }
-    };
-
-    // sendDataToParentWindow 함수 호출
-    sendDataToParentWindow(selectedApprovers);
-  };
-
   const renderRowSubComponent = useCallback(({ row }) => <CustomerView data={data[row.id]} />, [data]);
+
   return (
     <MainCard content={false}>
       <ScrollX>
         <ReactTable
-          columns={approver}
-          data={data}
+          columns={columns}
+          data={userData}
           handleAdd={handleAdd}
           getHeaderProps={(column) => column.getSortByToggleProps()}
           renderRowSubComponent={renderRowSubComponent}
-          onSelectedRowsChange={(selectedRows) => onApproversSelected(selectedRows)}
         />
-        <Button variant="contained" onClick={handleRegisterButtonClick}>
-          등록
-        </Button>
       </ScrollX>
+      <AlertCustomerDelete title={customerDeleteId} open={open} handleClose={handleClose} />
+      {/* add user dialog */}
+      <Dialog
+        maxWidth="sm"
+        TransitionComponent={PopupTransition}
+        keepMounted
+        fullWidth
+        onClose={handleAdd}
+        open={add}
+        sx={{ '& .MuiDialog-paper': { p: 0 }, transition: 'transform 225ms' }}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <AddCustomer customer={customer} onCancel={handleAdd} />
+      </Dialog>
     </MainCard>
   );
 };
 
-export default ApproverList;
+export default CustomerListPage;
