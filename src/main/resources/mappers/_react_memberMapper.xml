@@ -10,6 +10,7 @@
 	SELECT * FROM EMPLOYEES_TBL
 </select>
 
+
 <delete id="deleteById" parameterType="String">
 	delete from EMPLOYEES_TBL where id=#{id} 
 </delete>
@@ -17,6 +18,17 @@
 <update id="editEmployee" parameterType="springBoot_team_pj_126.dto.UserDTO">
 	UPDATE employees_tbl SET ROLE='승인' WHERE no=#{no}
 </update>
+
+
+
+
+<!-- 5월 4일 김성훈 추가 직급만들기 -->
+<select id="memberPosition" resultType="springBoot_team_pj_126.dto.UserDTO">
+	SELECT e.id,e.name,e.hiredate,e.state,d.deptname,p.positionname
+	FROM employees_tbl e
+	LEFT join department_tbl d on e.deptid = d.deptid
+	LEFT join position_tbl p on e.positionid = p.positionid
+</select>
 
 
 

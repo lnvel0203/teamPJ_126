@@ -51,6 +51,13 @@ public class ReactController {
 		return service.listAll(req, model);
 	}
 	
+	@GetMapping("/position")
+	public List<UserDTO> memberPosition(HttpServletRequest req ,Model model)
+			throws ServletException, IOException{
+		System.out.println("컨드롤-  memberPosition");
+		return service.memberPositionList(req, model);
+	}
+	
 //	@PostMapping("/editEmployee")
 	@PutMapping("/editEmployee/{no}") //-> @PathVariale로 받는다
 //	@GetMapping
