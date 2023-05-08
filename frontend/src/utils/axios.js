@@ -48,7 +48,7 @@ export const setAuthToken = (token) => {
   //토큰이름은 내맘데로
   window.localStorage.setItem('auth_token', token);
 
-  alert(token);
+  //alert(token);
   //setAuth_token(token)과 같다
 };
 

@@ -44,4 +44,15 @@
 </update> 
 
 
+
+<!-- 5월 4일 김성훈 추가 직급만들기 -->
+<select id="memberPosition" resultType="springBoot_team_pj_126.dto.UserDTO">
+	SELECT e.id,e.name,e.hiredate,e.state,d.deptname,p.positionname
+	FROM employees_tbl e
+	LEFT join department_tbl d on e.deptid = d.deptid
+	LEFT join position_tbl p on e.positionid = p.positionid
+</select>
+
+
+
 </mapper>

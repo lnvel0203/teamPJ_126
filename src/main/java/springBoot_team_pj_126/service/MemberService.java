@@ -16,6 +16,7 @@ public interface MemberService {
 
 	public List<UserDTO> listAll(HttpServletRequest req, Model model) 
 			throws ServletException, IOException;
+
 	
 //	public void insertMember(MemberDTO dto) throws ServletException, IOException;
 //	

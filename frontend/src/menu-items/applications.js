@@ -14,7 +14,8 @@ import {
   UserOutlined,
   AppstoreAddOutlined,
   RobotOutlined,
-  PartitionOutlined
+  PartitionOutlined,
+  EditOutlined
 } from '@ant-design/icons';
 
 // icons
@@ -30,7 +31,8 @@ const icons = {
   AppstoreAddOutlined,
   RobotOutlined,
   FileTextOutlined,
-  PartitionOutlined
+  PartitionOutlined,
+  EditOutlined
 };
 // ==============================|| MENU ITEMS - APPLICATIONS ||============================== //
 
@@ -59,7 +61,7 @@ const applications = {
       id: 'chat',
       title: <FormattedMessage id="chat" />,
       type: 'item',
-      url: 'http://192.168.0.27:5000/',
+      url: 'http://192.168.0.28:5000/',
       icon: icons.MessageOutlined,
       breadcrumbs: false,
       external: true,
@@ -75,19 +77,19 @@ const applications = {
     //전자결재
     {
       id: 'approval',
-      title: <FormattedMessage id="approval" />,
+      title: <FormattedMessage id="전자결재" />,
       type: 'collapse',
       icon: icons.EditOutlined,
       children: [
         {
           id: 'document-write',
-          title: <FormattedMessage id="document-write" />,
+          title: <FormattedMessage id="작성" />,
           type: 'item',
           url: '/apps/document/documentWrite'
         },
         {
           id: 'document-list',
-          title: <FormattedMessage id="document-list" />,
+          title: <FormattedMessage id="목록" />,
           type: 'item',
           url: '/apps/document/documentList'
         }
@@ -125,6 +127,7 @@ const applications = {
           type: 'item',
           url: '/apps/invoice/create'
         },
+
         {
           id: 'edit',
           title: <FormattedMessage id="급여수정" />,
@@ -146,7 +149,8 @@ const applications = {
           type: 'item',
           url: '/apps/profiles/user/personal',
           breadcrumbs: false
-        }
+
+        },
       ]
     }, // 여기까지 변겅
 
@@ -175,6 +179,20 @@ const applications = {
           title: <FormattedMessage id="직급관리" />,
           type: 'item',
           url: '/apps/adminperson-customer/hierarchylocaletext'
+        },
+        {
+          // 인사평가 추가(2023-05-04 김희수)
+          id: 'Personnelevaluation',
+          title: <FormattedMessage id="인사평가" />,
+          type: 'item',
+          url: '/apps/adminperson-customer/Personnelevaluation'
+        },
+        {
+          // 근태 관리
+          id: 'AttendanceList',
+          title: <FormattedMessage id="근태 관리" />,
+          type: 'item',
+          url: '/apps/adminperson-customer/AttendanceList'
         }
       ]
     }

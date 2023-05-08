@@ -7,17 +7,33 @@ import axios from 'axios';
 
 function Calendar() {
   const API_BASE_URL = 'http://localhost:8081/members/calender';
-
+                      
   const [calendars, setCalendars] = useState([]);
   const [events, setEvents] = useState([]);
 
+  const id = localStorage.getItem('id');
+
   useEffect(() => {
     const fetchCalendars = async () => {
+
+      // let headers = {};
+
+      // headers = {
+      //   Authorization: 'Bearer ${getAuthToken()'
+      // };
       try {
-        // axios get 요청
-        const response = await axios.get(API_BASE_URL);
-        console.log(response.data);
+        // const API_BASE_URL = 'http://localhost:8081/members/delete';
+        // const deletes = clickInfo.event.title;
+        // console.log('deletes 호출!!' ,deletes)
+        // axios.delete(API_BASE_URL+"/"+ deletes)
+
+
+        const response = await axios.get(API_BASE_URL+"/"+id);
+        
+        console.log(response.data); 
         setCalendars(response.data);
+     
+        
       } catch (error) {
         console.error('Error fetching calendars:', error);
       }
@@ -29,14 +45,17 @@ function Calendar() {
   useEffect(() => {
     const calendarEvents = calendars.map((calendar) => ({
       userid: calendar.no,
+      userids:calendar.id,
       start: calendar.startDate,
       end: calendar.endDate,
       title: calendar.title,
       description: calendar.descriptions,
-      color: calendar.color
+      color: calendar.color,
     }));
     setEvents(calendarEvents);
+    
   }, [calendars, setEvents]);
+
 
   const handleDateSelect = (selectInfo) => {
     const formHtml = `
@@ -115,31 +134,36 @@ function Calendar() {
       </body>
     </html>
     `;
-
-    const newWindow = window.open('', 'Add Event', 'width=500,height=400');
+  
+    const newWindow = window.open("", "Add Event", "width=500,height=400");
     newWindow.document.body.innerHTML = formHtml;
-
-    newWindow.document.getElementById('newEventForm').addEventListener('submit', (event) => {
+  
+    newWindow.document.getElementById("newEventForm").addEventListener("submit", (event) => {
       event.preventDefault();
-
-      const title = newWindow.document.getElementById('title').value;
-      const descriptions = newWindow.document.getElementById('description').value;
+  
+      const title = newWindow.document.getElementById("title").value;
+      const descriptions = newWindow.document.getElementById("description").value;
       const selectedColor = newWindow.document.querySelectorAll('input[name="color"]:checked');
       const color = Array.from(selectedColor).map((checkbox) => checkbox.value)[0];
       const startDate = selectInfo.startStr;
       const endDate = selectInfo.endStr;
-
+   
       console.log(title);
-      console.log(descriptions);
-      console.log(selectInfo.startStr);
-      console.log(selectInfo.endStr);
-      console.log(color);
+      console.log(descriptions); 
+      console.log(selectInfo.startStr); 
+      console.log(selectInfo.endStr); 
+      console.log(color); 
 
       const API_BASE_URL = 'http://localhost:8081/members';
 
       const newevent = {
-        startDate: startDate,
-        endDate: endDate,
+        
+        //아이디?
+        id:id,
+
+
+        startDate : startDate,
+        endDate : endDate,
         title: title,
         descriptions: descriptions,
         color: color
@@ -147,45 +171,70 @@ function Calendar() {
 
       console.log('insert 호출!!', newevent);
 
-      // axios insert 요청
-      axios
-        .post(API_BASE_URL + '/insert', newevent)
-        .then((response) => {
+
+      axios.post(API_BASE_URL + "/insert", newevent)
+        .then(response => {
           console.log(response.data);
           alert('일정이 추가되었습니다.');
+          newWindow.close();
+          window.location.reload();
         })
-        .catch((error) => {
+        .catch(error => {
           console.error(error);
           alert('일정 추가에 실패했습니다.');
+          newWindow.close();
         });
 
-      
-    });
+      //#C6D2BE
 
-    newWindow.document.getElementById('cancelButton').addEventListener('click', (event) => {
+      // if (title) {
+      //   setEvents([
+      //     ...events,
+      //     {
+      //       title,
+      //       descriptions,
+      //       start: selectInfo.startStr,
+      //       end: selectInfo.endStr,
+      //       color: color.length > 0 ? color[0] : '#C6D2BE',
+      //     },
+      //   ]);
+
+      //   newWindow.close();
+      // }
+    });
+  
+    newWindow.document.getElementById("cancelButton").addEventListener("click", (event) => {
       event.preventDefault();
       newWindow.close();
     });
   };
 
+
+  
+  
   const handleEventClick = (clickInfo) => {
     const eventEl = clickInfo.el;
 
-    eventEl.querySelectorAll('.delete-button').forEach((btn) => {
+    eventEl.querySelectorAll(".delete-button").forEach((btn) => {
       btn.remove();
     });
 
-    const deleteBtn = document.createElement('button');
-    deleteBtn.innerHTML = '삭제';
-    deleteBtn.classList.add('delete-button');
+    const deleteBtn = document.createElement("button");
+    deleteBtn.innerHTML = "삭제";
+    deleteBtn.classList.add("delete-button");
     deleteBtn.onclick = () => {
-      if (window.confirm(`삭제 합니다.'${clickInfo.event.title}'?`)) {
+      if (window.confirm(`삭제 합니다.'${clickInfo.event.title}'?`))
+      {
         const API_BASE_URL = 'http://localhost:8081/members/delete';
         const deletes = clickInfo.event.title;
-        console.log('deletes 호출!!', deletes);
-        // axios delete 요청
-        axios.delete(API_BASE_URL + '/' + deletes);
+        console.log('deletes 호출!!' ,deletes)
+        axios.delete(API_BASE_URL+"/"+ deletes)
         clickInfo.event.remove();
+        window.location.reload();
+
+
+
+
       }
     };
     eventEl.appendChild(deleteBtn);
@@ -193,27 +242,47 @@ function Calendar() {
 
   const eventContent = (eventInfo) => {
     return (
+
       <>
+
+
+
+
         <b>{eventInfo.timeText}</b>
         <p>
           <h3>{eventInfo.event.title}</h3>
         </p>
         <p>{eventInfo.event.extendedProps.description}</p>
+
+
+
+
       </>
     );
   };
 
   return (
+
+    
     <div>
-      <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+        
+      <FullCalendar 
+      
+
+
+        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}  // api에서 시간 떙겨옴. 확인
         initialView="dayGridMonth"
         headerToolbar={{
-          start: 'today prev,next',
-          center: 'title',
-          end: 'dayGridMonth,timeGridWeek,timeGridDay'
+          start: "today prev,next",
+          center: "title",
+          end: "dayGridMonth,timeGridWeek,timeGridDay",
         }}
+
+        //if?
         events={events}
+
+
+        
         selectable={true}
         selectMirror={true}
         dayMaxEvents={true}
@@ -223,6 +292,8 @@ function Calendar() {
         eventRemove={(info) => {
           setEvents(events.filter((event) => event !== info.event));
         }}
+
+       
       />
     </div>
   );

@@ -36,8 +36,7 @@ import {
   CSVExport,
   HeaderSort,
   IndeterminateCheckbox,
-  //5월4일 김성훈 수정 삭제 요청 
-  //SortingSelect,
+  SortingSelect,
   TablePagination,
   TableRowSelection
 } from 'components/third-party/ReactTable';
@@ -50,49 +49,9 @@ import AlertCustomerDelete from 'sections/apps/customer/AlertCustomerDelete';
 import { renderFilterTypes, GlobalFilter } from 'utils/react-table';
 
 // assets
-//5월 4일 김성훈 PlusQutlined,삭제 요청 
-//import { CloseOutlined, PlusOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
-
-//5월 8일 김성훈 수정 ,삭제 요청 
-//import { CloseOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
-
+import { CloseOutlined, PlusOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
 
 // ==============================|| REACT TABLE ||============================== //
-//5월 4일 김성훈 handleAdd,삭제
-//function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, handleAdd })
-
-//5월 4일 김성훈 직원 직급 선택하기 
-function SelectCell({ positionname, onChange }) {
-  return (
-    <select value={positionname} onChange={e => onChange(e.target.value)}>
-      <option value="사원">사원</option>
-      <option value="주임">주임</option>
-      <option value="대리">대리</option>
-      <option value="과장">과장</option>
-      <option value="부장">부장</option>
-      <option value="이사">이사</option>
-      <option value="대표이사">대표이사</option>
-    </select>
-  );
-}
-
-//5월 4일 김성훈 직급 등록 백엔드로 보내기 
-function handleEdit(rowData) {
-  const { id, positionname } = rowData;
-  console.log(id, positionname);
-
-  axios.put(`http://localhost:8081/members/editPosition/${id}/${positionname}`)
-    .then(() => {
-      console.log('수정 성공');
-      // 서버에서 수정된 데이터를 받아올 경우 필요한 처리
-      window.location.reload(); // 자동 새로고침
-    })
-    .catch(error => {
-      console.error('수정 실패', error);
-      // 에러 처리
-    });
-}
-
 
 function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,}) {
   const theme = useTheme();
@@ -107,8 +66,7 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,}) {
     headerGroups,
     prepareRow,
     setHiddenColumns,
-    //5월 4일 김성훈 수정 
-    //allColumns,
+    allColumns,
     visibleColumns,
     rows,
     page,
@@ -117,8 +75,7 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,}) {
     state: { globalFilter, selectedRowIds, pageIndex, pageSize, expanded },
     preGlobalFilteredRows,
     setGlobalFilter,
-    //5월 4일 김성훈 수정
-    //setSortBy,
+    setSortBy,
     selectedFlatRows
   } = useTable(
     {
@@ -164,9 +121,8 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,}) {
             size="small"
           />
           <Stack direction={matchDownSM ? 'column' : 'row'} alignItems="center" spacing={1}>
-            {/* <SortingSelect sortBy={sortBy.id} setSortBy={setSortBy} allColumns={allColumns} /> */}
-            {/*  5월 4일 김성훈 Add Custorme 제거   사용안함 삭제 요청 */ }
-            {/* <Button variant="contained" startIcon={<PlusOutlined />} onClick={handleAdd} size="small">
+            <SortingSelect sortBy={sortBy.id} setSortBy={setSortBy} allColumns={allColumns} />
+            <Button variant="contained" startIcon={<PlusOutlined />} onClick={handleAdd} size="small">
               Add Customer
             </Button> */}
             <CSVExport data={selectedFlatRows.length > 0 ? selectedFlatRows.map((d) => d.original) : data} filename={'customer-list.csv'} />
@@ -410,12 +366,9 @@ const CustomerListPage = () => {
         className: 'cell-right'
       },
       {
-        Header: '직급',
-        accessor: 'positionname',
-        className: 'cell-center',
+        Header: 'Country',
+        accessor: 'country'
       },
-
-      //5월 4일 수정 김성훈  직원 직급 수정 및 버튼 
       {
         Header: '변경',
         className: 'cell-center',

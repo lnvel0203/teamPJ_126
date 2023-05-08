@@ -11,8 +11,6 @@ import org.springframework.ui.Model;
 import springBoot_team_pj_126.dto.CalenderDTO;
 
 
-
-
 public interface CalenderService {
 	
 	public List<CalenderDTO> listAll(String id, HttpServletRequest req,Model model)
@@ -28,6 +26,6 @@ public interface CalenderService {
 			throws ServletException,IOException;
 //		
 //		
-//	public CalenderDTO selectCalender(String userid)
-//			throws ServletException,IOException;
+	public String selectCalender(String id)
+			throws ServletException,IOException;
 }

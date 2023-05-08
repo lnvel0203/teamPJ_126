@@ -35,6 +35,8 @@ public class SecurityConfig {
 			.and()
 			.authorizeHttpRequests((requests) -> requests
 					.antMatchers(HttpMethod.POST, "/members/login", "/members/register").permitAll()		// 반드시 리액트와 일치시켜야한다. 내생각엔 여기에 /members/login이나 join도  붙여야하나?
+//					.antMatchers(HttpMethod.GET, "/members/calender").authenticated()	
+//					.antMatchers(HttpMethod.POST, "/members/insert").authenticated()
 					//.anyRequest().authenticated()//나머지는 토큰 인증을 해야한다.
 					.anyRequest().permitAll()	
 			);

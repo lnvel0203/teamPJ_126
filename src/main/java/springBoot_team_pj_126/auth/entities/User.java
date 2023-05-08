@@ -19,6 +19,7 @@ public class User {
 
     @Id
 	private int no;
+
     // id은 중복값이 있으면 안됨. (회원가입할때 아이디중복이 안되는것)
 	private String id;
 	private String name;
