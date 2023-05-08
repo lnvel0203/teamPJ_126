@@ -3,6 +3,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useMemo, useState, Fragment } from 'react';
 
+
 // material-ui
 import { alpha, useTheme } from '@mui/material/styles';
 import {
@@ -15,7 +16,8 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Tooltip,
+  //5월 8일 수정 김성훈  삭제 요청
+  // Tooltip,
   Typography,
   useMediaQuery
 } from '@mui/material';
@@ -27,13 +29,14 @@ import { useFilters, useExpanded, useGlobalFilter, useRowSelect, useSortBy, useT
 // project import
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
-import IconButton from 'components/@extended/IconButton';
+//5월 8일 수정 김성훈  삭제 요청
+// import IconButton from 'components/@extended/IconButton';
 import { PopupTransition } from 'components/@extended/Transitions';
 import {
   CSVExport,
   HeaderSort,
   IndeterminateCheckbox,
-  //5월4일 김성훈 수정
+  //5월4일 김성훈 수정 삭제 요청 
   //SortingSelect,
   TablePagination,
   TableRowSelection
@@ -47,15 +50,49 @@ import AlertCustomerDelete from 'sections/apps/customer/AlertCustomerDelete';
 import { renderFilterTypes, GlobalFilter } from 'utils/react-table';
 
 // assets
-//5월 4일 김성훈 PlusQutlined,삭제
+//5월 4일 김성훈 PlusQutlined,삭제 요청 
 //import { CloseOutlined, PlusOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
 
-import { CloseOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
+//5월 8일 김성훈 수정 ,삭제 요청 
+//import { CloseOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
 
 
 // ==============================|| REACT TABLE ||============================== //
 //5월 4일 김성훈 handleAdd,삭제
 //function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, handleAdd })
+
+//5월 4일 김성훈 직원 직급 선택하기 
+function SelectCell({ positionname, onChange }) {
+  return (
+    <select value={positionname} onChange={e => onChange(e.target.value)}>
+      <option value="사원">사원</option>
+      <option value="주임">주임</option>
+      <option value="대리">대리</option>
+      <option value="과장">과장</option>
+      <option value="부장">부장</option>
+      <option value="이사">이사</option>
+      <option value="대표이사">대표이사</option>
+    </select>
+  );
+}
+
+//5월 4일 김성훈 직급 등록 백엔드로 보내기 
+function handleEdit(rowData) {
+  const { id, positionname } = rowData;
+  console.log(id, positionname);
+
+  axios.put(`http://localhost:8081/members/editPosition/${id}/${positionname}`)
+    .then(() => {
+      console.log('수정 성공');
+      // 서버에서 수정된 데이터를 받아올 경우 필요한 처리
+      window.location.reload(); // 자동 새로고침
+    })
+    .catch(error => {
+      console.error('수정 실패', error);
+      // 에러 처리
+    });
+}
+
 
 function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,}) {
   const theme = useTheme();
@@ -128,7 +165,7 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,}) {
           />
           <Stack direction={matchDownSM ? 'column' : 'row'} alignItems="center" spacing={1}>
             {/* <SortingSelect sortBy={sortBy.id} setSortBy={setSortBy} allColumns={allColumns} /> */}
-            {/*  5월 4일 김성훈 Add Custorme 제거 */ }
+            {/*  5월 4일 김성훈 Add Custorme 제거   사용안함 삭제 요청 */ }
             {/* <Button variant="contained" startIcon={<PlusOutlined />} onClick={handleAdd} size="small">
               Add Customer
             </Button> */}
@@ -228,52 +265,53 @@ const StatusCell = ({ value }) => {
   }
 };
 
-const ActionCell = (row, setCustomer, setCustomerDeleteId, handleClose, theme) => {
-  const collapseIcon = row.isExpanded ? (
-    <CloseOutlined style={{ color: theme.palette.error.main }} />
-  ) : (
-    <EyeTwoTone twoToneColor={theme.palette.secondary.main} />
-  );
-  return (
-    <Stack direction="row" alignItems="center" justifyContent="center" spacing={0}>
-      <Tooltip title="View">
-        <IconButton
-          color="secondary"
-          onClick={(e) => {
-            e.stopPropagation();
-            row.toggleRowExpanded();
-          }}
-        >
-          {collapseIcon}
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Edit">
-        <IconButton
-          color="primary"
-          onClick={(e) => {
-            e.stopPropagation();
-            setCustomer(row.values);
-            handleAdd();
-          }}
-        >
-          <EditTwoTone twoToneColor={theme.palette.primary.main} />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Delete">
-        <IconButton
-          color="error"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleClose();
-            setCustomerDeleteId(row.values.fatherName);
-          }}
-        >
-          <DeleteTwoTone twoToneColor={theme.palette.error.main} />
-        </IconButton>
-      </Tooltip>
-    </Stack>
-  );
-};
+//    5월 8일 수정   사용 안함 삭제 
+// const ActionCell = (row, setCustomer, setCustomerDeleteId, handleClose, theme) => {
+//   const collapseIcon = row.isExpanded ? (
+//     <CloseOutlined style={{ color: theme.palette.error.main }} />
+//   ) : (
+//     <EyeTwoTone twoToneColor={theme.palette.secondary.main} />
+//   );
+//   return (
+//     <Stack direction="row" alignItems="center" justifyContent="center" spacing={0}>
+//       <Tooltip title="View">
+//         <IconButton
+//           color="secondary"
+//           onClick={(e) => {
+//             e.stopPropagation();
+//             row.toggleRowExpanded();
+//           }}
+//         >
+//           {collapseIcon}
+//         </IconButton>
+//       </Tooltip>
+//       <Tooltip title="Edit">
+//         <IconButton
+//           color="primary"
+//           onClick={(e) => {
+//             e.stopPropagation();
+//             setCustomer(row.values);
+//             handleAdd();
+//           }}
+//         >
+//           <EditTwoTone twoToneColor={theme.palette.primary.main} />
+//         </IconButton>
+//       </Tooltip>
+//       <Tooltip title="Delete">
+//         <IconButton
+//           color="error"
+//           onClick={(e) => {
+//             e.stopPropagation();
+//             handleClose();
+//             setCustomerDeleteId(row.values.fatherName);
+//           }}
+//         >
+//           <DeleteTwoTone twoToneColor={theme.palette.error.main} />
+//         </IconButton>
+//       </Tooltip>
+//     </Stack>
+//   );
+// };
 
 StatusCell.propTypes = {
   value: PropTypes.number
@@ -295,6 +333,8 @@ SelectionHeader.propTypes = {
   getToggleAllPageRowsSelectedProps: PropTypes.func
 };
 
+
+//직워 리스트 불러오기 
 const CustomerListPage = () => {
   const theme = useTheme();
 
@@ -319,7 +359,10 @@ const CustomerListPage = () => {
   const [add, setAdd] = useState(false);
   const [open, setOpen] = useState(false);
   const [customer, setCustomer] = useState();
-  const [customerDeleteId, setCustomerDeleteId] = useState();
+  const [customerDeleteId] = useState();
+
+  //5월 4일 김성훈 수정   사용안함 삭제 
+  //const [customerDeleteId, setCustomerDeleteId] = useState();
 
   const handleAdd = () => {
     setAdd(!add);
@@ -369,20 +412,29 @@ const CustomerListPage = () => {
       {
         Header: '직급',
         accessor: 'positionname',
-        className: 'cell-center'
+        className: 'cell-center',
       },
 
-      //5월 4일 수정 김성훈 
-      // {
-      //   Header: 'Status',
-      //   accessor: 'status',
-      //   Cell: StatusCell
-      // },
+      //5월 4일 수정 김성훈  직원 직급 수정 및 버튼 
       {
         Header: '변경',
         className: 'cell-center',
         disableSortBy: true,
-        Cell: ({ row }) => ActionCell(row, setCustomer, setCustomerDeleteId, handleClose, theme)
+        Cell: ({ value, row, setValue }) => {
+          const [selectedPosition, setSelectedPosition] = useState(value);
+          
+          const handlePositionChange = (newValue) => {
+            setSelectedPosition(newValue);
+            setValue(newValue, row.index, 'positionname', row.original.positionname);
+          };
+        
+          return (
+            <div>
+              <SelectCell positionname={selectedPosition} onChange={handlePositionChange} />
+              <button onClick={() => handleEdit({ ...row.original, positionname: selectedPosition })}>수정</button>
+            </div>
+          );
+        }
       }
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps

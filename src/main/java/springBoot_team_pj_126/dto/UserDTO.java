@@ -38,10 +38,10 @@ public class UserDTO {
 	private String role;	//ROLE_USER, ROLE_ADMIN, ROLE_MANAGER
 	
 	
-	//김성훈
-	private String deptname;
-	private String positionname;
-	
+	//김성훈   
+	private String deptname;  //팀이름
+	private String positionname;  // 직급이름 
+				
 	
 
 }

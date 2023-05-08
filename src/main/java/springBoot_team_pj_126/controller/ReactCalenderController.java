@@ -24,9 +24,6 @@ import springBoot_team_pj_126.dto.CalenderDTO;
 import springBoot_team_pj_126.service.CalenderServiceImpl;
 
 
-
-
-
 @RestController
 @RequestMapping(value="/members")
 public class ReactCalenderController {
@@ -37,42 +34,31 @@ public class ReactCalenderController {
 	CalenderServiceImpl service;
 	
 	// localhost:8081/calender
-	
+	// 갤린더 리스트 
 	@GetMapping("/calender/{id}")
 	public List<CalenderDTO> calenderList(@PathVariable String id, HttpServletRequest req, Model model)
 		throws ServletException ,IOException{
 		logger.info("<<<url - calenderList()>>>");
-
-		
-		System.out.println(id);
-		
+	
 		return service.listAll(id,req, model);
 		
 	}
-	
+	//갤린더 추가 
 	@PostMapping("/insert")
 	public void calenderInsert(@RequestBody CalenderDTO calenderDTO)
 			throws ServletException ,IOException{
 		logger.info("<<<url - calenderInsert()>>>");
 		
-		
-		System.out.println("id" +calenderDTO.getId() );
-		System.out.println("여기요~" +calenderDTO );
-		
-		
 		service.insertCalender(calenderDTO);
 		System.out.println("calenderInsert  성공!~~");
 	}
-	
+	//갤린더 삭제 
 	@DeleteMapping("/delete/{title}")
 	public void calenderDelete(@PathVariable String title)
 			throws ServletException ,IOException{
 		logger.info("<<<url - calenderDelete()>>>");
 		service.deleteCalender(title);
 		System.out.println("삭제 성공"+ title);
-		
 	}
-	
-	
 	
 }

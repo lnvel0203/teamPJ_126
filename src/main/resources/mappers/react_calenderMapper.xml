@@ -9,12 +9,9 @@
     SELECT * FROM calendar_tbl where id =#{id}
   <!--   SELECT * FROM calendar_tbl where id =#{id} -->
    </select>
-   
-   
+
    <!--  SELECT * FROM calendar_tbl where id = #{id}  -->
-   
-   
-   
+    
    <!-- INSERT INTO calendar_tbl(calenderno,startDate,endDate,title,descriptions,color)
 		VALUES((SELECT NVL(MAX(calenderno) + 1, 1) FROM calendar_tbl),#{startDate},#{endDate},#{title},#{descriptions},#{color}) -->
    

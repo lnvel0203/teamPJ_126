@@ -51,12 +51,7 @@ public class ReactController {
 		return service.listAll(req, model);
 	}
 	
-	@GetMapping("/position")
-	public List<UserDTO> memberPosition(HttpServletRequest req ,Model model)
-			throws ServletException, IOException{
-		System.out.println("컨드롤-  memberPosition");
-		return service.memberPositionList(req, model);
-	}
+
 	
 //	@PostMapping("/editEmployee")
 	@PutMapping("/editEmployee/{no}") //-> @PathVariale로 받는다
@@ -81,6 +76,26 @@ public class ReactController {
 		System.out.println("delete [성공]");
 		
 	}
-
+	
+	//5월 4일 김성훈 추가  리스트 보기 
+	@GetMapping("/position")
+	public List<UserDTO> memberPosition(HttpServletRequest req ,Model model)
+			throws ServletException, IOException{
+		System.out.println("컨드롤-  memberPosition");
+		return service.memberPositionList(req, model);
+	}
+	
+	//5월 8일  리엑트에서 아이디와 포지션 받아오기  포지선 수정 
+	@PutMapping("/editPosition/{id}/{positionname}")
+	public void PositionUpdata(UserDTO dto, Model model) 
+			throws ServletException, IOException{ 
+		System.out.println("컨트롤러 - PositionUdata");
+		String id = dto.getId();
+		String positionname =dto.getPositionname();
+		System.out.println("id확인:  " + id);
+		System.out.println("postitonname: " +positionname );
+		service.editPosition(id ,positionname);
+		System.out.println("update [성공]");
+	}
 	
 }

@@ -20,9 +20,15 @@
 </update>
 
 
-
-
-<!-- 5월 4일 김성훈 추가 직급만들기 -->
+<!-- <update id="editPosition" parameterType="springBoot_team_pj_126.dto.UserDTO">
+  UPDATE employees_tbl SET positionid = (SELECT positionid
+  FROM position_tbl WHERE positionname = #{positionname, jdbcType=VARCHAR})
+  WHERE id = #{id, jdbcType=INTEGER}
+</update>
+ -->
+ 
+ 
+ <!-- 5월 4일 김성훈 추가  직원  리스트  -->
 <select id="memberPosition" resultType="springBoot_team_pj_126.dto.UserDTO">
 	SELECT e.id,e.name,e.hiredate,e.state,d.deptname,p.positionname
 	FROM employees_tbl e
@@ -30,6 +36,12 @@
 	LEFT join position_tbl p on e.positionid = p.positionid
 </select>
 
+<!-- 5월 4일 김성훈 추가 직급  수정 -->
+<update id="editPosition" parameterType="String">
+	UPDATE employees_tbl SET positionid = (SELECT positionid
+	FROM position_tbl WHERE positionname = #{positionname})
+	WHERE id = #{id}
+</update> 
 
 
 </mapper>

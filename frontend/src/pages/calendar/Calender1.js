@@ -159,22 +159,7 @@ function Calendar() {
           alert('일정 추가에 실패했습니다.');
         });
 
-      //#C6D2BE
-
-      // if (title) {
-      //   setEvents([
-      //     ...events,
-      //     {
-      //       title,
-      //       descriptions,
-      //       start: selectInfo.startStr,
-      //       end: selectInfo.endStr,
-      //       color: color.length > 0 ? color[0] : '#C6D2BE',
-      //     },
-      //   ]);
-
-      //   newWindow.close();
-      // }
+      
     });
 
     newWindow.document.getElementById('cancelButton').addEventListener('click', (event) => {

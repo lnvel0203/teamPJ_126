@@ -46,21 +46,9 @@ public class MemberServiceImpl implements MemberService{
 		return list;
 	}
 	
-	//5월 4일 김성훈 추가
-	@Override
-	public List<UserDTO> memberPositionList(HttpServletRequest req, Model model) 
-			throws ServletException, IOException {
-		System.out.println("서비스 - memberPositionList");
-		
-		List<UserDTO> list = mapper.memberPosition();
-		model.addAttribute("list", list);
-		return list;
-	}
-	
 	
 	
 
-	
 	
 	
 	
@@ -99,5 +87,27 @@ public class MemberServiceImpl implements MemberService{
 //		}
 //		return dot;
 //	}
+	
+	
+	
+	//5월 4일 김성훈 추가 직원 리스트 
+	@Override
+	public List<UserDTO> memberPositionList(HttpServletRequest req, Model model) 
+			throws ServletException, IOException {
+		System.out.println("서비스 - memberPositionList");
+		
+		List<UserDTO> list = mapper.memberPosition();
+		model.addAttribute("list", list);
+		return list;
+	}
+	//5월 4일 김성훈 추가  직급 수정 
+	@Override
+	public void editPosition(String id , String positionname) 
+			throws ServletException, IOException {
+		System.out.println("서비스 - editPosition");
+		mapper.editPosition(id,positionname);
+	}
+
+
 
 }
