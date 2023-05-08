@@ -92,7 +92,7 @@ const Address = ({ handlerAddress }) => {
   useEffect(() => {
     const fetchAddresses = async () => {
       try {
-        const response = await axios.get('http://localhost:8081/members/address/test');
+        const response = await axios.get('http://localhost:8081/members');
         setAddressData(response.data);
       } catch (error) {
         console.error('Error fetching addresses:', error);

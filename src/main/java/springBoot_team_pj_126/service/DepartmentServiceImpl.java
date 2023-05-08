@@ -7,42 +7,22 @@ import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import springBoot_team_pj_126.dao.DepartmentMapper;
-import springBoot_team_pj_126.dto.DeptDTO;
+import springBoot_team_pj_126.dto.UserDTO;
 
-
+@Component
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
 
 	
-	@Autowired
-	private DepartmentMapper mapper;
-	
 	@Override
-	public List<DeptDTO> DepartmentList(HttpServletRequest req, Model model) 
+	public List<UserDTO> DepartmentList(HttpServletRequest req, Model model) 
 			throws ServletException, IOException {
 		
-
-		
-		List<DeptDTO> list = mapper.departmentList();
-		System.out.println("서비스 : list : " + list);
-		model.addAttribute("list", list);
-		return list;
-	}
-
-	@Override
-	public void addDepartment(DeptDTO dto) throws ServletException, IOException {
-		
-		mapper.addDeptment(dto);
-		
-		
-		
-		
-		
+		return null;
 	}
 
 	

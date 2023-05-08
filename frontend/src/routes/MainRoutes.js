@@ -117,6 +117,7 @@ const EditorComponent = Loadable(lazy(() => import('pages/document/EditorCompone
 const DocumentForm = Loadable(lazy(() => import('pages/document/Form')));
 const DocumentList = Loadable(lazy(() => import('pages/document/list')));
 const Documentwrite = Loadable(lazy(() => import('pages/document/write')));
+const AttendanceList = Loadable(lazy(() => import('pages/attendance/AttendanceList')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -301,6 +302,11 @@ const MainRoutes = {
                   //2023-05-04 추가
                   path: 'Personnelevaluation',
                   element: <Personnelevaluation />
+                },
+                {
+                  //2023-05-04 추가
+                  path: 'AttendanceList',
+                  element: <AttendanceList />
                 }
               ]
             }

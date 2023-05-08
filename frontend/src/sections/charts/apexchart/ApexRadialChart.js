@@ -23,7 +23,7 @@ const redialBarChartOptions = {
       endAngle: 270,
       hollow: {
         margin: 5,
-        size: '30%',
+        size: '20%',
         background: 'transparent',
         image: undefined
       },
@@ -32,19 +32,21 @@ const redialBarChartOptions = {
           show: false
         },
         value: {
-          show: false
+          show: true,
+          fontSize: '16px',
+          color: '#888'
         }
       }
     }
   },
-  labels: ['Vimeo', 'Messenger', 'Facebook', 'LinkedIn'],
+  labels: ['지각', '조기퇴근', '결근', '미체크'],
   legend: {
     show: true,
     floating: true,
-    fontSize: '16px',
+    fontSize: '12px',
     position: 'left',
-    offsetX: 0,
-    offsetY: 15,
+    offsetX: 5,
+    offsetY: -12,
     labels: {
       useSeriesColors: true
     },
@@ -85,7 +87,7 @@ const ApexRedialBarChart = () => {
   const line = theme.palette.divider;
   const grey200 = theme.palette.grey[200];
 
-  const [series] = useState([76, 67, 61, 90]);
+  const [series] = useState([4, 5, 1, 12]);
   const [options, setOptions] = useState(redialBarChartOptions);
 
   const secondary = theme.palette.primary[700];

@@ -143,6 +143,7 @@ public class CheckServiceImpl implements CheckService {
 	// 근무 체크 메서드
 	@Override
 	public void attendenceCheck(String id, String status){
+		System.out.println("status: " + status);
 		
 	    // switch-case : 근무 체크 버튼 선택 판별
 	    switch (status) {
@@ -168,8 +169,11 @@ public class CheckServiceImpl implements CheckService {
 	        	mapper.businessTrip(id);
 	            break;
 	        case "rest":		// 휴식
+	        	System.out.println("휴식?");
 	        	mapper.rest(id);
+	        	break;
 	        case "return-work":	// 복귀
+	        	System.out.println("복귀?");
 	        	mapper.returnWork(id);
 	            break;
 	        default:

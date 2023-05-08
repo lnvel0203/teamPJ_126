@@ -18,12 +18,16 @@ import {
 // ==============================|| INVOICE - ICONS ||============================== //
 
 const InvoiceCard = () => {
+  const handleClick = (message) => {
+    alert(message);
+  };
+
   return (
-    <MainCard sx={{ height: '100%' }}>
-      <Grid container spacing={3}>
+    <MainCard sx={{ height: '100%' }} title="근무 체크">
+      <Grid container spacing={2}>
         <Grid item xs={4} sm={2} lg={6}>
-          <MainCard content={false} boxShadow sx={{ py: 2.5 }}>
-            <Stack alignItems="center" spacing={2}>
+          <MainCard content={false} boxShadow sx={{ py: 2.5 }} onClick={() => handleClick('All Invoices')}>
+            <Stack alignItems="center" spacing={1}>
               <Avatar size="md" type="filled">
                 <FileTextFilled />
               </Avatar>
@@ -34,8 +38,8 @@ const InvoiceCard = () => {
           </MainCard>
         </Grid>
         <Grid item xs={4} sm={2} lg={6}>
-          <MainCard boxShadow>
-            <Stack alignItems="center" spacing={2}>
+          <MainCard boxShadow onClick={() => handleClick('Reports')}>
+            <Stack alignItems="center" spacing={1}>
               <Avatar size="md" type="filled" color="info">
                 <ReconciliationFilled />
               </Avatar>
@@ -46,8 +50,8 @@ const InvoiceCard = () => {
           </MainCard>
         </Grid>
         <Grid item xs={4} sm={2} lg={6}>
-          <MainCard boxShadow>
-            <Stack alignItems="center" spacing={2}>
+          <MainCard boxShadow onClick={() => handleClick('Paid')}>
+            <Stack alignItems="center" spacing={1}>
               <Avatar size="md" type="filled" color="success">
                 <DollarCircleFilled />
               </Avatar>
@@ -58,8 +62,8 @@ const InvoiceCard = () => {
           </MainCard>
         </Grid>
         <Grid item xs={4} sm={2} lg={6}>
-          <MainCard boxShadow>
-            <Stack alignItems="center" spacing={2}>
+          <MainCard boxShadow onClick={() => handleClick('Pending')}>
+            <Stack alignItems="center" spacing={1}>
               <Avatar size="md" type="filled" color="warning">
                 <HourglassFilled />
               </Avatar>
@@ -70,8 +74,8 @@ const InvoiceCard = () => {
           </MainCard>
         </Grid>
         <Grid item xs={4} sm={2} lg={6}>
-          <MainCard boxShadow>
-            <Stack alignItems="center" spacing={2}>
+          <MainCard boxShadow onClick={() => handleClick('Cancelled')}>
+            <Stack alignItems="center" spacing={1}>
               <Avatar size="md" type="filled" color="error">
                 <CloseCircleFilled />
               </Avatar>
@@ -82,8 +86,8 @@ const InvoiceCard = () => {
           </MainCard>
         </Grid>
         <Grid item xs={4} sm={2} lg={6}>
-          <MainCard boxShadow>
-            <Stack alignItems="center" spacing={2}>
+          <MainCard boxShadow onClick={() => handleClick('Draft')}>
+            <Stack alignItems="center" spacing={1}>
               <Avatar size="md" type="filled">
                 <ShoppingFilled />
               </Avatar>

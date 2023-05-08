@@ -17,6 +17,7 @@ const Form = ({ documentType, author, retentionPeriod, securityLevel, approvers 
     console.log(formData);
     // Add logic to send formData to server using fetch or Axios
   };
+
   return (
     <form onSubmit={handleSubmit}>
       <div>
