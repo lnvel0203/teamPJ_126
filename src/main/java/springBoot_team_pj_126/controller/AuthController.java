@@ -41,18 +41,15 @@ public class AuthController {
    }
    
    
-   
    @PostMapping("/register")
-   public ResponseEntity<User> register(@RequestBody SignDTO signUpDTO) {
+   public String register(@RequestBody SignDTO signUpDTO) {
       
       System.out.println("<<< register >>>");
       // 엔티티를 생성할 때 새 엔티티를 찾을 수 있는 URL과 함께 201 HTTP 코드를 반환하는 것이 가장 좋다.
-      User user = userService.register(signUpDTO);
+      userService.register(signUpDTO);
       //회원가입을 할때도 토큰을 발생시킨다.
       //user.setToken(userAuthProvider.createToken(user.getLogin()));
-      return ResponseEntity.created(URI.create("/users/" + user.getId()))
-            .body(user);
-      
+      return "1";
    }
    
    
