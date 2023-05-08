@@ -1,12 +1,18 @@
-.tb-1,
-.tb-2 {
+.container {
+  margin: 0 auto;
+  padding: 20px;
+  max-width: 900px;
+}
+
+table {
   border-collapse: collapse;
   margin-top: 20px;
   width: 100%;
   max-width: 900px;
 }
 
-.write-td {
+th,
+td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: left;
@@ -14,7 +20,13 @@
   color: black;
 }
 
-.write-h1 {
+th {
+  background-color: #f2f2f2;
+  font-size: 11px;
+  color: #000;
+}
+
+h1 {
   font-size: 24px;
   font-weight: bold;
   color: #000;
@@ -31,7 +43,7 @@
   width: 80px;
 }
 
-.tb-3 {
+.tb-2 {
   height: 250px;
 }
 .tr-4 {
@@ -61,18 +73,4 @@
 }
 .selected {
   color: rgb(38, 0, 255);
-}
-.col-1,
-.col-2,
-.col-3,
-.col-4,
-.col-5,
-.tr-1,
-.tr-3,
-.tr-4 {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-  font-weight: bold;
-  color: black;
 }
