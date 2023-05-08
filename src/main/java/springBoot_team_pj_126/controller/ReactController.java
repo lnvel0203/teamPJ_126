@@ -93,7 +93,7 @@ public class ReactController {
 			throws ServletException, IOException{ 
 		System.out.println("컨트롤러 - PositionUdata");
 		String id = dto.getId();
-		String positionname =dto.getPositionname();
+		String positionname =dto.getPositionName();
 		System.out.println("id확인:  " + id);
 		System.out.println("postitonname: " +positionname );
 		service.editPosition(id ,positionname);
