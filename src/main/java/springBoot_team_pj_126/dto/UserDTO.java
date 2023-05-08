@@ -32,12 +32,9 @@ public class UserDTO {
 	private String salaryId;
 	private String thingNo;
 	private String role;	//ROLE_USER, ROLE_ADMIN, ROLE_MANAGER
-	
-	
-	//김성훈
-	private String deptname;
-	private String positionname;
-	
+	private String DeptName;
+	private String stemp;
+	private String positionName;
 	
 
 }

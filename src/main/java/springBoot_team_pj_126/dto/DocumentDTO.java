@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 
@@ -23,4 +24,12 @@ public class DocumentDTO {
     private Date draftDate;
     private String docType;
     private String docState;
+    private int firstApproverNo;
+    private int secondApproverNo;
+    private int thirdApproverNo;
+    private int fourthApproverNo;
+    
+    @Lob
+    private byte[] file;
+    
 }
