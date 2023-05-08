@@ -14,8 +14,6 @@ public interface DocumentMapper {
 	
 	public List<UserDTO> approverList();
 	
-	public void addDocument(DocumentDTO dto);
-	
 }
 
 

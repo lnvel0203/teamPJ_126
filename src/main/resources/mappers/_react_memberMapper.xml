@@ -30,7 +30,7 @@
  
  <!-- 5월 4일 김성훈 추가  직원  리스트  -->
 <select id="memberPosition" resultType="springBoot_team_pj_126.dto.UserDTO">
-	SELECT e.id,e.name,e.hiredate,e.state,d.deptname,p.positionname
+	SELECT e.id,e.name,e.hiredate,e.state,d.deptName,p.positionName
 	FROM employees_tbl e
 	LEFT join department_tbl d on e.deptid = d.deptid
 	LEFT join position_tbl p on e.positionid = p.positionid
@@ -39,7 +39,7 @@
 <!-- 5월 4일 김성훈 추가 직급  수정 -->
 <update id="editPosition" parameterType="String">
 	UPDATE employees_tbl SET positionid = (SELECT positionid
-	FROM position_tbl WHERE positionname = #{positionname})
+	FROM position_tbl WHERE positionName = #{positionName})
 	WHERE id = #{id}
 </update> 
 

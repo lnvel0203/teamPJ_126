@@ -20,9 +20,7 @@ public interface DocumentService {
 	
 	public List<UserDTO> approverList(HttpServletRequest req, Model model) 
 			throws ServletException, IOException;
-
-	public void addDocument(DocumentDTO dto) throws ServletException, IOException;
-	
+		
 //	public void insertMember(MemberDTO dto) throws ServletException, IOException;
 //	
 //	public void updateMember(MemberDTO dto) throws ServletException, IOException;

@@ -51,6 +51,16 @@ public class DocumentController {
 		return service.approverList(req, model);
 	}
 	
+//	//RESTAPI를 쓰고있다. ? 이 매핑이 restAPI인가?
+//	@PostMapping("/join")
+//	public void memberInsert(@RequestBody MemberDTO member) throws ServletException, IOException{
+//		//리스트 데이터를 넘긴다. -- 리액트에 넘긴다, 주소는 jsp나 타입리프에 넘기는것이다. 지금은 리액트 화면에 넘기기위해 데이터만 넘긴다.
+//		System.out.println("컨트롤러 - insert");
+//		mservice.insertMember(member);
+//		System.out.println("insert [성공]");
+//	}
+//	
+	
 	@PostMapping("/addDocument")
 	public void addDocument(@RequestBody DocumentDTO dto) throws ServletException, IOException{
 		System.out.println(dto);

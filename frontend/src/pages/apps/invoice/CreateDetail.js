@@ -12,9 +12,12 @@ const CreateDetail = ({ addId }) => {
     addId: PropTypes.string
   };
 
+  // 돈 포맷
+  const formatter = new Intl.NumberFormat('ko-KR');
+
   // 정보
   const [infoId, setInfoId] = useState(0);
-  const [empId, setEmpId] = useState('');
+  const [id, setId] = useState('');
   const [baseSalary, setBaseSalary] = useState(0);
   const [regularWeeklyHours, setRegularWeeklyHours] = useState(0);
 
@@ -23,6 +26,15 @@ const CreateDetail = ({ addId }) => {
 
   // 주말 총 근무 시간
   const [weekendWorkingHours, setWeekendWorkingHours] = useState(0);
+
+  // 연장 근무 Form value
+  const [overtimePayForm, setOvertimePayForm] = useState(0);
+  // 주말 근무 Form value
+  const [weekendWorkPayForm, setWeekendWorkPayForm] = useState(0);
+  // 주휴수당
+  const [restDayPayForm, setRestDayPayForm] = useState(0);
+  // 상여금
+  const [bonusForm, setBonusForm] = useState(0);
 
   useEffect(() => {
     async function fetchData() {
@@ -33,7 +45,7 @@ const CreateDetail = ({ addId }) => {
         }
         const response = await axios.get(`http://localhost:8081/members/salaryCreateDetail?id=${addId}`);
         setInfoId(response.data.infoId);
-        setEmpId(response.data.empId);
+        setId(response.data.id);
         setBaseSalary(response.data.baseSalary);
         setRegularWeeklyHours(response.data.regularWeeklyHours);
       } catch (error) {
@@ -60,7 +72,9 @@ const CreateDetail = ({ addId }) => {
   // 연장근무 & 주말 근무 계산
   // ============================================================================
   // 연장근무 시간
-  const overtimeHours = weeklyWorkingHours - regularWeeklyHours;
+  const overtimeHours = weeklyWorkingHours <= regularWeeklyHours ? 0 : Math.round(weeklyWorkingHours - regularWeeklyHours);
+  console.log('#' + weeklyWorkingHours);
+  console.log('#' + regularWeeklyHours);
   // 월 근무 시간
   const monthlyWorkingHours = weeklyWorkingHours * 4;
   // 시급
@@ -83,16 +97,29 @@ const CreateDetail = ({ addId }) => {
   //   return restDayPay;
   // }
 
+  const [totalAmount, setTotalAmount] = useState(0);
+
+  useEffect(() => {
+    const calculateTotalAmount = () => {
+      const total = overtimePay + weekendWorkPay + restDayPayForm + bonusForm;
+      setTotalAmount(total);
+    };
+
+    calculateTotalAmount();
+  }, [overtimePay, weekendWorkPay, restDayPayForm, bonusForm]);
+
   return (
     <MainCard title="급여 상세 내역">
       <Grid container spacing={2} alignItems="center">
-        {console.log(infoId + empId + baseSalary + regularWeeklyHours)}
+        {console.log(infoId + id + baseSalary + regularWeeklyHours)}
+        {console.log(overtimePayForm + weekendWorkPayForm + restDayPayForm + bonusForm)}
+
         {/* 월급 시작 */}
         <Grid item xs={12}>
           <MainCard>
             <Stack spacing={0.5}>
               <InputLabel>월급</InputLabel>
-              <TextField fullWidth value={baseSalary} />
+              <TextField fullWidth value={formatter.format(baseSalary)} />
             </Stack>
           </MainCard>
         </Grid>
@@ -105,8 +132,11 @@ const CreateDetail = ({ addId }) => {
               <Grid item xs={12} lg={3}>
                 <Stack spacing={0.5}>
                   <InputLabel>연장 근로 수당</InputLabel>
-                  <TextField fullWidth value={overtimePay} />
-                  {/* <FormHelperText>{'시급: ' + hourlyWage + '원 | 연장 근무 시간: ' + overtimeHours + '시간'}</FormHelperText> */}
+                  <TextField
+                    fullWidth
+                    value={formatter.format(overtimePay)}
+                    onChange={(e) => setOvertimePayForm(Number(e.target.value) || 0)}
+                  />
                   <FormHelperText>{hourlyWage + ' * ' + overtimeHours + ' * ' + overtimeRate + ' = ' + overtimePay}</FormHelperText>
                 </Stack>
               </Grid>
@@ -116,7 +146,11 @@ const CreateDetail = ({ addId }) => {
               <Grid item xs={12} lg={3}>
                 <Stack spacing={0.5}>
                   <InputLabel>주말 근로 수당</InputLabel>
-                  <TextField fullWidth value={weekendWorkPay} />
+                  <TextField
+                    fullWidth
+                    value={formatter.format(weekendWorkPay)}
+                    onChange={(e) => setWeekendWorkPayForm(Number(e.target.value) || 0)}
+                  />
                   <FormHelperText>
                     {hourlyWage + ' * ' + weekendWorkingHours + ' * ' + overtimeRate + ' = ' + weekendWorkPay}
                   </FormHelperText>
@@ -128,7 +162,11 @@ const CreateDetail = ({ addId }) => {
               <Grid item xs={12} lg={3}>
                 <Stack spacing={0.5}>
                   <InputLabel>주휴 수당</InputLabel>
-                  <TextField fullWidth />
+                  <TextField
+                    fullWidth
+                    value={formatter.format(formatter.format(restDayPayForm))}
+                    onChange={(e) => setRestDayPayForm(Number(e.target.value) || 0)}
+                  />
                   <FormHelperText>Please enter your contact</FormHelperText>
                 </Stack>
               </Grid>
@@ -138,7 +176,7 @@ const CreateDetail = ({ addId }) => {
                 <Stack spacing={0.5}>
                   {/* TODO - 상여금 유효성 검사 하기(숫자만 입력 가능하게) */}
                   <InputLabel>상여금</InputLabel>
-                  <TextField fullWidth />
+                  <TextField fullWidth value={formatter.format(bonusForm)} onChange={(e) => setBonusForm(Number(e.target.value) || 0)} />
                   <FormHelperText>Please enter your contact</FormHelperText>
                 </Stack>
               </Grid>
@@ -156,8 +194,7 @@ const CreateDetail = ({ addId }) => {
               <Grid item xs={12} lg={4}>
                 <Stack spacing={0.5}>
                   <InputLabel>총액</InputLabel>
-                  <TextField fullWidth />
-                  <FormHelperText>Please enter your contact</FormHelperText>
+                  <TextField fullWidth value={formatter.format(totalAmount)} />
                 </Stack>
               </Grid>
             </Grid>

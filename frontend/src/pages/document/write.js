@@ -2,6 +2,9 @@ import React, { useState,useEffect } from 'react';
 import './DocumentComponent.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 const DocumentWritePage = () => {
   
   const [documentType,setDocumentType] = useState('');
@@ -49,77 +52,6 @@ const DocumentWritePage = () => {
     setApprover(storedApprover);
     console.log(storedApprover)
   }, [localStorage.getItem('approver')]);
-
-  useEffect(() => {
-    const storedApprover = JSON.parse(localStorage.getItem('approver')) || [];
-    setApprover(storedApprover);
-    const handleStorageChange = () => {
-      const storedApprover = JSON.parse(localStorage.getItem('approver')) || [];
-      setApprover(storedApprover);
-    };
-    window.addEventListener('storage', handleStorageChange);
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, []);
-
-  const [value, setValue] = useState('');
-
-  const modules = {
-    toolbar: [
-      [{ font: [] }],
-      [{ header: [1, 2, 3, 4, false] }],
-      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-      [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
-      ['link', 'image'],
-      [{ align: [] }, { color: [] }, { background: [] }],
-      ['clean']
-    ]
-  };
-
-  const formats = [
-    'font',
-    'header',
-    'bold',
-    'italic',
-    'underline',
-    'strike',
-    'blockquote',
-    'list',
-    'bullet',
-    'indent',
-    'link',
-    'image',
-    'align',
-    'color',
-    'background'
-  ];
-
-  const handleSubmit = () => {
-    const addDocument = {
-        
-      //아이디?
-      id:id,
-      documentType : documentType,
-      author : author,
-      retentionPeriod: retentionPeriod,
-      securityLevel: securityLevel,
-    };
-  
-    console.log('insert 호출!!', addDocument);
-  
-  
-    axios.post(API_BASE_URL + "/addDocument", addDocument)
-      .then(response => {
-        console.log(response.data);
-        alert('일정이 추가되었습니다.');
-      })
-      .catch(error => {
-        console.error(error);
-        alert('일정 추가에 실패했습니다.');
-      });
-  };
-
   
     return (
     

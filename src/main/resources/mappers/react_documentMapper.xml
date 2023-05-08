@@ -17,12 +17,6 @@
 		AND e.POSITIONID = p.POSITIONID
 </select>
 
-<insert id="addDocument" parameterType="springBoot_team_pj_126.dto.DocumentDTO">
-	INSERT INTO DEPARTMENT_TBL values(#{deptid}, #{deptname}, default, null)
-</insert>
-
-
-
 <!-- <insert id="insertMember" parameterType="com.example.react.dto.MemberDTO">
 	INSERT INTO mvc_member_tbl values((select nvl(max(id)+1,1)from mvc_member_tbl), #{password}, #{username},#{age},#{email},#{address},#{salary})
 </insert>	

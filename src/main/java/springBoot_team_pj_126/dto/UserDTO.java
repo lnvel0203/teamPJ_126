@@ -36,6 +36,7 @@ public class UserDTO {
 	private String salaryId;
 	private String thingNo;
 	private String role;	//ROLE_USER, ROLE_ADMIN, ROLE_MANAGER
+	
 	private String deptName;
 	private String stemp;
 	private String positionName;
