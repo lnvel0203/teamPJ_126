@@ -14,7 +14,8 @@ import { TwitterCircleFilled, ClockCircleFilled, BugFilled, MobileFilled, Warnin
 
 const TasksCard = () => (
   <MainCard
-    title="Tasks"
+    sx={{ height: '100%' }}
+    title="근무 현황"
     content={false}
     secondary={
       <Link component={RouterLink} to="#" color="primary">

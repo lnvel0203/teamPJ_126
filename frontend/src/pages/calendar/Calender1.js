@@ -15,11 +15,19 @@ function Calendar() {
 
   useEffect(() => {
     const fetchCalendars = async () => {
+
+      // let headers = {};
+
+      // headers = {
+      //   Authorization: 'Bearer ${getAuthToken()'
+      // };
       try {
         // const API_BASE_URL = 'http://localhost:8081/members/delete';
         // const deletes = clickInfo.event.title;
         // console.log('deletes 호출!!' ,deletes)
         // axios.delete(API_BASE_URL+"/"+ deletes)
+
+
         const response = await axios.get(API_BASE_URL+"/"+id);
         
         console.log(response.data); 

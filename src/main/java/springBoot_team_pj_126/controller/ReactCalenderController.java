@@ -44,15 +44,12 @@ public class ReactCalenderController {
 		
 	}
 	
+
+	
 	@PostMapping("/insert")
 	public void calenderInsert(@RequestBody CalenderDTO calenderDTO)
 			throws ServletException ,IOException{
 		logger.info("<<<url - calenderInsert()>>>");
-		
-		
-		System.out.println("id" +calenderDTO.getId() );
-		System.out.println("여기요~" +calenderDTO );
-		
 		
 		service.insertCalender(calenderDTO);
 		System.out.println("calenderInsert  성공!~~");
@@ -67,6 +64,17 @@ public class ReactCalenderController {
 		
 	}
 	
-	
+	@GetMapping("/calender/getcontent/{id}")
+	public String calenderContent(@PathVariable String id)
+		throws ServletException ,IOException{
+		logger.info("<<<url - calenderContent()>>>");
+
+		
+		System.out.println(id);
+		String content = service.selectCalender(id);
+		System.out.println(content);
+		return content;
+		
+	}
 	
 }

@@ -1,11 +1,11 @@
+// AddApprover.jsx
+
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router';
 
-const AddApprover = ({ onAddApprovers }) => {
-  const [approvers, setApprovers] = useState([false]);
-  const [value, setValue] = useState([]);
-  const navigate = useNavigate();
+const AddApprover = () => {
+  const [approvers, setApprovers] = useState([]);
+  const [selectedApprovers, setSelectedApprovers] = useState([]);
 
   const fetchData = async () => {
     try {
@@ -27,13 +27,13 @@ const AddApprover = ({ onAddApprovers }) => {
   };
 
   const handleRegister = () => {
-    const selectedApprovers = approvers.filter((approver) => approver.isChecked);
+    setSelectedApprovers(approvers.filter((approver) => approver.isChecked));
     console.log(selectedApprovers)
-    onAddApprovers(selectedApprovers);
-    setValue(selectedApprovers);
-    navigate(`Documentwrite/${value}`);
-    window.close();
+    localStorage.setItem("approver",JSON.stringify(selectedApprovers));
+    console.log('로컬',localStorage.getItem("approver"))
   };
+
+  
   
 
   return (
@@ -51,7 +51,6 @@ const AddApprover = ({ onAddApprovers }) => {
               <p>{approver.name}</p>
               <p>{approver.deptName}</p>
               <p>{approver.positionName}</p>
-              
             </div>
           </li>
         ))}

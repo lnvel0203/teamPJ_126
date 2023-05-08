@@ -41,4 +41,10 @@
       FROM calendar_tbl
       WHERE title = #{title}
    </select>
+   
+   <select id="getContent" parameterType="String" resultType="springBoot_team_pj_126.dto.CalenderDTO">
+      SELECT descriptions
+      FROM calendar_tbl
+      WHERE id = #{id}
+   </select>
 </mapper>

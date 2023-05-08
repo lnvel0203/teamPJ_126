@@ -8,14 +8,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import springBoot_team_pj_126.dao.DepartmentMapper;
 import springBoot_team_pj_126.dto.DeptDTO;
 
-@Component
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
 
@@ -26,10 +24,19 @@ public class DepartmentServiceImpl implements DepartmentService {
 	public List<DeptDTO> DepartmentList(HttpServletRequest req, Model model) 
 			throws ServletException, IOException {
 		System.out.println("<<< 서비스 - 부서리스트 >>>");
-		
+
 		List<DeptDTO> list = mapper.departmentList();
-		
+	
 		return list;
+	}
+
+	@Override
+	public void addDepartment(DeptDTO dto) 
+			throws ServletException, IOException {
+		System.out.println("<<< 서비스 - 부서추가 >>>");
+		
+		mapper.addDeptment(dto);
+		
 	}
 
 	

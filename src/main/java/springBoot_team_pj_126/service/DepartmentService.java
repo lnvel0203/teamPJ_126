@@ -11,8 +11,11 @@ import org.springframework.ui.Model;
 
 import springBoot_team_pj_126.dto.DeptDTO;
 
+
 public interface DepartmentService {
 
 	public List<DeptDTO> DepartmentList(HttpServletRequest req, Model model) 
 			throws ServletException, IOException;
+	
+	public void addDepartment(DeptDTO dto) throws ServletException, IOException;
 }

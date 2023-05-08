@@ -61,7 +61,7 @@ const applications = {
       id: 'chat',
       title: <FormattedMessage id="chat" />,
       type: 'item',
-      url: 'http://192.168.0.27:5000/',
+      url: 'http://192.168.0.28:5000/',
       icon: icons.MessageOutlined,
       breadcrumbs: false,
       external: true,
@@ -85,15 +85,14 @@ const applications = {
           id: 'document-write',
           title: <FormattedMessage id="작성" />,
           type: 'item',
-          url: '/apps/document/documentWrite',
+          url: '/apps/document/documentWrite'
         },
         {
           id: 'document-list',
           title: <FormattedMessage id="목록" />,
           type: 'item',
           url: '/apps/document/documentList'
-        },
-        
+        }
       ]
     },
     // {
@@ -106,7 +105,6 @@ const applications = {
 
     // 전승연(수정 - 230428)
     {
-      
       id: 'customer',
       title: <FormattedMessage id="customer" />,
       type: 'item',
@@ -129,6 +127,7 @@ const applications = {
           type: 'item',
           url: '/apps/invoice/create'
         },
+
         {
           id: 'edit',
           title: <FormattedMessage id="급여수정" />,
@@ -150,7 +149,8 @@ const applications = {
           type: 'item',
           url: '/apps/profiles/user/personal',
           breadcrumbs: false
-        }
+
+        },
       ]
     }, // 여기까지 변겅
 
@@ -186,6 +186,13 @@ const applications = {
           title: <FormattedMessage id="인사평가" />,
           type: 'item',
           url: '/apps/adminperson-customer/Personnelevaluation'
+        },
+        {
+          // 근태 관리
+          id: 'AttendanceList',
+          title: <FormattedMessage id="근태 관리" />,
+          type: 'item',
+          url: '/apps/adminperson-customer/AttendanceList'
         }
       ]
     }

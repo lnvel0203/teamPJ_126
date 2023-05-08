@@ -60,7 +60,8 @@ public class ReactController {
 
 	//주의 사항 - 엑소시오 의 능력과 restAPI에 대해서 알아보기
 	@DeleteMapping("/deleteEmployee/{id}") 
-	public void memberDelete(@PathVariable String id) throws ServletException, IOException{
+	public void memberDelete(@PathVariable String id) 
+			throws ServletException, IOException{
 		
 		System.out.println("컨트롤러 - delete");
 		service.deleteMember(id);
