@@ -415,7 +415,7 @@ const CustomerListPage = () => {
         className: 'cell-center',
       },
 
-      //5월 4일 수정 김성훈  직원 직급 수정 및 버튼 
+      //5월 4일 수정 김성훈  직원 직급 수정 및 버튼 만들었습니다!
       {
         Header: '변경',
         className: 'cell-center',
