@@ -65,6 +65,7 @@ import { renderFilterTypes, GlobalFilter } from 'utils/react-table';
 function SelectCell({ positionname, onChange }) {
   return (
     <select value={positionname} onChange={e => onChange(e.target.value)}>
+      <option value="선택">선택</option>
       <option value="사원">사원</option>
       <option value="주임">주임</option>
       <option value="대리">대리</option>
