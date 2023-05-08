@@ -26,6 +26,8 @@ const CustomLocaleText = Loadable(lazy(() => import('pages/apps/adminperson-cust
 const CustomerListPage = Loadable(lazy(() => import('pages/apps/adminperson-customer/departloaletext')));
 const HierarchyLocaleText = Loadable(lazy(() => import('pages/apps/adminperson-customer/hierarchylocaletext')));
 const Personnelevaluation = Loadable(lazy(() => import('pages/apps/adminperson-customer/Personnelevaluation')));
+const DepartDepartments = Loadable(lazy(() => import('pages/apps/adminperson-customer/departdepartments')));
+
 
 const AppKanban = Loadable(lazy(() => import('pages/apps/kanban')));
 const AppKanbanBacklogs = Loadable(lazy(() => import('sections/apps/kanban/Backlogs')));
@@ -302,6 +304,11 @@ const MainRoutes = {
                   //2023-05-04 추가
                   path: 'Personnelevaluation',
                   element: <Personnelevaluation />
+                },
+                {
+                  //2023-05-08 추가
+                  path: 'DepartDepartments',
+                  element: <DepartDepartments />
                 },
                 {
                   //2023-05-04 추가
