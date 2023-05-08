@@ -238,7 +238,7 @@ const ActionCell = (row, setCustomer, setCustomerDeleteId, handleClose, theme) =
           {collapseIcon}
         </IconButton>
       </Tooltip>
-      <Tooltip title="Edit">
+      <Tooltip title="수정">
         <IconButton
           color="primary"
           onClick={(e) => {
@@ -294,7 +294,7 @@ const CustomerListPage = () => {
   // 서버에서 회원 정보를 패치해옴
   const fetchUserData = useCallback(async () => {
     try {
-      const response = await axios.get('http://localhost:8081/'); //컨트롤러 주소
+      const response = await axios.get('http://localhost:8081/department'); //컨트롤러 주소
       setUserData(response.data);
     } catch (error) {
       console.error(error);
@@ -332,22 +332,22 @@ const CustomerListPage = () => {
       },
       {
         Header: '번호',
-        accessor: 'id',
+        accessor: 'deptid', // 테이블 컬럼명
         className: 'cell-center'
       },
       {
         Header: '부서이름',
-        accessor: 'fatherName',
+        accessor: 'deptname',
         className: 'cell-center'
       },
       {
         Header: '부서장',
-        accessor: 'birth',
+        accessor: 'deptreadername',
         className: 'cell-center'
       },
       {
         Header: '설립일',
-        accessor: 'contact',
+        accessor: 'deptdate',
         className: 'cell-center'
       },
       {
