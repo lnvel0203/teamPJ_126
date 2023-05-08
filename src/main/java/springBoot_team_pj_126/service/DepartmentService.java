@@ -9,13 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.ui.Model;
 
-import springBoot_team_pj_126.dto.DeptDTO;
 import springBoot_team_pj_126.dto.UserDTO;
 
 public interface DepartmentService {
 
-	public List<DeptDTO> DepartmentList(HttpServletRequest req, Model model) 
+	public List<UserDTO> DepartmentList(HttpServletRequest req, Model model) 
 			throws ServletException, IOException;
-	
-	public void addDepartment(DeptDTO dto) throws ServletException, IOException;
 }

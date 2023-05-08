@@ -6,6 +6,21 @@
      
 <mapper namespace="springBoot_team_pj_126.dao.SalaryMapper">
 
+	<select id="salaryList" resultType="springBoot_team_pj_126.dto.SalaryDTO">
+	      SELECT s.salaryId, e.name, s.basicSalary, s.paymentStatus, s.payDay 
+	      FROM SALARY_TBL s 
+	      INNER JOIN employees_tbl e ON e.no = s.no 
+	      WHERE s.no = 1
+	</select>
+	
+	<!-- ========================================================================= -->
+	<!-- [급여 지급에 필요한 메서드] -->
+	<select id="salaryCreateDetail" parameterType="String" resultType="springBoot_team_pj_126.dto.SalaryInfoDTO">
+		SELECT INFOID, EMPID, BASESALARY, REGULARWEEKLYHOURS
+		FROM SALARY_INFO_TBL
+		WHERE EMPID = #{id}
+	</select>
+
 <select id="salaryList" resultType="springBoot_team_pj_126.dto.SalaryDTO">
 
    SELECT * FROM salary_TBL where id =#{id}
@@ -21,9 +36,6 @@
       INNER JOIN employees_tbl e ON e.no = s.no 
       WHERE s.no = 1
 </select> -->
-
-
-
 
  <insert id="insertSalary" parameterType="com.example.react.dto.SalaryDTO">
 	INSERT INTO salary_TBL values((select nvl(max(salaryId)+1,1)from salary_TBL), #{basicSalary}, #{name},#{payDay},#{paymentstatus},#{taxtionId},#{nontaxtionId},#{taxId},,#{overtimePay})
@@ -50,4 +62,57 @@
 
  -->
 
+	<!-- 주말 제외 총 근무 시간 -->
+	<select id="weeklyWorkingHours" parameterType="String" resultType="int">
+	<![CDATA[
+		SELECT
+		    COALESCE(SUM(NVL(start_work_duration, 0) - NVL(go_out_duration, 0)), 0) AS "Total_Work_Hours"
+		FROM
+		    (
+		        SELECT
+		            CASE
+		                WHEN statusName = 'start-work' THEN duration
+		                ELSE NULL
+		            END AS start_work_duration,
+		            CASE
+		                WHEN statusName = 'go-out' THEN duration
+		                ELSE NULL
+		            END AS go_out_duration,
+		            startTime
+		        FROM
+		            work_records_tbl
+		        WHERE
+		            employeeId = #{id}
+		    )
+		WHERE
+		    TO_CHAR(startTime, 'DY', 'NLS_DATE_LANGUAGE = AMERICAN') NOT IN ('SAT', 'SUN')
+      ]]>
+	</select>
+	
+	<!-- 주말 총 근무 시간 -->
+	<select id="weekendWorkingHours" parameterType="String" resultType="int">
+	<![CDATA[
+		SELECT
+		    COALESCE(SUM(NVL(start_work_duration, 0) - NVL(go_out_duration, 0)), 0) AS "Total_Work_Hours"
+		FROM
+		    (
+		        SELECT
+		            CASE
+		                WHEN statusName = 'start-work' THEN duration
+		                ELSE NULL
+		            END AS start_work_duration,
+		            CASE
+		                WHEN statusName = 'go-out' THEN duration
+		                ELSE NULL
+		            END AS go_out_duration,
+		            startTime
+		        FROM
+		            work_records_tbl
+		        WHERE
+		            employeeId = #{id}
+		    )
+		WHERE
+		    TO_CHAR(startTime, 'DY', 'NLS_DATE_LANGUAGE = AMERICAN') IN ('SAT', 'SUN')
+      ]]>
+	</select>
 </mapper>

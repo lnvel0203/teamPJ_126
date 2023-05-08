@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="springBoot_team_pj_126.dao.AttendanceMapper">
+
+   <!-- ========================================================================= -->
+   <!-- [근무 현황 & 근무 체크] -->
+   
+   <!-- 근무 현황 리스트 -->
+   <select id="statusList" parameterType="String" resultType="java.util.Map">
+      SELECT wr.statusName,
+            wr.startTime
+      FROM WORK_RECORDS_TBL wr
+      JOIN EMPLOYEES_TBL e 
+      ON wr.employeeId = e.id
+      WHERE e.id = #{id}
+      AND TO_DATE(wr.startTime, 'YYYY-MM-DD') = TO_DATE(SYSDATE , 'YYYY-MM-DD')
+      ORDER BY wr.startTime
+   </select>
+
+   <!-- 근무 체크 -->
+   <insert id="workCheck" parameterType="java.util.Map">
+      INSERT INTO work_records_tbl (recordId, statusName, employeeId, startTime, endTime, duration)
+      VALUES ((SELECT nvl(max(recordId)+1,1) FROM work_records_tbl), #{status}, #{id}, sysdate, NULL, NULL)
+   </insert>
+   
+   <!-- 근무 상태가 퇴근일 때 end time 업데이트 -->
+   <update id="updateEndWork" parameterType="String">
+      UPDATE work_records_tbl
+      SET endTime = SYSDATE
+      WHERE employeeId = #{id}
+      AND statusName = 'start-work' 
+      AND TRUNC(startTime) = TRUNC(SYSDATE)
+   </update>
+   
+   <!-- 근무 상태가 퇴근일 때 duration 업데이트 -->
+   <update id="updateEndDuration" parameterType="String">
+      UPDATE work_records_tbl
+      SET duration = (
+          SELECT
+          (endTime - startTime) * 24 * 60
+      FROM
+          work_records_tbl
+      WHERE
+          employeeId = #{id} 
+          AND TRUNC(startTime) = TRUNC(SYSDATE) 
+          AND statusName = 'start-work'
+      )
+      WHERE employeeId = #{id}
+      AND statusName = 'start-work' 
+      AND TRUNC(startTime) = TRUNC(SYSDATE)
+   </update>
+   
+   <!--  -->
+   
+    <!-- 근무 상태가 복귀일 때 end time 업데이트 -->
+   <update id="updateReturnWorks" parameterType="String">
+      UPDATE work_records_tbl
+      SET endTime = SYSDATE
+      WHERE employeeId = #{id}
+      AND statusName = 'go-out' 
+      AND TRUNC(startTime) = TRUNC(SYSDATE)
+   </update>
+   
+   <!-- 근무 상태가 복귀일 때 duration 업데이트 -->
+   <update id="updateReturDuration" parameterType="String">
+      UPDATE work_records_tbl
+      SET duration = (
+          SELECT
+          (endTime - startTime) * 24 * 60
+      FROM
+          work_records_tbl
+      WHERE
+          employeeId = #{id}
+          AND TRUNC(startTime) = TRUNC(SYSDATE) 
+          AND statusName = 'go-out'
+      )
+      WHERE employeeId = #{id}
+      AND statusName = 'go-out' 
+      AND TRUNC(startTime) = TRUNC(SYSDATE)
+   </update>
+   <!-- ========================================================================= -->
+   <!-- [여부 확인] -->
+   
+   <!-- 출근 여부 확인 -->
+   <select id="isStartWork" parameterType="String" resultType="int">
+      SELECT COUNT(*)
+      FROM work_records_tbl
+      WHERE employeeId = #{id} 
+      AND statusName = 'start-work' 
+      AND TRUNC(startTime) = TRUNC(SYSDATE)
+   </select>
+
+   <!-- #TODO - 퇴근 여부 출근 컬럼의 endTime 업데이트 여부로 판단해야할 것 같음 -->
+   <!-- 퇴근 여부 확인 -->
+   <select id="isEndWork" parameterType="String" resultType="int">
+      SELECT COUNT(*)
+      FROM work_records_tbl
+      WHERE employeeId = #{id} 
+      AND statusName = 'end-work' 
+      AND TRUNC(startTime) = TRUNC(SYSDATE)
+   </select>
+   
+   <!-- 외출 여부 확인 -->
+   <select id="checkOutStatus" parameterType="String" resultType="int">
+      SELECT COALESCE(
+          (
+              SELECT CASE
+                  WHEN statusName = 'go-out' THEN 1
+                  ELSE 0
+              END
+              FROM work_records_tbl
+              WHERE employeeId = #{id} 
+              AND StartTime = (
+                  SELECT MAX(startTime)
+                  FROM work_records_tbl
+                  WHERE employeeId = #{id} 
+              )
+          ),
+          0 
+      ) AS 외출여부
+      FROM dual
+   </select>
+
+   <!-- ========================================================================= -->
+   <!-- [근무 계획] -->
+   
+   <!-- 지각 횟수 -->
+   <select id="tardy" parameterType="String" resultType="int">
+      <![CDATA[
+         SELECT
+             COALESCE((
+                 SELECT
+                     COUNT(startTime)
+                 FROM
+                     work_records_tbl
+                 WHERE
+                     employeeId = #{id} AND
+                     statusName = 'start-work' AND
+                     TO_CHAR(startTime, 'HH24:MI') > '09:00' AND
+                     EXTRACT(YEAR FROM endTime) = EXTRACT(YEAR FROM SYSDATE)
+             ), 0) AS "earlyLeave"
+         FROM dual
+      ]]>
+   </select>
+   
+   <!-- 결근 횟수 -->
+	<select id="absence" parameterType="String" resultType="int">
+      <![CDATA[
+      	WITH work_dates AS (
+		    SELECT
+		        DATE '2023-04-01' + LEVEL - 1 AS work_date
+		    FROM
+		        dual
+		    CONNECT BY
+		        LEVEL <= DATE '2023-04-30' - DATE '2023-04-01' + 1
+		),
+		filtered_dates AS (
+		    SELECT
+		        work_date
+		    FROM
+		        work_dates
+		    WHERE
+		        TO_CHAR(work_date, 'DY', 'NLS_DATE_LANGUAGE = AMERICAN') NOT IN ('SAT', 'SUN')
+		),
+		absent_dates AS (
+		    SELECT
+		        fd.work_date
+		    FROM
+		        filtered_dates fd
+		    WHERE
+		        NOT EXISTS (
+		            SELECT
+		                1
+		            FROM
+		                work_records_tbl wrt
+		            WHERE
+		                wrt.employeeId = #{id}
+		                AND wrt.statusName = 'start-work' 
+		                AND TRUNC(wrt.startTime) = fd.work_date
+		        )
+		)
+		SELECT
+		    COUNT(*) AS "Absence_Count"
+		FROM
+		    absent_dates
+      ]]>
+   </select>
+
+   <!-- 조기 퇴근 횟수 -->
+   <select id="earlyLeave" parameterType="String" resultType="int">
+      <![CDATA[
+         SELECT
+             COALESCE((
+                 SELECT
+                     COUNT(startTime)
+                 FROM
+                     work_records_tbl
+                 WHERE
+                     employeeId = #{id} AND
+                     statusName = 'end-work' AND
+                     TO_CHAR(startTime, 'HH24:MI') < '18:00' AND
+                     EXTRACT(YEAR FROM startTime) = EXTRACT(YEAR FROM SYSDATE)
+             ), 0) AS "earlyLeave"
+         FROM dual
+      ]]>
+   </select>
+   
+   <!-- 미체크 -->
+   <select id="unchecked" parameterType="String" resultType="int">
+      <![CDATA[
+         SELECT COUNT(*) as unchecked
+		 FROM work_records_tbl
+		 WHERE employeeId = #{id}
+		 AND statusName = 'start-work'
+		 AND endTime IS NULL
+		 AND TRUNC(startTime) != TRUNC(SYSDATE)
+      ]]>
+   </select>
+
+   <!-- ========================================================================= -->
+   <!-- [근무 시간] -->
+   
+   <!-- 총 근무일 -->
+   <select id="totalDays" parameterType="String" resultType="int">
+   		SELECT COUNT(*) AS "Total_Work_Days"
+		FROM work_records_tbl
+		WHERE employeeId = #{id}
+		AND statusName = 'start-work'
+   </select>
+   
+   <!-- 총 근무 시간 -->
+   <select id="totalHours" parameterType="String" resultType="int">
+      <![CDATA[
+      	SELECT
+		    COALESCE(SUM(NVL(start_work_duration, 0) - NVL(go_out_duration, 0)), 0) AS "Total_Work_Hours"
+		FROM
+		    (
+		        SELECT
+		            CASE
+		                WHEN statusName = 'start-work' THEN duration
+		                ELSE NULL
+		            END AS start_work_duration,
+		            CASE
+		                WHEN statusName = 'go-out' THEN duration
+		                ELSE NULL
+		            END AS go_out_duration
+		        FROM
+		            work_records_tbl
+		        WHERE
+		            employeeId = #{id}
+		    )   
+      ]]>
+   </select>
+   
+</mapper>
