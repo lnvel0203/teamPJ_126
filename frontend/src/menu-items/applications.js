@@ -61,7 +61,7 @@ const applications = {
       id: 'chat',
       title: <FormattedMessage id="chat" />,
       type: 'item',
-      url: 'http://192.168.0.27:5000/',
+      url: 'http://192.168.0.28:5000/',
       icon: icons.MessageOutlined,
       breadcrumbs: false,
       external: true,

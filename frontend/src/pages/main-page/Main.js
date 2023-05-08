@@ -12,6 +12,8 @@ import CheckCard from './work-info/work-check/CheckCard';
 // 캘린더 변경
 import AppCalendar from 'pages/calendar/Calender1';
 import Chart from './work-info/work-plan/Chart';
+
+//STT
 import Dictaphone from '../../sections/charts/madechat/Dictaphone';
 
 const Main = () => {
@@ -38,8 +40,7 @@ const Main = () => {
         </Grid>
 
         {/* 근무 현황 */}
-        {/* <Grid item xs={4} sx={{ height: '467px' }}> */}
-        <Grid item xs={4}>
+        <Grid item xs={4} sx={{ height: '600px' }}>
           <WorkStatus refresh={refreshStatus} />
         </Grid>
       </Grid>
@@ -49,10 +50,7 @@ const Main = () => {
         <Grid item xs={12}>
           <MainCard>
             <AppCalendar />
-
             <Dictaphone/>
-
-
           </MainCard>
         </Grid>
       </Grid>

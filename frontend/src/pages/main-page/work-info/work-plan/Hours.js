@@ -25,7 +25,7 @@ export default function Hours() {
 
   const items = [
     { text: '총 근무일', number: totalDays + ' 일' },
-    { text: '총 시간', number: totalHours / 60 + ' 시간' },
+    { text: '총 시간', number: Math.round(totalHours / 60) + ' 시간' },
     { text: '평균 시간', number: totalDays === 0 ? '0' : Math.round(totalHours / 60 / totalDays) + ' 시간' }
   ];
 
