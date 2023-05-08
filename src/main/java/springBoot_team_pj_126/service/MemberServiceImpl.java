@@ -19,7 +19,7 @@ import springBoot_team_pj_126.dao.MemberRepository;
 import springBoot_team_pj_126.dto.MemberDTO;
 import springBoot_team_pj_126.dto.UserDTO;
 
-//사원관리용 서비스 생성(2023-04-27)
+
 @Component
 @Service
 public class MemberServiceImpl implements MemberService{
@@ -41,24 +41,14 @@ public class MemberServiceImpl implements MemberService{
 		System.out.println("서비스 - list");
 		List<UserDTO> list = mapper.memberList();
 		
-		return list;
-	}
-	
-	//5월 4일 김성훈 추가
-	@Override
-	public List<UserDTO> memberPositionList(HttpServletRequest req, Model model) 
-			throws ServletException, IOException {
-		System.out.println("서비스 - memberPositionList");
-		
-		List<UserDTO> list = mapper.memberPosition();
 		model.addAttribute("list", list);
+		System.out.println("list : " + list);
 		return list;
 	}
 	
 	
 	
 
-	
 	
 	
 	
@@ -97,5 +87,27 @@ public class MemberServiceImpl implements MemberService{
 //		}
 //		return dot;
 //	}
+	
+	
+	
+	//5월 4일 김성훈 추가 직원 리스트 
+	@Override
+	public List<UserDTO> memberPositionList(HttpServletRequest req, Model model) 
+			throws ServletException, IOException {
+		System.out.println("서비스 - memberPositionList");
+		
+		List<UserDTO> list = mapper.memberPosition();
+		model.addAttribute("list", list);
+		return list;
+	}
+	//5월 4일 김성훈 추가  직급 수정 
+	@Override
+	public void editPosition(String id , String positionname) 
+			throws ServletException, IOException {
+		System.out.println("서비스 - editPosition");
+		mapper.editPosition(id,positionname);
+	}
+
+
 
 }
