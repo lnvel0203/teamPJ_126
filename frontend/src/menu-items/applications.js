@@ -174,6 +174,12 @@ const applications = {
           url: '/apps/adminperson-customer/departloaletext'
         },
         {
+          id: 'departdepartments',
+          title: <FormattedMessage id="부서배치" />,
+          type: 'item',
+          url: '/apps/adminperson-customer/departdepartments'
+        },
+        {
           // 직급관리 추가(2023-05-03 김희수)
           id: 'hierarchylocaletext',
           title: <FormattedMessage id="직급관리" />,

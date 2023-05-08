@@ -1,13 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
-class EditorComponent extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  modules = {
+const EditorComponent = ({ value, onChange }) => {
+  const modules = {
     toolbar: [
       [{ font: [] }],
       [{ header: [1, 2, 3, 4, false] }],
@@ -19,7 +15,7 @@ class EditorComponent extends Component {
     ]
   };
 
-  formats = [
+  const formats = [
     'font',
     'header',
     'bold',
@@ -37,21 +33,19 @@ class EditorComponent extends Component {
     'background'
   ];
 
-  render() {
-    const { value, onChange } = this.props;
-    return (
-      <div style={{ height: '650px', width: '900px' }}>
-        <ReactQuill
-          style={{ height: '600px' }}
-          theme="snow"
-          modules={this.modules}
-          formats={this.formats}
-          value={value || ''}
-          onChange={(content, delta, source, editor) => onChange(editor.getHTML())}
-        />
-        <div className="ql-editor" style={{ color: 'black' }}></div>
-      </div>
-    );
-  }
-}
+  return (
+    <div style={{ height: '650px', width: '900px' }}>
+      <ReactQuill
+        style={{ height: '600px' }}
+        theme="snow"
+        modules={modules}
+        formats={formats}
+        value={value}
+        onChange={(content, delta, source, editor) => onChange(editor.getHTML())}
+      />
+      <div className="ql-editor" style={{ color: 'black' }}></div>
+    </div>
+  );
+};
+
 export default EditorComponent;

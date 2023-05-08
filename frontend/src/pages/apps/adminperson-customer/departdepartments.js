@@ -408,7 +408,6 @@ const CustomerListPage = () => {
         className: 'cell-center'
       },
       {
-        
         Header: '부서',
         accessor: 'deptName',
         className: 'cell-right'

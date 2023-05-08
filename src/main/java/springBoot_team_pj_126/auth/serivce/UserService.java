@@ -82,15 +82,15 @@ public class UserService {
 	      System.out.println("hp : " + userDTO.getHp());
 	      System.out.println("email : "+ userDTO.getEmail());
 	      System.out.println("address : " + userDTO.getAddress());
-	      
+	      System.out.println("왜안됨?");
 	      //import java.util.Optional;
 	     // Optional<User> optionalUser = userRepository.findById(userDTO.getId());
 	 
 	     Optional<User> optionalUser = userMapper.selectId(userDTO.getId());
-	      System.out.println("optionalUser : "  + optionalUser);
+	     System.out.println("optionalUser : "  + optionalUser);
 	      
 	      
-	      
+	     
 	      if(optionalUser.isPresent()) {
 	         throw new AppException("Login already exists", HttpStatus.BAD_REQUEST);
 	      }

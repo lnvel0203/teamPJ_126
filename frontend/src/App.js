@@ -23,26 +23,7 @@ import { FirebaseProvider as AuthProvider } from 'contexts/FirebaseContext';
 // ==============================|| APP - THEME, ROUTER, LOCAL  ||============================== //
 
 const App = () => {
-  // const [loading, setLoading] = useState(false);
-  // const [userData, setUserData] = useState([]);
-
-  // const fetchUserData = async () => {
-  //   try {
-  //     const response = await getUsers();
-  //     setUserData(response.data);
-  //   } catch (error) {
-  //     console.error('Failed to fetch user data:', error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   dispatch(fetchDashboard()).then(() => {
-  //     setLoading(true);
-  //   });
-  //   fetchUserData();
-  // }, []);
-
-  // if (!loading) return <Loader />;
+ 
   return (
     <ThemeCustomization>
       <RTLLayout>
@@ -54,12 +35,7 @@ const App = () => {
                   <Routes />
                   <Snackbar />
                 </Notistack>
-                {/* {userData.map((user) => (
-                  <div key={user.id}>
-                    <p>{user.name}</p>
-                    <p>{user.email}</p>
-                  </div>
-                ))} */}
+                
               </>
             </AuthProvider>
           </ScrollTop>
