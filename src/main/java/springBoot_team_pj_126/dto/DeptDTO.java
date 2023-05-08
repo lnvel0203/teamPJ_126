@@ -19,5 +19,5 @@ public class DeptDTO {
    private String deptname;
    private Date deptdate;
    private String deptreadername;
-   
+
 }

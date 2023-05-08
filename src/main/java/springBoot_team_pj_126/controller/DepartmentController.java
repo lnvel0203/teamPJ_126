@@ -1,5 +1,5 @@
 package springBoot_team_pj_126.controller;
-// 부서관리용 컨트롤러 생성(2023-05-04)
+// 부서관리용 컨트롤러 생성(2023-05-04_김희수)
 
 import java.io.IOException;
 import java.util.List;
@@ -7,24 +7,28 @@ import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import springBoot_team_pj_126.dto.DeptDTO;
+import springBoot_team_pj_126.service.DepartmentService;
 
 @RequestMapping (value="/department")
 @RestController
 public class DepartmentController {
+	
+	@Autowired(required = true)
+	private DepartmentService service;
 
    @GetMapping
    public List<DeptDTO> getDepartmentList(HttpServletRequest req, Model model) 
          throws ServletException, IOException{
-      
-      System.out.println("컨트롤러 - memberList");
-      
-      return null;
+      System.out.println("컨트롤러 - DepartmentList");
+
+      return service.DepartmentList(req, model);
    }
    
 //   @PostMapping("/editEmployee")

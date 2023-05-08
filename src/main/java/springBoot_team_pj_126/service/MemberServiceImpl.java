@@ -41,8 +41,6 @@ public class MemberServiceImpl implements MemberService{
 		System.out.println("서비스 - list");
 		List<UserDTO> list = mapper.memberList();
 		
-		model.addAttribute("list", list);
-		System.out.println("list : " + list);
 		return list;
 	}
 	
