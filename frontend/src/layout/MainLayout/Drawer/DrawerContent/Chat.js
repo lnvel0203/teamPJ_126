@@ -9,7 +9,7 @@ import { Button } from '@mui/material';
 // ==============================|| DRAWER CONTENT - NAVIGATION CARD ||============================== //
 const handleClick = () => {
   const features = 'width=600,height=900';
-  window.open('http://192.168.0.27:5000/', '_blank', features);
+  window.open('http://192.168.0.28:5000/', '_blank', features);
 };
 
 const NavCard = () => (

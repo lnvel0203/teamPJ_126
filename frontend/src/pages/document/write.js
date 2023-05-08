@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Form from './Form';
 import './DocumentComponent.css';
+import AddApprover from './AddApprover';
+
 
 class DocumentWritePage extends Component {
   constructor(props) {
@@ -11,11 +13,7 @@ class DocumentWritePage extends Component {
       author: '',
       retentionPeriod: '',
       securityLevel: '',
-      approvers: [
-        { id: 1, department: '개발', name: '영수', position: '사장', stamps: 'https://example.com/stamp-alex.png' },
-        { id: 2, department: '인사', name: '철수', position: '대리', stamps: 'https://example.com/stamp-alex.png' },
-        { id: 3, department: '경영', name: '종수', position: '팀장', stamps: 'https://example.com/stamp-alex.png' }
-      ]
+      selectedApprovers: []
     };
   }
 
@@ -51,11 +49,21 @@ class DocumentWritePage extends Component {
     // ...
   };
 
+  handleAddApprovers = (approvers) => {
+    this.setState({ selectedApprovers: approvers });
+  }
+
+  
+
   render() {
-    const { documentType, author, retentionPeriod, securityLevel, approvers } = this.state;
+    const { documentType, author, retentionPeriod, securityLevel, selectedApprovers  } = this.state;
 
     return (
+
+      
       <div style={{ marginLeft: '' }}>
+        <AddApprover onAddApprovers={this.handleAddApprovers} />
+        <p>{selectedApprovers.name}</p>
         <h1>기본 설정</h1>
         <table>
           <tbody>
@@ -111,21 +119,21 @@ class DocumentWritePage extends Component {
                   +
                 </button>
               </td>
-              <td className="col-2">{approvers[0].position}</td>
-              <td className="col-3">{approvers[1].position}</td>
-              <td className="col-4">{approvers[2].position}</td>
+              <td className="col-2"></td>
+              <td className="col-3"></td>
+              <td className="col-4"></td>
               <td className="col-5"></td>
             </tr>
             <tr className="tr-2">
-              <td className="col-2">{approvers[0].stamps}</td>
-              <td className="col-3">{approvers[1].stamps}</td>
-              <td className="col-4">{approvers[2].stamps}</td>
+              <td className="col-2"></td>
+              <td className="col-3"></td>
+              <td className="col-4"></td>
               <td className="col-5"></td>
             </tr>
             <tr className="tr-3">
-              <td className="col-2">{approvers[0].name}</td>
-              <td className="col-3">{approvers[1].name}</td>
-              <td className="col-4">{approvers[2].name}</td>
+              <td className="col-2"></td>
+              <td className="col-3"></td>
+              <td className="col-4"></td>
               <td className="col-5"></td>
             </tr>
             <tr className="tr-4">

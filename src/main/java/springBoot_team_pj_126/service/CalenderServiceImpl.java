@@ -37,6 +37,17 @@ public class CalenderServiceImpl implements CalenderService{
 		
 		return list;
 	}
+	
+	
+	@Override
+	public String selectCalender(String id) 
+			throws ServletException, IOException {
+		
+		
+		CalenderDTO content = dao.getContent(id);
+		System.out.println(content.getDescriptions());
+		return content.getDescriptions();
+	}
 
 	@Override
 	public void insertCalender(CalenderDTO calenderDTO) 
@@ -59,13 +70,8 @@ public class CalenderServiceImpl implements CalenderService{
 		System.out.println("서비스 -deleteCalender ");
 		dao.deleteById(title);
 	}
-//
-//	@Override
-//	public CalenderDTO selectCalender(String userid) 
-//			throws ServletException, IOException {
-//		
-//		return null;
-//	}
+
+
 
 
 

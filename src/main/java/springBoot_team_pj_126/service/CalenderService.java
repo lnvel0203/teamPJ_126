@@ -28,6 +28,6 @@ public interface CalenderService {
 			throws ServletException,IOException;
 //		
 //		
-//	public CalenderDTO selectCalender(String userid)
-//			throws ServletException,IOException;
+	public String selectCalender(String id)
+			throws ServletException,IOException;
 }

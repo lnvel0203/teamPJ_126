@@ -7,7 +7,6 @@ import { Card, CardContent, CardHeader, Divider, Typography } from '@mui/materia
 
 // project import
 import Highlighter from './third-party/Highlighter';
-
 // header style
 const headerSX = {
   p: 2.5,
@@ -105,7 +104,7 @@ const MainCard = forwardRef(
             <Highlighter codeString={codeString} codeHighlight={codeHighlight} />
           </>
         )}
-      </Card>
+        </Card>
     );
   }
 );

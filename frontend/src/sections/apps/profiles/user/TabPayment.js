@@ -1,5 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
+
 import {  useParams } from 'react-router';
+
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -33,6 +35,7 @@ import ExportPDFView from 'sections/apps/invoice/export-pdf';
 
 import { dispatch, useSelector } from 'store';
 import { getInvoiceSingleList } from 'store/reducers/invoice';
+
 
 // assets
 import { DownloadOutlined,  PrinterFilled, ShareAltOutlined } from '@ant-design/icons';
@@ -82,7 +85,7 @@ const TabPayment = () => {
         <Box sx={{ p: 2.5, pb: 0 }}>
           <MainCard content={false} sx={{ p: 1.25, bgcolor: 'primary.lighter', borderColor: theme.palette.primary[100] }}>
             <Stack direction="row" justifyContent="flex-end" spacing={1}>
-              
+
               <PDFDownloadLink document={<ExportPDFView list={list} />} fileName={`${list?.invoice_id}-${list?.customer_name}.pdf`}>
                 <IconButton>
                   <DownloadOutlined style={{ color: theme.palette.grey[900] }} />
@@ -212,9 +215,11 @@ const TabPayment = () => {
             <Grid item xs={12}>
               <Stack direction="row" spacing={1}>
                 <Typography color="secondary">Notes: </Typography>
+
                 <Typography>
                 귀하의 노고에 감사드립니다.
                 </Typography>
+
               </Stack>
             </Grid>
           </Grid>

@@ -16,7 +16,11 @@ public interface MemberService {
 
 	public List<UserDTO> listAll(HttpServletRequest req, Model model) 
 			throws ServletException, IOException;
-
+	
+	
+	//김성훈 5월 4일 추가 
+	public List<UserDTO> memberPositionList(HttpServletRequest req, Model model) 
+			throws ServletException, IOException;
 	
 //	public void insertMember(MemberDTO dto) throws ServletException, IOException;
 //	
