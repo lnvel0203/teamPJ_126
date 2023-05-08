@@ -30,79 +30,90 @@ public class CheckController {
 	// ========================================================
 	// [근무 현황 & 근무 체크]
 	
-	// 현재 상태 확인
-	@GetMapping("/checkOutStatus")
-	public int checkOutStatus(@RequestParam String id) 
-			throws ServletException, IOException {
-		logger.info("CheckController - checkOutStatus()");
-		
-		int selectCnt = service.checkOutStatus(id);
-		
-		return selectCnt;
-	}
+//	// 현재 상태 확인
+//	@GetMapping("/checkOutStatus")
+//	public int checkOutStatus(@RequestParam String id) 
+//			throws ServletException, IOException {
+//		logger.info("CheckController - checkOutStatus()");
+//		
+//		int selectCnt = service.checkOutStatus(id);
+//		
+//		return selectCnt;
+//	}
 	
-	// 출근 여부 확인
-	@GetMapping("/isStartWork")
-	public int isStartWork(@RequestParam String id) 
-			throws ServletException, IOException {
-		logger.info("CheckController - isStartWork()");
-		
-		int selectCnt = service.isStartWork(id);
-		
-		return selectCnt;
-	}
+//	// 출근 여부 확인
+//	@GetMapping("/isStartWork")
+//	public int isStartWork(@RequestParam String id) 
+//			throws ServletException, IOException {
+//		logger.info("CheckController - isStartWork()");
+//		
+//		int selectCnt = service.isStartWork(id);
+//		
+//		return selectCnt;
+//	}
+//	
+//	// 퇴근 여부 확인
+//	@GetMapping("/isEndWork")
+//	public int isEndWork(@RequestParam String id) 
+//			throws ServletException, IOException {
+//		logger.info("CheckController - isEndWork()");
+//		int selectCnt = service.isEndWork(id);
+//		
+//		return selectCnt;
+//	}
 	
-	// 퇴근 여부 확인
-	@GetMapping("/isEndWork")
-	public int isEndWork(@RequestParam String id) 
-			throws ServletException, IOException {
-		logger.info("CheckController - isEndWork()");
-		int selectCnt = service.isEndWork(id);
-		
-		return selectCnt;
-	}
+//	// 근무 현황 
+//	@GetMapping("/attendanceList")
+//	public CheckOption attendanceList(@RequestParam String id) 
+//			throws ServletException, IOException {
+//		logger.info("CheckController - attendanceList()");
+//		
+//		CheckOption arr = service.attendanceList(id);
+//		
+//		return arr;
+//	}
 	
-	// 근무 현황 
-	@GetMapping("/attendanceList")
-	public CheckOption attendanceList(@RequestParam String id) 
-			throws ServletException, IOException {
-		logger.info("CheckController - attendanceList()");
-		
-		CheckOption arr = service.attendanceList(id);
-		
-		return arr;
-	}
-	
-	// 근무 체크
-	@PostMapping("/attendanceCheck")
-	public void attendenceCheck(@RequestBody Map<String, String> data) {
-		logger.info("CheckController - attendenceCheck()");
-		
-		String id = data.get("id");
-	    String status = data.get("status");
-		
-		service.attendenceCheck(id, status);
-	}
+//	// 근무 체크
+//	@PostMapping("/attendanceCheck")
+//	public void attendenceCheck(@RequestBody Map<String, String> data) {
+//		logger.info("CheckController - attendenceCheck()");
+//		
+//		String id = data.get("id");
+//	    String status = data.get("status");
+//		
+//		service.attendenceCheck(id, status);
+//	}
 	
 	// ========================================================
 	// [근무 시간]
-	@GetMapping("/getDate")
-    public Map<String, Object> getDate(@RequestParam String id) {
-        logger.info("CheckController - getDate()");
-        
-        Map<String, Object> data = service.getDate(id);
-        
-        return data;
-    }
+//	@GetMapping("/getDate")
+//    public Map<String, Object> getDate(@RequestParam String id) {
+//        logger.info("CheckController - getDate()");
+//        
+//        Map<String, Object> data = service.getDate(id);
+//        
+//        return data;
+//    }
 
+//	// 근태 현황
+//	@GetMapping("/attendance")
+//    public Map<String, Object> attendance(@RequestParam String id) {
+//		logger.info("CheckController - attendance()");
+//        
+//        Map<String, Object> data =	service.getAttendance(id);
+//
+//        return data;
+//    }
+
+	// #TODO - 데이터 베이스에서 불러오는 값으로 바꾸기
 	// 근태 현황
-	@GetMapping("/attendance")
-    public Map<String, Object> attendance(@RequestParam String id) {
-		logger.info("CheckController - attendance()");
-        
-        Map<String, Object> data =	service.getAttendance(id);
-
-        return data;
-    }
-
+//	@GetMapping("/vacation")
+//    public Map<String, Object> vacation(@RequestParam String id) {
+//		logger.info("CheckController - vacation()");
+//		
+//		Map<String, Object> data =	service.getAttendance(id);
+//		data.put("vacation", 1);
+//		
+//        return data;
+//    }
 }

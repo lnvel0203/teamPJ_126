@@ -26,6 +26,7 @@ const InvoiceItem = ({ id, name, description, qty, price, onDeleteItem, onEditIt
   const touchedName = getIn(touched, Name);
   const errorName = getIn(errors, Name);
 
+
   const Description = `invoice_detail[${index}].description`;
   const touchedDescription = getIn(touched, Description);
   const errorDescription = getIn(errors, Description);

@@ -6,38 +6,72 @@
      
 <mapper namespace="springBoot_team_pj_126.dao.SalaryMapper">
 
-<select id="salaryList" resultType="springBoot_team_pj_126.dto.SalaryDTO">
-      <!-- SELECT SALARYID, BASICSALARY FROM SALARY_TBL -->
-      
-      SELECT s.salaryId, e.name, s.basicSalary, s.paymentStatus, s.payDay 
-      FROM SALARY_TBL s 
-      INNER JOIN employees_tbl e ON e.no = s.no 
-      WHERE s.no = 1
-</select>
+	<select id="salaryList" resultType="springBoot_team_pj_126.dto.SalaryDTO">
+	      SELECT s.salaryId, e.name, s.basicSalary, s.paymentStatus, s.payDay 
+	      FROM SALARY_TBL s 
+	      INNER JOIN employees_tbl e ON e.no = s.no 
+	      WHERE s.no = 1
+	</select>
+	
+	<!-- ========================================================================= -->
+	<!-- [급여 지급에 필요한 메서드] -->
+	<select id="salaryCreateDetail" parameterType="String" resultType="springBoot_team_pj_126.dto.SalaryInfoDTO">
+		SELECT INFOID, EMPID, BASESALARY, REGULARWEEKLYHOURS
+		FROM SALARY_INFO_TBL
+		WHERE EMPID = #{id}
+	</select>
 
-<!-- <insert id="insertMember" parameterType="com.example.react.dto.MemberDTO">
-   INSERT INTO mvc_member_tbl values((select nvl(max(id)+1,1)from mvc_member_tbl), #{password}, #{username},#{age},#{email},#{address},#{salary})
-</insert>   
-
-<update id="updateMember" parameterType="com.example.react.dto.MemberDTO">
-   update mvc_member_tbl
-   set password = #{password},
-      username = #{username},
-      age = #{age},
-      email = #{email},
-      address = #{address},
-      salary = #{salary}
-   where id=#{id}
-</update>
-
-<delete id="deleteById" parameterType="int">
-   delete from mvc_member_tbl where id=#{id} 
-</delete>
-      
-<select id="findById" parameterType="com.example.react.dto.MemberDTO" resultType="com.example.react.dto.MemberDTO">
-   select * from mvc_member_tbl where id=#{id} AND password =#{password}
-</select>
-
- -->
-
+	<!-- 주말 제외 총 근무 시간 -->
+	<select id="weeklyWorkingHours" parameterType="String" resultType="int">
+	<![CDATA[
+		SELECT
+		    COALESCE(SUM(NVL(start_work_duration, 0) - NVL(go_out_duration, 0)), 0) AS "Total_Work_Hours"
+		FROM
+		    (
+		        SELECT
+		            CASE
+		                WHEN statusName = 'start-work' THEN duration
+		                ELSE NULL
+		            END AS start_work_duration,
+		            CASE
+		                WHEN statusName = 'go-out' THEN duration
+		                ELSE NULL
+		            END AS go_out_duration,
+		            startTime
+		        FROM
+		            work_records_tbl
+		        WHERE
+		            employeeId = #{id}
+		    )
+		WHERE
+		    TO_CHAR(startTime, 'DY', 'NLS_DATE_LANGUAGE = AMERICAN') NOT IN ('SAT', 'SUN')
+      ]]>
+	</select>
+	
+	<!-- 주말 총 근무 시간 -->
+	<select id="weekendWorkingHours" parameterType="String" resultType="int">
+	<![CDATA[
+		SELECT
+		    COALESCE(SUM(NVL(start_work_duration, 0) - NVL(go_out_duration, 0)), 0) AS "Total_Work_Hours"
+		FROM
+		    (
+		        SELECT
+		            CASE
+		                WHEN statusName = 'start-work' THEN duration
+		                ELSE NULL
+		            END AS start_work_duration,
+		            CASE
+		                WHEN statusName = 'go-out' THEN duration
+		                ELSE NULL
+		            END AS go_out_duration,
+		            startTime
+		        FROM
+		            work_records_tbl
+		        WHERE
+		            employeeId = #{id}
+		    )
+		WHERE
+		    TO_CHAR(startTime, 'DY', 'NLS_DATE_LANGUAGE = AMERICAN') IN ('SAT', 'SUN')
+      ]]>
+	</select>
 </mapper>

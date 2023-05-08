@@ -13,7 +13,7 @@ export default function Hours() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8081/members/getDate?id=${id}`)
+      .get(`http://localhost:8081/members/getHour?id=${id}`)
       .then((response) => {
         setTotalHours(response.data.totalHours);
         setTotalDays(response.data.totalDays);
@@ -24,9 +24,9 @@ export default function Hours() {
   }, []);
 
   const items = [
-    { text: '근무 일수', number: totalDays + ' 일' },
-    { text: '총 시간', number: totalHours + ' 시간' },
-    { text: '평균 시간', number: totalDays === 0 ? '-' : Math.round(totalHours / totalDays) + ' 시간' }
+    { text: '총 근무일', number: totalDays + ' 일' },
+    { text: '총 시간', number: totalHours / 60 + ' 시간' },
+    { text: '평균 시간', number: totalDays === 0 ? '0' : Math.round(totalHours / 60 / totalDays) + ' 시간' }
   ];
 
   return (

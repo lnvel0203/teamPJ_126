@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Typography } from '@mui/material';
 
 function Clock() {
   const [time, setTime] = useState(new Date());
@@ -18,9 +19,9 @@ function Clock() {
   const seconds = time.getSeconds().toString().padStart(2, '0');
 
   return (
-    <div style={{ fontSize: '1.8em', textAlign: 'center' }}>
-      {hours}:{minutes}:{seconds}
-    </div>
+    <Typography variant="h2" color="CaptionText">
+      {hours} : {minutes} : {seconds}
+    </Typography>
   );
 }
 

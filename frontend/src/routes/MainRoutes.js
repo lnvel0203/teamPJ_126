@@ -16,7 +16,7 @@ const WidgetData = Loadable(lazy(() => import('pages/widget/data')));
 const WidgetChart = Loadable(lazy(() => import('pages/widget/chart')));
 
 // render - applications
-const AppChat = Loadable(lazy(() => import('pages/apps/chat')));
+// const AppChat = Loadable(lazy(() => import('pages/apps/chat')));
 
 // 캘린더 변경
 const AppCalendar = Loadable(lazy(() => import('pages/calendar/Calender1')));
@@ -25,6 +25,7 @@ const AppCustomerCard = Loadable(lazy(() => import('pages/apps/customer/card')))
 const CustomLocaleText = Loadable(lazy(() => import('pages/apps/adminperson-customer/customlocaletext')));
 const CustomerListPage = Loadable(lazy(() => import('pages/apps/adminperson-customer/departloaletext')));
 const HierarchyLocaleText = Loadable(lazy(() => import('pages/apps/adminperson-customer/hierarchylocaletext')));
+const Personnelevaluation = Loadable(lazy(() => import('pages/apps/adminperson-customer/Personnelevaluation')));
 
 const AppKanban = Loadable(lazy(() => import('pages/apps/kanban')));
 const AppKanbanBacklogs = Loadable(lazy(() => import('sections/apps/kanban/Backlogs')));
@@ -121,6 +122,7 @@ const EditorComponent = Loadable(lazy(() => import('pages/document/EditorCompone
 const DocumentForm = Loadable(lazy(() => import('pages/document/Form')));
 const DocumentList = Loadable(lazy(() => import('pages/document/list')));
 const Documentwrite = Loadable(lazy(() => import('pages/document/write')));
+const AttendanceList = Loadable(lazy(() => import('pages/attendance/AttendanceList')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -172,10 +174,10 @@ const MainRoutes = {
               path: 'main-page',
               element: <MainPage />
             },
-            {
-              path: 'chat',
-              element: <AppChat />
-            },
+            // {
+            //   path: 'chat',
+            //   element: <AppChat />
+            // },
             {
               path: 'calendar',
               element: <AppCalendar />
@@ -330,6 +332,16 @@ const MainRoutes = {
                 {
                   path: 'hierarchylocaletext',
                   element: <HierarchyLocaleText />
+                },
+                {
+                  //2023-05-04 추가
+                  path: 'Personnelevaluation',
+                  element: <Personnelevaluation />
+                },
+                {
+                  //2023-05-04 추가
+                  path: 'AttendanceList',
+                  element: <AttendanceList />
                 }
               ]
             }
