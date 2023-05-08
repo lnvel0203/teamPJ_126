@@ -28,6 +28,12 @@ public class DocumentDTO {
     private int secondApproverNo;
     private int thirdApproverNo;
     private int fourthApproverNo;
+
+    private String firstApproverState; 
+    private String secondApproverState;
+    private String thirdApproverState; 
+    private String fourthApproverState;
+
     
     @Lob
     private byte[] file;
