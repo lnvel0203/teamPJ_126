@@ -14,7 +14,8 @@ import {
   UserOutlined,
   AppstoreAddOutlined,
   RobotOutlined,
-  PartitionOutlined
+  PartitionOutlined,
+  EditOutlined
 } from '@ant-design/icons';
 
 // icons
@@ -30,7 +31,8 @@ const icons = {
   AppstoreAddOutlined,
   RobotOutlined,
   FileTextOutlined,
-  PartitionOutlined
+  PartitionOutlined,
+  EditOutlined
 };
 // ==============================|| MENU ITEMS - APPLICATIONS ||============================== //
 
@@ -75,22 +77,23 @@ const applications = {
     //전자결재
     {
       id: 'approval',
-      title: <FormattedMessage id="approval" />,
+      title: <FormattedMessage id="전자결재" />,
       type: 'collapse',
       icon: icons.EditOutlined,
       children: [
         {
           id: 'document-write',
-          title: <FormattedMessage id="document-write" />,
+          title: <FormattedMessage id="작성" />,
           type: 'item',
-          url: '/apps/document/documentWrite'
+          url: '/apps/document/documentWrite',
         },
         {
           id: 'document-list',
-          title: <FormattedMessage id="document-list" />,
+          title: <FormattedMessage id="목록" />,
           type: 'item',
           url: '/apps/document/documentList'
-        }
+        },
+        
       ]
     },
     // {
@@ -103,6 +106,7 @@ const applications = {
 
     // 전승연(수정 - 230428)
     {
+      
       id: 'customer',
       title: <FormattedMessage id="customer" />,
       type: 'item',

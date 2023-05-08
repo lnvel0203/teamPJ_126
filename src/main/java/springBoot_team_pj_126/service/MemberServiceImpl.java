@@ -41,10 +41,26 @@ public class MemberServiceImpl implements MemberService{
 		System.out.println("서비스 - list");
 		List<UserDTO> list = mapper.memberList();
 		
-		model.addAttribute("list", list);
-		System.out.println("list : " + list);
 		return list;
 	}
+	
+	//5월 4일 김성훈 추가
+	@Override
+	public List<UserDTO> memberPositionList(HttpServletRequest req, Model model) 
+			throws ServletException, IOException {
+		System.out.println("서비스 - memberPositionList");
+		
+		List<UserDTO> list = mapper.memberPosition();
+		model.addAttribute("list", list);
+		return list;
+	}
+	
+	
+	
+
+	
+	
+	
 	
 //	@Override
 //	public void insertMember(MemberDTO dto) throws ServletException, IOException {

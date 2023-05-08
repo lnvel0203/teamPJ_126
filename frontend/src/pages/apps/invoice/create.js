@@ -243,6 +243,7 @@ const Create = () => {
                 <Grid item xs={12} sm={6} md={3}>
                   <Stack spacing={1}>
                     <InputLabel>지급여부</InputLabel>
+                    {/* 폼 시작 */}
                     <FormControl sx={{ width: '100%' }}>
                       <Select
                         value={values.status}
@@ -265,6 +266,7 @@ const Create = () => {
                         <MenuItem value="Cancelled">취소</MenuItem>
                       </Select>
                     </FormControl>
+                    {/* 폼 시작 */}
                   </Stack>
                   {touched.status && errors.status && <FormHelperText error={true}>{errors.status}</FormHelperText>}
                 </Grid>
@@ -434,8 +436,8 @@ const Create = () => {
                                   <TableCell>지급액</TableCell>
                                   <TableCell>공제내역</TableCell>
                                   <TableCell>공제액</TableCell>
-                                  <TableCell align="right">차인지급액</TableCell>
-                                  <TableCell align="right">Action</TableCell>
+                                  {/* <TableCell align="right">차인지급액</TableCell> */}
+                                  <TableCell>Action</TableCell>
                                 </TableRow>
                               </TableHead>
                               <TableBody>
