@@ -12,6 +12,7 @@ import CheckCard from './work-info/work-check/CheckCard';
 // 캘린더 변경
 import AppCalendar from 'pages/calendar/Calender1';
 import Chart from './work-info/work-plan/Chart';
+import Dictaphone from '../../sections/charts/madechat/Dictaphone';
 
 const Main = () => {
   const [refreshStatus, setRefreshStatus] = useState(false);
@@ -48,6 +49,10 @@ const Main = () => {
         <Grid item xs={12}>
           <MainCard>
             <AppCalendar />
+
+            <Dictaphone/>
+
+
           </MainCard>
         </Grid>
       </Grid>

@@ -68,8 +68,7 @@ public class SalaryServiceImpl implements SalaryService{
 		return data;
 	}
 	
-
-
+	
 	@Override
 	public void insertSalary(SalaryDTO dto) throws ServletException, IOException {
 		System.out.println("서비스 - insert");
@@ -77,6 +76,7 @@ public class SalaryServiceImpl implements SalaryService{
 		mapper.insertSalary(dto);
 	}
 
+	
 	@Override
 	public void updateSalary(SalaryDTO dto) throws ServletException, IOException {
 		System.out.println("서비스 - update");

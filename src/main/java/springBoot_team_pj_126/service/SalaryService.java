@@ -19,6 +19,12 @@ public interface SalaryService {
 	public List<SalaryDTO> salaryList(HttpServletRequest req, Model model) 
 			throws ServletException, IOException;
 
+	public void insertSalary(SalaryDTO dto) throws ServletException, IOException;
+	
+	public void updateSalary(SalaryDTO dto) throws ServletException, IOException;
+	
+	public void deleteSalary(int salaryId) throws ServletException, IOException;
+
 	// ========================================================
 	// [급여 지급에 필요한 메서드]
 	
