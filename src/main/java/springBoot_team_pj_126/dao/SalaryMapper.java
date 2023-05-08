@@ -25,6 +25,12 @@ public interface SalaryMapper {
 	// 주말 총 근무 시간
 	public int weekendWorkingHours(String id);
 	
+	public void insertSalary(SalaryDTO salaryDTO);
+	
+	public void updateSalary(SalaryDTO salaryDTO);
+	
+	public void deleteSalary(int salaryId);
+	
 }
 
 

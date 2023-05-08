@@ -21,6 +21,47 @@
 		WHERE EMPID = #{id}
 	</select>
 
+<select id="salaryList" resultType="springBoot_team_pj_126.dto.SalaryDTO">
+
+   SELECT * FROM salary_TBL where id =#{id}
+</select>
+
+
+
+<!-- SELECT SALARYID, BASICSALARY FROM SALARY_TBL -->
+  <!--  
+<select id="salaryList" resultType="springBoot_team_pj_126.dto.SalaryDTO">
+             SELECT s.salaryId, e.name, s.basicSalary, s.paymentStatus, s.payDay 
+      FROM SALARY_TBL s 
+      INNER JOIN employees_tbl e ON e.no = s.no 
+      WHERE s.no = 1
+</select> -->
+
+ <insert id="insertSalary" parameterType="com.example.react.dto.SalaryDTO">
+	INSERT INTO salary_TBL values((select nvl(max(salaryId)+1,1)from salary_TBL), #{basicSalary}, #{name},#{payDay},#{paymentstatus},#{taxtionId},#{nontaxtionId},#{taxId},,#{overtimePay})
+</insert>	
+
+<update id="updateSalary" parameterType="com.example.react.dto.SalaryDTO">
+	update salary_TBL
+	set basicSalary = #{basicSalary},
+	payDay = #{payDay},
+	taxtionId = #{taxtionId},
+		nontaxtionId = #{nontaxtionId},
+		taxId= #{taxId}
+	where id=#{id}
+</update>
+
+<delete id="deleteSalary" parameterType="int">
+	delete from salary_TBL where id=#{id} 
+</delete>
+		
+<!--<select id="findById" parameterType="com.example.react.dto.MemberDTO" resultType="com.example.react.dto.MemberDTO">
+	select * from mvc_member_tbl where id=#{id} AND password =#{password}
+
+</select>
+
+ -->
+
 	<!-- 주말 제외 총 근무 시간 -->
 	<select id="weeklyWorkingHours" parameterType="String" resultType="int">
 	<![CDATA[

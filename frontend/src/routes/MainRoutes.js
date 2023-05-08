@@ -41,15 +41,10 @@ const UserProfile = Loadable(lazy(() => import('pages/apps/profiles/user')));
 const UserTabPersonal = Loadable(lazy(() => import('sections/apps/profiles/user/TabPersonal')));
 const UserTabPayment = Loadable(lazy(() => import('sections/apps/profiles/user/TabPayment')));
 const UserTabPassword = Loadable(lazy(() => import('sections/apps/profiles/user/TabPassword')));
-const AccountTabRole = Loadable(lazy(() => import('sections/apps/profiles/account/TabRole')));
+
 const UserTabSettings = Loadable(lazy(() => import('sections/apps/profiles/user/TabSettings')));
 
-const AccountProfile = Loadable(lazy(() => import('pages/apps/profiles/account')));
-const AccountTabProfile = Loadable(lazy(() => import('sections/apps/profiles/account/TabProfile')));
-const AccountTabPersonal = Loadable(lazy(() => import('sections/apps/profiles/account/TabPersonal')));
-const AccountTabAccount = Loadable(lazy(() => import('sections/apps/profiles/account/TabAccount')));
-const AccountTabPassword = Loadable(lazy(() => import('sections/apps/profiles/account/TabPassword')));
-const AccountTabSettings = Loadable(lazy(() => import('sections/apps/profiles/account/TabSettings')));
+
 
 // render - forms & tables
 const FormsValidation = Loadable(lazy(() => import('pages/forms/validation')));
@@ -263,36 +258,6 @@ const MainRoutes = {
             {
               path: 'profiles',
               children: [
-                {
-                  path: 'account',
-                  element: <AccountProfile />,
-                  children: [
-                    {
-                      path: 'basic',
-                      element: <AccountTabProfile />
-                    },
-                    {
-                      path: 'personal',
-                      element: <AccountTabPersonal />
-                    },
-                    {
-                      path: 'my-account',
-                      element: <AccountTabAccount />
-                    },
-                    {
-                      path: 'password',
-                      element: <AccountTabPassword />
-                    },
-                    {
-                      path: 'role',
-                      element: <AccountTabRole />
-                    },
-                    {
-                      path: 'settings',
-                      element: <AccountTabSettings />
-                    }
-                  ]
-                },
                 {
                   path: 'user',
                   element: <UserProfile />,

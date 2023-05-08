@@ -388,8 +388,8 @@ const List = () => {
       {
         Header: '이름',
         accessor: 'name',
+        className: 'cell-center',
         disableFilters: true,
-        className: 'cell-center'
       },
       {
         Header: 'Avatar',

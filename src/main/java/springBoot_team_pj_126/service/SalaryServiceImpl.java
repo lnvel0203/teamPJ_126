@@ -41,7 +41,7 @@ public class SalaryServiceImpl implements SalaryService{
 
 	// ========================================================
 	// [급여 지급에 필요한 메서드]
-	
+
 	// 급여 지급 상세 내역
 	@Override
 	public SalaryInfoDTO salaryCreateDetail(String id) {
@@ -68,6 +68,43 @@ public class SalaryServiceImpl implements SalaryService{
 		return data;
 	}
 	
+
+
+	@Override
+	public void insertSalary(SalaryDTO dto) throws ServletException, IOException {
+		System.out.println("서비스 - insert");
+		
+		mapper.insertSalary(dto);
+	}
+
+	@Override
+	public void updateSalary(SalaryDTO dto) throws ServletException, IOException {
+		System.out.println("서비스 - update");
+		mapper.updateSalary(dto);
+	}
+
+	@Override
+	public void deleteSalary(int salaryId) throws ServletException, IOException {
+		System.out.println("서비스 - delete");
+		mapper.deleteSalary(salaryId);
+	}
+//
+//	@Override
+//	public MemberDTO selectMember(MemberDTO dto) throws ServletException, IOException {
+//		System.out.println("서비스 - select");
+//		
+//		
+//		Map<String, Object> map = new HashMap<String, Object>();
+//
+//		map.put("id", dto.getId());
+//		map.put("password", dto.getPassword());
+//		
+//		MemberDTO dot = mapper.findById(map);
+//		if(dot !=null) {
+//			System.out.println("성공");
+//		}
+//		return dot;
+//	}
 
 
 }
