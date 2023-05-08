@@ -16,19 +16,16 @@ function Calendar() {
   useEffect(() => {
     const fetchCalendars = async () => {
 
-      // let headers = {};
-
-      // headers = {
-      //   Authorization: 'Bearer ${getAuthToken()'
-      // };
       try {
         // const API_BASE_URL = 'http://localhost:8081/members/delete';
         // const deletes = clickInfo.event.title;
         // console.log('deletes 호출!!' ,deletes)
         // axios.delete(API_BASE_URL+"/"+ deletes)
+        const headers = {
+          Authorization: 'Bearer ${getAuthToken()'
+        };
 
-
-        const response = await axios.get(API_BASE_URL+"/"+id);
+        const response = await axios.get(API_BASE_URL+"/" + id, headers);
         
         console.log(response.data); 
         setCalendars(response.data);
@@ -161,8 +158,6 @@ function Calendar() {
         
         //아이디?
         id:id,
-
-
         startDate : startDate,
         endDate : endDate,
         title: title,

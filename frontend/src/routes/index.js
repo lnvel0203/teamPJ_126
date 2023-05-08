@@ -18,16 +18,7 @@ export default function ThemeRoutes() {
     {
       path: '/',
       element: <AuthLogin />
-      // path: '/',
-      // element: <CommonLayout layout="landing" />,
-      // children: [
-      //   {
-      //     path: '/',
-      //     element: <AuthLogin />
-      //     // path: '/',
-      //     // element: <PagesLanding />
-      //   }
-      // ]
+     
     },
     LoginRoutes,
     ComponentsRoutes,
