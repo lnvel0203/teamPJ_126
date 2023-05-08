@@ -14,7 +14,8 @@ import {
   UserOutlined,
   AppstoreAddOutlined,
   RobotOutlined,
-  PartitionOutlined
+  PartitionOutlined,
+  EditOutlined
 } from '@ant-design/icons';
 
 // icons
@@ -30,7 +31,8 @@ const icons = {
   AppstoreAddOutlined,
   RobotOutlined,
   FileTextOutlined,
-  PartitionOutlined
+  PartitionOutlined,
+  EditOutlined
 };
 // ==============================|| MENU ITEMS - APPLICATIONS ||============================== //
 
@@ -59,11 +61,11 @@ const applications = {
       id: 'chat',
       title: <FormattedMessage id="chat" />,
       type: 'item',
-      url: '/apps/chat',
+      url: 'http://192.168.0.28:5000/',
       icon: icons.MessageOutlined,
-      breadcrumbs: false
-      // external: true,
-      // target: true
+      breadcrumbs: false,
+      external: true,
+      target: true
     },
     {
       id: 'calendar',
@@ -75,19 +77,19 @@ const applications = {
     //전자결재
     {
       id: 'approval',
-      title: <FormattedMessage id="approval" />,
+      title: <FormattedMessage id="전자결재" />,
       type: 'collapse',
       icon: icons.EditOutlined,
       children: [
         {
           id: 'document-write',
-          title: <FormattedMessage id="document-write" />,
+          title: <FormattedMessage id="작성" />,
           type: 'item',
           url: '/apps/document/documentWrite'
         },
         {
           id: 'document-list',
-          title: <FormattedMessage id="document-list" />,
+          title: <FormattedMessage id="목록" />,
           type: 'item',
           url: '/apps/document/documentList'
         }
@@ -125,12 +127,6 @@ const applications = {
           type: 'item',
           url: '/apps/invoice/create'
         },
-        {
-          id: 'details',
-          title: <FormattedMessage id="급여상세" />,
-          type: 'item',
-          url: '/apps/invoice/details/1'
-        },
 
         {
           id: 'edit',
@@ -153,14 +149,8 @@ const applications = {
           type: 'item',
           url: '/apps/profiles/user/personal',
           breadcrumbs: false
+
         },
-        {
-          id: 'account-profile',
-          title: <FormattedMessage id="admin_사원정보수정" />,
-          type: 'item',
-          url: '/apps/profiles/account/basic',
-          breadcrumbs: false
-        }
       ]
     }, // 여기까지 변겅
 
@@ -182,6 +172,27 @@ const applications = {
           title: <FormattedMessage id="부서관리" />,
           type: 'item',
           url: '/apps/adminperson-customer/departloaletext'
+        },
+        {
+          // 직급관리 추가(2023-05-03 김희수)
+          id: 'hierarchylocaletext',
+          title: <FormattedMessage id="직급관리" />,
+          type: 'item',
+          url: '/apps/adminperson-customer/hierarchylocaletext'
+        },
+        {
+          // 인사평가 추가(2023-05-04 김희수)
+          id: 'Personnelevaluation',
+          title: <FormattedMessage id="인사평가" />,
+          type: 'item',
+          url: '/apps/adminperson-customer/Personnelevaluation'
+        },
+        {
+          // 근태 관리
+          id: 'AttendanceList',
+          title: <FormattedMessage id="근태 관리" />,
+          type: 'item',
+          url: '/apps/adminperson-customer/AttendanceList'
         }
       ]
     }

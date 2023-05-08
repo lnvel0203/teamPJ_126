@@ -1,4 +1,4 @@
-package springBoot_team_pj_126.auth.service;
+package springBoot_team_pj_126.auth.serivce;
 
 import java.nio.CharBuffer;
 import java.util.Optional;

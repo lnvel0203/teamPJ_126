@@ -6,12 +6,10 @@ import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,10 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import springBoot_team_pj_126.dto.CalenderDTO;
 import springBoot_team_pj_126.service.CalenderServiceImpl;
-
-
-
-
 
 @RestController
 @RequestMapping(value="/members")
@@ -38,22 +32,24 @@ public class ReactCalenderController {
 	
 	// localhost:8081/calender
 	
-	@GetMapping("/calender")
-	public List<CalenderDTO> calenderList(HttpServletRequest req, Model model)
+	@GetMapping("/calender/{id}")
+	public List<CalenderDTO> calenderList(@PathVariable String id, HttpServletRequest req, Model model)
 		throws ServletException ,IOException{
 		logger.info("<<<url - calenderList()>>>");
 
-		return service.listAll(req, model);
+		
+		System.out.println(id);
+		
+		return service.listAll(id,req, model);
 		
 	}
+	
+
 	
 	@PostMapping("/insert")
 	public void calenderInsert(@RequestBody CalenderDTO calenderDTO)
 			throws ServletException ,IOException{
 		logger.info("<<<url - calenderInsert()>>>");
-		
-		System.out.println("여기요~" +calenderDTO );
-		
 		
 		service.insertCalender(calenderDTO);
 		System.out.println("calenderInsert  성공!~~");
@@ -68,6 +64,17 @@ public class ReactCalenderController {
 		
 	}
 	
-	
+	@GetMapping("/calender/getcontent/{id}")
+	public String calenderContent(@PathVariable String id)
+		throws ServletException ,IOException{
+		logger.info("<<<url - calenderContent()>>>");
+
+		
+		System.out.println(id);
+		String content = service.selectCalender(id);
+		System.out.println(content);
+		return content;
+		
+	}
 	
 }

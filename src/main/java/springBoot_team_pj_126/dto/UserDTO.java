@@ -1,9 +1,5 @@
 package springBoot_team_pj_126.dto;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -38,18 +34,10 @@ public class UserDTO {
 	private String role;	//ROLE_USER, ROLE_ADMIN, ROLE_MANAGER
 	
 	
-	// , 로 구분해서 roles를 가지고 온다.입력후 -> 파싱한다.
-	//ENUM으로 받아도된다.
-	//내가 커스터마이징해야할듯하다.
-//	public List<String> getRoleList(){
-//		
-//		if(this.role.length() > 0) {
-//			//asList 쓰는법 알아보기
-//			return Arrays.asList(this.role.split(","));
-//		}
-//		
-//		return new ArrayList<>();
-//	}
+	//김성훈
+	private String deptname;
+	private String positionname;
+	
 	
 
 }

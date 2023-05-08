@@ -16,13 +16,17 @@ public interface MemberService {
 
 	public List<UserDTO> listAll(HttpServletRequest req, Model model) 
 			throws ServletException, IOException;
-
+	
+	
+	//김성훈 5월 4일 추가 
+	public List<UserDTO> memberPositionList(HttpServletRequest req, Model model) 
+			throws ServletException, IOException;
 	
 //	public void insertMember(MemberDTO dto) throws ServletException, IOException;
 //	
 	public void editEmployee(UserDTO dto) throws ServletException, IOException;
 //	
-	public void deleteMember(int id) throws ServletException, IOException;
+	public void deleteMember(String id) throws ServletException, IOException;
 //	
 //	public MemberDTO selectMember(MemberDTO dto) throws ServletException, IOException;
 	

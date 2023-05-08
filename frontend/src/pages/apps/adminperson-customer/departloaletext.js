@@ -33,12 +33,13 @@ import {
   CSVExport,
   HeaderSort,
   IndeterminateCheckbox,
-  SortingSelect,
+  // SortingSelect,
   TablePagination,
   TableRowSelection
 } from 'components/third-party/ReactTable';
 
-import AddCustomer from 'sections/apps/customer/AddCustomer';
+// import AddCustomer from 'sections/apps/customer/AddCustomer';
+import AddDepart from 'sections/apps/customer/AddDepart';
 import CustomerView from 'sections/apps/customer/CustomerView';
 import AlertCustomerDelete from 'sections/apps/customer/AlertCustomerDelete';
 
@@ -63,7 +64,7 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
     headerGroups,
     prepareRow,
     setHiddenColumns,
-    allColumns,
+    // allColumns,
     visibleColumns,
     rows,
     page,
@@ -72,7 +73,7 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
     state: { globalFilter, selectedRowIds, pageIndex, pageSize, expanded },
     preGlobalFilteredRows,
     setGlobalFilter,
-    setSortBy,
+    // setSortBy,
     selectedFlatRows
   } = useTable(
     {
@@ -118,7 +119,7 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
             size="small"
           />
           <Stack direction={matchDownSM ? 'column' : 'row'} alignItems="center" spacing={1}>
-            <SortingSelect sortBy={sortBy.id} setSortBy={setSortBy} allColumns={allColumns} />
+            {/* <SortingSelect sortBy={sortBy.id} setSortBy={setSortBy} allColumns={allColumns} /> */}
             <Button variant="contained" startIcon={<PlusOutlined />} onClick={handleAdd} size="small">
               Add Customer
             </Button>
@@ -237,7 +238,7 @@ const ActionCell = (row, setCustomer, setCustomerDeleteId, handleClose, theme) =
           {collapseIcon}
         </IconButton>
       </Tooltip>
-      <Tooltip title="Edit">
+      <Tooltip title="수정">
         <IconButton
           color="primary"
           onClick={(e) => {
@@ -293,7 +294,7 @@ const CustomerListPage = () => {
   // 서버에서 회원 정보를 패치해옴
   const fetchUserData = useCallback(async () => {
     try {
-      const response = await axios.get('http://localhost:8081/'); //컨트롤러 주소
+      const response = await axios.get('http://localhost:8081/department'); //컨트롤러 주소
       setUserData(response.data);
     } catch (error) {
       console.error(error);
@@ -330,37 +331,24 @@ const CustomerListPage = () => {
         disableSortBy: true
       },
       {
-        Header: '#',
-        accessor: 'id',
+        Header: '번호',
+        accessor: 'deptid', // 테이블 컬럼명
         className: 'cell-center'
       },
       {
-        Header: 'User Name',
-        accessor: 'fatherName',
-        Cell: CustomCell
+        Header: '부서이름',
+        accessor: 'deptname',
+        className: 'cell-center'
       },
       {
-        Header: 'Email',
-        accessor: 'email'
+        Header: '부서장',
+        accessor: 'deptreadername',
+        className: 'cell-center'
       },
       {
-        Header: 'Contact',
-        accessor: 'contact',
-        Cell: NumberFormatCell
-      },
-      {
-        Header: 'Age',
-        accessor: 'age',
-        className: 'cell-right'
-      },
-      {
-        Header: 'Country',
-        accessor: 'country'
-      },
-      {
-        Header: 'Status',
-        accessor: 'status',
-        Cell: StatusCell
+        Header: '설립일',
+        accessor: 'deptdate',
+        className: 'cell-center'
       },
       {
         Header: 'Actions',
@@ -398,7 +386,7 @@ const CustomerListPage = () => {
         sx={{ '& .MuiDialog-paper': { p: 0 }, transition: 'transform 225ms' }}
         aria-describedby="alert-dialog-slide-description"
       >
-        <AddCustomer customer={customer} onCancel={handleAdd} />
+        <AddDepart customer={customer} onCancel={handleAdd} />
       </Dialog>
     </MainCard>
   );

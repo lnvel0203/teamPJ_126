@@ -10,10 +10,6 @@
 		SELECT * FROM document_tbl
 </select>
 
-<select id="approverList" resultType="springBoot_team_pj_126.dto.UserDTO">
-		SELECT e.e.NO,e.name,d.deptname,e.stemp FROM EMPLOYEES_TBL e,DEPARTMENT_TBl d WHERE e.DEPTID = d.DEPTID
-</select>
-
 <!-- <insert id="insertMember" parameterType="com.example.react.dto.MemberDTO">
 	INSERT INTO mvc_member_tbl values((select nvl(max(id)+1,1)from mvc_member_tbl), #{password}, #{username},#{age},#{email},#{address},#{salary})
 </insert>	

@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import springBoot_team_pj_126.dto.DocumentDTO;
-import springBoot_team_pj_126.dto.UserDTO;
 import springBoot_team_pj_126.service.DocumentService;
 
 
@@ -33,22 +32,13 @@ public class DocumentController {
 	//http://localhost:8081/members	
 	//localhost:8080/members =>가 첫 url인데
 	
-	@GetMapping("/document")
+	@GetMapping("document")
 	public List<DocumentDTO> DocumentList(HttpServletRequest req, Model model) 
 			throws ServletException, IOException{
 		System.out.println("컨트롤러 - DocumentList");
 		List<DocumentDTO> list = service.documentList(req, model);
 		System.out.println("list : " + list);
 		return service.documentList(req, model);
-	}
-	
-	@GetMapping("/approver")
-	public List<UserDTO> ApproverList(HttpServletRequest req, Model model) 
-			throws ServletException, IOException{
-		System.out.println("컨트롤러 - ApproverList");
-		List<UserDTO> list = service.approverList(req, model);
-		System.out.println("list : " + list);
-		return service.approverList(req, model);
 	}
 	
 //	//RESTAPI를 쓰고있다. ? 이 매핑이 restAPI인가?

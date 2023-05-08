@@ -17,7 +17,6 @@ import org.springframework.ui.Model;
 import springBoot_team_pj_126.dao.DocumentMapper;
 import springBoot_team_pj_126.dao.MemberMapper;
 import springBoot_team_pj_126.dto.DocumentDTO;
-import springBoot_team_pj_126.dto.UserDTO;
 
 
 @Component
@@ -32,17 +31,6 @@ public class DocumentServiceImpl implements DocumentService{
 			throws ServletException, IOException {
 		System.out.println("서비스 - list");
 		List<DocumentDTO> list = mapper.documentList();
-		System.out.println(list);
-		
-		model.addAttribute("list", list);
-		return list;
-	}
-	
-	@Override
-	public List<UserDTO> approverList(HttpServletRequest req, Model model) 
-			throws ServletException, IOException {
-		System.out.println("서비스 - approverList");
-		List<UserDTO> list = mapper.approverList();
 		System.out.println(list);
 		
 		model.addAttribute("list", list);
