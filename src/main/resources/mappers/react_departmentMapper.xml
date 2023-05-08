@@ -6,9 +6,13 @@
      
 <mapper namespace="springBoot_team_pj_126.dao.DepartmentMapper">
 
+
 <select id="departmentList" resultType="springBoot_team_pj_126.dto.DeptDTO">
 	SELECT * FROM DEPARTMENT_TBL
 </select>
 
+<insert id="addDeptment" parameterType="springBoot_team_pj_126.dto.DeptDTO">
+	INSERT INTO DEPARTMENT_TBL values(#{deptid}, #{deptname}, default, null)
+</insert>
 
 </mapper>
