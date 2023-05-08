@@ -420,7 +420,7 @@ const CustomerListPage = () => {
 
       //5월 4일 수정 김성훈  직원 직급 수정 및 버튼 
       {
-        Header: '변경',
+        Header: '부서배치',
         className: 'cell-center',
         disableSortBy: true,
         Cell: ({ value, row, setValue }) => {
