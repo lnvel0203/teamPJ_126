@@ -16,9 +16,9 @@
 	<!-- ========================================================================= -->
 	<!-- [급여 지급에 필요한 메서드] -->
 	<select id="salaryCreateDetail" parameterType="String" resultType="springBoot_team_pj_126.dto.SalaryInfoDTO">
-		SELECT INFOID, EMPID, BASESALARY, REGULARWEEKLYHOURS
+		SELECT INFOID, ID, BASESALARY, REGULARWEEKLYHOURS
 		FROM SALARY_INFO_TBL
-		WHERE EMPID = #{id}
+		WHERE ID = #{id}
 	</select>
 
 <select id="salaryList" resultType="springBoot_team_pj_126.dto.SalaryDTO">
