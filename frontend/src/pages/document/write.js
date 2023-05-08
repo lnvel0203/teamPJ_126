@@ -1,5 +1,8 @@
 import React, { useState,useEffect } from 'react';
 import './DocumentComponent.css';
+
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 const DocumentWritePage = () => {
   
   const [documentType,setDocumentType] = useState('');
@@ -7,9 +10,10 @@ const DocumentWritePage = () => {
   const [retentionPeriod,setRetentionPeriod] = useState('');
   const [securityLevel,setSecurityLevel] = useState('');
   const [approver, setApprover] = useState([]);
+  const id = localStorage.getItem('id');
+  
  
   const handleDocumentTypeChange = (event) => {
-    localStorage.removeItem("approver");
     setDocumentType(event.target.value);
   };
 
@@ -17,6 +21,7 @@ const DocumentWritePage = () => {
 
   const handleAuthorChange = (event) => {
     setAuthor(event.target.value);
+    console.log("id",{id})
   };
 
   const handleRetentionPeriodChange = (event) => {
@@ -29,7 +34,7 @@ const DocumentWritePage = () => {
   };
 
   const handleAddButtonClick = () => {
-    
+    localStorage.removeItem("approver");
     window.open('/apps/document/AddApprover', '_blank', 'width=800,height=600,top=300,left=300');
   };
 
@@ -42,17 +47,93 @@ const DocumentWritePage = () => {
   useEffect(() => {
     const storedApprover = JSON.parse(localStorage.getItem('approver')) || [];
     setApprover(storedApprover);
+    console.log(storedApprover)
   }, [localStorage.getItem('approver')]);
+
+  useEffect(() => {
+    const storedApprover = JSON.parse(localStorage.getItem('approver')) || [];
+    setApprover(storedApprover);
+    const handleStorageChange = () => {
+      const storedApprover = JSON.parse(localStorage.getItem('approver')) || [];
+      setApprover(storedApprover);
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
+
+  const [value, setValue] = useState('');
+
+  const modules = {
+    toolbar: [
+      [{ font: [] }],
+      [{ header: [1, 2, 3, 4, false] }],
+      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+      ['link', 'image'],
+      [{ align: [] }, { color: [] }, { background: [] }],
+      ['clean']
+    ]
+  };
+
+  const formats = [
+    'font',
+    'header',
+    'bold',
+    'italic',
+    'underline',
+    'strike',
+    'blockquote',
+    'list',
+    'bullet',
+    'indent',
+    'link',
+    'image',
+    'align',
+    'color',
+    'background'
+  ];
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    
+    const formData = new FormData();
+    formData.append('documentType', documentType);
+    formData.append('author', author);
+    formData.append('retentionPeriod', retentionPeriod);
+    formData.append('securityLevel', securityLevel);
+  
+    approver.forEach((apv, index) => {
+      formData.append(`approver${index}`, JSON.stringify(apv));
+    });
+  
+    formData.append('file', selectedFile);
+  
+    try {
+      const response = await axios.post('http://localhost:8081/documents', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      console.log('Insert success:', response.data);
+      // 이후 처리 (예: 페이지 이동 등)
+    } catch (error) {
+      console.error('Insert error:', error);
+      // 이후 처리 (예: 에러 메시지 표시 등)
+    }
+  };
+
   
     return (
     
       <div style={{ marginLeft: '' }}>      
         <h1>기본 설정</h1>
-        <table>
+         <table className="tb-1">
           <tbody>
-            <tr>
+            <tr className="tr-1">
               <td>문서 종류</td>
-              <td>
+              <td className='write-td'>
                 <select value={documentType} onChange={handleDocumentTypeChange}>
                   <option value="">-- 선택하세요 --</option>
                   <option value="보고서">보고서</option>
@@ -61,14 +142,14 @@ const DocumentWritePage = () => {
                   <option value="기타">기타</option>
                 </select>
               </td>
-              <td>작성자</td>
+              <td className='write-td'>작성자</td>
               <td>
                 <input type="text" value={author} onChange={handleAuthorChange} />
               </td>
             </tr>
-            <tr>
+            <tr className="tr-1">
               <td>보존 연한</td>
-              <td>
+              <td className='write-td'>
                 <select value={retentionPeriod} onChange={handleRetentionPeriodChange}>
                   <option value="">-- 선택하세요 --</option>
                   <option value="1년">1년</option>
@@ -79,7 +160,7 @@ const DocumentWritePage = () => {
                 </select>
               </td>
               <td>보안등급</td>
-              <td>
+              <td className='write-td'>
                 <select value={securityLevel} onChange={handleSecurityLevelChange}>
                   <option value="">-- 선택하세요 --</option>
                   <option value="일반">일반</option>
@@ -108,11 +189,13 @@ const DocumentWritePage = () => {
               <td className="col-5">{approver[3] ? approver[3].positionName : ""}</td>
             </tr>
             <tr className="tr-2">
-              <td className="col-2"></td>
-              <td className="col-3"></td>
-              <td className="col-4"></td>
-              <td className="col-5"></td>
+              <td className="col-2">{approver[0] ? "(결재란)" : ""}</td>
+              <td className="col-3">{approver[1] ? "(결재란)" : ""}</td>
+              <td className="col-4">{approver[2] ? "(결재란)" : ""}</td>
+              <td className="col-5">{approver[3] ? "(결재란)" : ""}</td>
             </tr>
+
+
             <tr className="tr-3">
               <td className="col-2">{approver[0] ? approver[0].name : ""}</td>
               <td className="col-3">{approver[1] ? approver[1].name : ""}</td>
@@ -121,7 +204,7 @@ const DocumentWritePage = () => {
             </tr>
             <tr className="tr-4">
               <td className="col-1">참조</td>
-              <td colSpan="4" className="col-2">
+              <td colSpan="4" className="file">
                 <input type="file" onChange={handleFileUpload} />
               </td>
             </tr>
@@ -129,6 +212,23 @@ const DocumentWritePage = () => {
         </table>
         <br />
         <h1>상세 입력</h1>
+        <form onSubmit={handleSubmit}>
+      <div style={{ height: '650px', width: '900px' }}>
+        <ReactQuill
+          style={{ height: '600px' }}
+          theme="snow"
+          modules={modules}
+          formats={formats}
+          value={value}
+          onChange={(content, delta, source, editor) => setValue(editor.getHTML())}
+        />
+        <div className="ql-editor" style={{ color: 'black' }}></div>
+      </div>
+      <div>
+        <button type="submit">보내기</button>
+        <button type="button">취소</button>
+      </div>
+    </form>
       </div>
     );
 }

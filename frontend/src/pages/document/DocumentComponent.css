@@ -9,10 +9,10 @@
 .write-td {
   border: 1px solid #ddd;
   padding: 8px;
-  text-align: left;
+  text-align: center; /* 중앙정렬로 수정 */
   font-weight: bold;
   color: black;
-}
+} 
 
 .write-h1 {
   font-size: 24px;
@@ -24,22 +24,19 @@
   position: relative;
 }
 
-.col-2,
-.col-3,
-.col-4,
-.col-5 {
+.col-2, .col-3, .col-4, .col-5 {
   width: 80px;
 }
 
 .tb-3 {
   height: 250px;
 }
+
 .tr-4 {
   height: 50px;
 }
 
-.tr-1,
-.tr-3 {
+.tr-1, .tr-3 {
   height: 40px;
 }
 
@@ -56,23 +53,40 @@
 .ql-header.ql-header-1 {
   color: black;
 }
+
 .selectedApprovers {
   color: black;
 }
+
 .selected {
   color: rgb(38, 0, 255);
 }
-.col-1,
-.col-2,
-.col-3,
-.col-4,
-.col-5,
-.tr-1,
-.tr-3,
-.tr-4 {
+
+.col-1, .col-2, .col-3, .col-4, .col-5,
+.tr-1, .tr-3, .tr-4 {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: left;
   font-weight: bold;
   color: black;
+}
+
+.tr-2 {
+  height: 100px;
+}
+
+.tb-2 td {
+  text-align: center; /* 중앙정렬로 수정 */
+}
+
+.tb-1 td {
+  text-align: center; /* 중앙정렬로 수정 */
+}
+
+.tb-1 {
+  border-collapse: collapse;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 900px;
+  height: 120px;
 }
