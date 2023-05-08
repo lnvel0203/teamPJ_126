@@ -129,6 +129,7 @@ const applications = {
           type: 'item',
           url: '/apps/invoice/create'
         },
+
         {
           id: 'edit',
           title: <FormattedMessage id="급여수정" />,
@@ -150,7 +151,8 @@ const applications = {
           type: 'item',
           url: '/apps/profiles/user/personal',
           breadcrumbs: false
-        }
+
+        },
       ]
     }, // 여기까지 변겅
 

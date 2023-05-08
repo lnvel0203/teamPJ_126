@@ -10,7 +10,7 @@
    SELECT * FROM EMPLOYEES_TBL where id ={id}
 </select>
 
-<!-- <insert id="insertMember" parameterType="com.example.react.dto.MemberDTO">
+<!-- <2insert id="insertMember" parameterType="com.example.react.dto.MemberDTO">
 	INSERT INTO mvc_member_tbl values((select nvl(max(id)+1,1)from mvc_member_tbl), #{password}, #{username},#{age},#{email},#{address},#{salary})
 </insert>	
 

@@ -39,24 +39,24 @@ public class SalaryServiceImpl implements SalaryService{
 		return list;
 	}
 	
-//	@Override
-//	public void insertMember(MemberDTO dto) throws ServletException, IOException {
-//		System.out.println("서비스 - insert");
-//		
-//		mapper.insertMember(dto);
-//	}
-//
-//	@Override
-//	public void updateMember(MemberDTO dto) throws ServletException, IOException {
-//		System.out.println("서비스 - update");
-//		mapper.updateMember(dto);
-//	}
-//
-//	@Override
-//	public void deleteMember(int id) throws ServletException, IOException {
-//		System.out.println("서비스 - delete");
-//		mapper.deleteById(id);
-//	}
+	@Override
+	public void insertSalary(SalaryDTO dto) throws ServletException, IOException {
+		System.out.println("서비스 - insert");
+		
+		mapper.insertSalary(dto);
+	}
+
+	@Override
+	public void updateSalary(SalaryDTO dto) throws ServletException, IOException {
+		System.out.println("서비스 - update");
+		mapper.updateSalary(dto);
+	}
+
+	@Override
+	public void deleteSalary(int salaryId) throws ServletException, IOException {
+		System.out.println("서비스 - delete");
+		mapper.deleteSalary(salaryId);
+	}
 //
 //	@Override
 //	public MemberDTO selectMember(MemberDTO dto) throws ServletException, IOException {
