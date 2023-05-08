@@ -62,9 +62,9 @@ import { renderFilterTypes, GlobalFilter } from 'utils/react-table';
 //function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, handleAdd })
 
 //5월 4일 김성훈 직원 직급 선택하기 
-function SelectCell({ positionname, onChange }) {
+function SelectCell({ positionName, onChange }) {
   return (
-    <select value={positionname} onChange={e => onChange(e.target.value)}>
+    <select value={positionName} onChange={e => onChange(e.target.value)}>
 
       <option value="선택">선택</option>
 
@@ -81,10 +81,10 @@ function SelectCell({ positionname, onChange }) {
 
 //5월 4일 김성훈 직급 등록 백엔드로 보내기 
 function handleEdit(rowData) {
-  const { id, positionname } = rowData;
-  console.log(id, positionname);
+  const { id, positionName } = rowData;
+  console.log(id, positionName);
 
-  axios.put(`http://localhost:8081/members/editPosition/${id}/${positionname}`)
+  axios.put(`http://localhost:8081/members/editPosition/${id}/${positionName}`)
     .then(() => {
       console.log('수정 성공');
       // 서버에서 수정된 데이터를 받아올 경우 필요한 처리
@@ -409,12 +409,12 @@ const CustomerListPage = () => {
       },
       {
         Header: '부서',
-        accessor: 'deptname',
+        accessor: 'deptName',
         className: 'cell-right'
       },
       {
         Header: '직급',
-        accessor: 'positionname',
+        accessor: 'positionName',
         className: 'cell-center',
       },
 
@@ -428,13 +428,13 @@ const CustomerListPage = () => {
           
           const handlePositionChange = (newValue) => {
             setSelectedPosition(newValue);
-            setValue(newValue, row.index, 'positionname', row.original.positionname);
+            setValue(newValue, row.index, 'positionName', row.original.positionName);
           };
         
           return (
             <div>
-              <SelectCell positionname={selectedPosition} onChange={handlePositionChange} />
-              <button onClick={() => handleEdit({ ...row.original, positionname: selectedPosition })}>수정</button>
+              <SelectCell positionName={selectedPosition} onChange={handlePositionChange} />
+              <button onClick={() => handleEdit({ ...row.original, positionName: selectedPosition })}>수정</button>
             </div>
           );
         }

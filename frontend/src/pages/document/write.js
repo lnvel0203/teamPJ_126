@@ -76,7 +76,6 @@ const DocumentWritePage = () => {
       ['clean']
     ]
   };
-
   const formats = [
     'font',
     'header',

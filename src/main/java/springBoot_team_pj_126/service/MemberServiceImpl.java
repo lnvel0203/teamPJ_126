@@ -102,10 +102,10 @@ public class MemberServiceImpl implements MemberService{
 	}
 	//5월 4일 김성훈 추가  직급 수정 
 	@Override
-	public void editPosition(String id , String positionname) 
+	public void editPosition(String id , String positionName) 
 			throws ServletException, IOException {
 		System.out.println("서비스 - editPosition");
-		mapper.editPosition(id,positionname);
+		mapper.editPosition(id,positionName);
 	}
 
 
