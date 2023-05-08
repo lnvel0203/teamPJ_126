@@ -88,15 +88,15 @@ public class ReactController {
 	
 	
 	//5월 8일  리엑트에서 아이디와 포지션 받아오기  포지선 수정 
-	@PutMapping("/editPosition/{id}/{positionname}")
+	@PutMapping("/editPosition/{id}/{positionName}")
 	public void PositionUpdata(UserDTO dto, Model model) 
 			throws ServletException, IOException{ 
 		System.out.println("컨트롤러 - PositionUdata");
 		String id = dto.getId();
-		String positionname =dto.getPositionname();
+		String positionName =dto.getPositionName();
 		System.out.println("id확인:  " + id);
-		System.out.println("postitonname: " +positionname );
-		service.editPosition(id ,positionname);
+		System.out.println("positionName: " +positionName );
+		service.editPosition(id ,positionName);
 		System.out.println("update [성공]");
 	}
 	

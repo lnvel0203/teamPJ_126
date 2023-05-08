@@ -175,7 +175,6 @@ const applications = {
           url: '/apps/adminperson-customer/departloaletext'
         },
         {
-          // 직급관리 추가(2023-05-08 김희수)
           id: 'departdepartments',
           title: <FormattedMessage id="부서배치" />,
           type: 'item',

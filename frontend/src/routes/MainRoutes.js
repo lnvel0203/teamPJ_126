@@ -26,7 +26,6 @@ const CustomLocaleText = Loadable(lazy(() => import('pages/apps/adminperson-cust
 const CustomerListPage = Loadable(lazy(() => import('pages/apps/adminperson-customer/departloaletext')));
 const HierarchyLocaleText = Loadable(lazy(() => import('pages/apps/adminperson-customer/hierarchylocaletext')));
 const Personnelevaluation = Loadable(lazy(() => import('pages/apps/adminperson-customer/Personnelevaluation')));
-// 2023-05-08 추가
 const DepartDepartments = Loadable(lazy(() => import('pages/apps/adminperson-customer/departdepartments')));
 
 
