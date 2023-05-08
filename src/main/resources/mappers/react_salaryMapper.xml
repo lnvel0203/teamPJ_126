@@ -4,32 +4,31 @@
      PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
      "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
      
-<mapper namespace="springBoot_team_pj_126.dao.MypageMapper">
+<mapper namespace="springBoot_team_pj_126.dao.SalaryMapper">
 
-<select id="memberList" resultType="springBoot_team_pj_126.dto.UserDTO">
-   SELECT * FROM EMPLOYEES_TBL where id ={id}
+<select id="salaryList" resultType="springBoot_team_pj_126.dto.SalaryDTO">
+   SELECT * FROM salary_TBL where id =#{id}
 </select>
 
-<!-- <insert id="insertMember" parameterType="com.example.react.dto.MemberDTO">
-	INSERT INTO mvc_member_tbl values((select nvl(max(id)+1,1)from mvc_member_tbl), #{password}, #{username},#{age},#{email},#{address},#{salary})
+ <insert id="insertSalary" parameterType="com.example.react.dto.SalaryDTO">
+	INSERT INTO salary_TBL values((select nvl(max(salaryId)+1,1)from salary_TBL), #{basicSalary}, #{name},#{payDay},#{paymentstatus},#{taxtionId},#{nontaxtionId},#{taxId},,#{overtimePay})
 </insert>	
 
-<update id="updateMember" parameterType="com.example.react.dto.MemberDTO">
-	update mvc_member_tbl
-	set password = #{password},
-		username = #{username},
-		age = #{age},
-		email = #{email},
-		address = #{address},
-		salary = #{salary}
+<update id="updateSalary" parameterType="com.example.react.dto.SalaryDTO">
+	update salary_TBL
+	set basicSalary = #{basicSalary},
+	payDay = #{payDay},
+	taxtionId = #{taxtionId},
+		nontaxtionId = #{nontaxtionId},
+		taxId= #{taxId}
 	where id=#{id}
 </update>
 
-<delete id="deleteById" parameterType="int">
-	delete from mvc_member_tbl where id=#{id} 
+<delete id="deleteSalary" parameterType="int">
+	delete from salary_TBL where id=#{id} 
 </delete>
 		
-<select id="findById" parameterType="com.example.react.dto.MemberDTO" resultType="com.example.react.dto.MemberDTO">
+<!--<select id="findById" parameterType="com.example.react.dto.MemberDTO" resultType="com.example.react.dto.MemberDTO">
 	select * from mvc_member_tbl where id=#{id} AND password =#{password}
 </select>
 
