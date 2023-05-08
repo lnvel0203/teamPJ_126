@@ -1,6 +1,5 @@
 import React, { useState,useEffect } from 'react';
 import './DocumentComponent.css';
-
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 const DocumentWritePage = () => {
@@ -15,6 +14,7 @@ const DocumentWritePage = () => {
  
   const handleDocumentTypeChange = (event) => {
     setDocumentType(event.target.value);
+    console.log(localStorage.getItem("id"))
   };
 
   
@@ -95,33 +95,29 @@ const DocumentWritePage = () => {
     'background'
   ];
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    
-    const formData = new FormData();
-    formData.append('documentType', documentType);
-    formData.append('author', author);
-    formData.append('retentionPeriod', retentionPeriod);
-    formData.append('securityLevel', securityLevel);
+  const handleSubmit = () => {
+    const addDocument = {
+        
+      //아이디?
+      id:id,
+      documentType : documentType,
+      author : author,
+      retentionPeriod: retentionPeriod,
+      securityLevel: securityLevel,
+    };
   
-    approver.forEach((apv, index) => {
-      formData.append(`approver${index}`, JSON.stringify(apv));
-    });
+    console.log('insert 호출!!', addDocument);
   
-    formData.append('file', selectedFile);
   
-    try {
-      const response = await axios.post('http://localhost:8081/documents', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+    axios.post(API_BASE_URL + "/addDocument", addDocument)
+      .then(response => {
+        console.log(response.data);
+        alert('일정이 추가되었습니다.');
+      })
+      .catch(error => {
+        console.error(error);
+        alert('일정 추가에 실패했습니다.');
       });
-      console.log('Insert success:', response.data);
-      // 이후 처리 (예: 페이지 이동 등)
-    } catch (error) {
-      console.error('Insert error:', error);
-      // 이후 처리 (예: 에러 메시지 표시 등)
-    }
   };
 
   

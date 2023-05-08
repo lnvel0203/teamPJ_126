@@ -49,6 +49,15 @@ public class DocumentServiceImpl implements DocumentService{
 		return list;
 	}
 	
+	@Override
+	public void addDocument(DocumentDTO dto)
+			throws ServletException, IOException {
+		System.out.println("<<< service - 결재서류등록 >>>");
+		
+		mapper.addDocument(dto);
+	}
+	
+	
 //	@Override
 //	public void insertMember(MemberDTO dto) throws ServletException, IOException {
 //		System.out.println("서비스 - insert");
