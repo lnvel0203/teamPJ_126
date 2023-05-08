@@ -15,6 +15,12 @@ public interface SalaryMapper {
 	
 	public List<SalaryDTO> salaryList();
 	
+	public void insertSalary(SalaryDTO salaryDTO);
+	
+	public void updateSalary(SalaryDTO salaryDTO);
+	
+	public void deleteSalary(int salaryId);
+	
 }
 
 

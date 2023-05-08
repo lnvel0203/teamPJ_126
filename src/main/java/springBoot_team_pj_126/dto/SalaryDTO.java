@@ -14,7 +14,7 @@ import lombok.Data;
 @Data
 public class SalaryDTO {
 	@Id
-    private int salaryId;
+  private int salaryId;
 	private int basicSalary;
 	private String payDay; //지급일
 	private String paymentstatus;
@@ -23,8 +23,11 @@ public class SalaryDTO {
 	private int taxId;
 	private int no;
 	
+
     private String name; // 사원이름
-//    private int overtimePay;  //야근수당
+    
+    
+//  private int overtimePay;  //야근수당
 //	private int deduction; //공제액 급여에서 공제된 금액
 //	private int totaleduction; // 공제총액 공제 항목의 총액  (공제액(sum))
 //	private int netPay; // 지급액  
