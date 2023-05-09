@@ -48,10 +48,6 @@ public class MemberServiceImpl implements MemberService{
 	
 	
 	
-
-	
-	
-	
 //	@Override
 //	public void insertMember(MemberDTO dto) throws ServletException, IOException {
 //		System.out.println("서비스 - insert");
@@ -107,7 +103,5 @@ public class MemberServiceImpl implements MemberService{
 		System.out.println("서비스 - editPosition");
 		mapper.editPosition(id,positionName);
 	}
-
-
 
 }

@@ -35,6 +35,4 @@ public interface MemberService {
 	//5월 4일 추가 김성훈   // 지원 직급 수정 
 	public void editPosition(String id , String positionName) throws ServletException, IOException;
 	
-	
-	
 }
