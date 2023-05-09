@@ -17,15 +17,10 @@ public interface MemberService {
 	public List<UserDTO> listAll(HttpServletRequest req, Model model) 
 			throws ServletException, IOException;
 
-	
-//	public void insertMember(MemberDTO dto) throws ServletException, IOException;
-//	
+// < 4월 28일 김희수 추가 - 상태 업데이트문 >
 	public void editEmployee(UserDTO dto) throws ServletException, IOException;
 //	
 	public void deleteMember(String id) throws ServletException, IOException;
-//	
-//	public MemberDTO selectMember(MemberDTO dto) throws ServletException, IOException;
-	
 	
 	
 	//김성훈 5월 4일 추가   // 직원 리스트

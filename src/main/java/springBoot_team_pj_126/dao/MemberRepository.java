@@ -16,7 +16,11 @@ public interface MemberRepository {
 	public String findPassword(String dto);
 	
 	public List<UserDTO> memberList();
+	
+	// 4월 28일 김희수 추가
 	public void deleteById(String id);
+	
+	// 5월 2일 김희수 추가
 	public void editEmployee(UserDTO dto);
 	
 	//김성훈 5월 4일 추가

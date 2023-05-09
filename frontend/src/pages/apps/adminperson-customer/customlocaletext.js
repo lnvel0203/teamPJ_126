@@ -49,22 +49,6 @@ import { renderFilterTypes, GlobalFilter } from 'utils/react-table';
 import { CloseOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
 
 // ==============================|| REACT TABLE ||============================== //
-// const customerId = 11;
-
-// # axios 승인 요청
-// const handleClick = (no) => {
-//   alert('id' + no);
-//   axios
-//     .post('http://localhost:8081/members/editEmployee', {
-//       no: no
-//     })
-//     .then((response) => {
-//       console.log(response);
-//     })
-//     .catch((error) => {
-//       console.error(error);
-//     });
-// };
 
 const handleClick = (no) => {
   //미승인 상태 사원 -> 승인상태로 변경 및 승인버튼 삭제

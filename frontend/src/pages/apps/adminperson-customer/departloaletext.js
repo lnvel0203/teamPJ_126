@@ -15,7 +15,8 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Tooltip,
+  //2023-05-09 김희수 Tooltip 삭제
+  // Tooltip,
   Typography,
   useMediaQuery
 } from '@mui/material';
@@ -27,19 +28,20 @@ import { useFilters, useExpanded, useGlobalFilter, useRowSelect, useSortBy, useT
 // project import
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
-import IconButton from 'components/@extended/IconButton';
+// import IconButton from 'components/@extended/IconButton';
 import { PopupTransition } from 'components/@extended/Transitions';
 import {
   CSVExport,
   HeaderSort,
   IndeterminateCheckbox,
+  //2023-05-09 김희수 SortingSelect 삭제
   // SortingSelect,
   TablePagination,
   TableRowSelection
 } from 'components/third-party/ReactTable';
 
 // import AddCustomer from 'sections/apps/customer/AddCustomer';
-import AddDepart from 'sections/apps/customer/AddDepart';
+import AddDepart from 'sections/apps/depart/AddDepart';
 import CustomerView from 'sections/apps/customer/CustomerView';
 import AlertCustomerDelete from 'sections/apps/customer/AlertCustomerDelete';
 
@@ -47,9 +49,43 @@ import AlertCustomerDelete from 'sections/apps/customer/AlertCustomerDelete';
 import { renderFilterTypes, GlobalFilter } from 'utils/react-table';
 
 // assets
-import { CloseOutlined, PlusOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
+import {  PlusOutlined } from '@ant-design/icons';
+
+// 수정 팝업 컴포넌트
+//  import EditDepart from 'sections/apps/depart/EditDepart';
 
 // ==============================|| REACT TABLE ||============================== //
+
+// 2023-05-09 김희수 부서 수정 버튼기능 추가
+// const editClick = () => {
+//   alert('test');
+//   window.open('sections/apps/depart/EditDepart');
+//   axios
+//     .put(`http://localhost:8081/department/editDepartment/${deptid}/${deptname}`, deptid,deptname)
+//     .then((EditDepart) => {
+//       console.log(EditDepart);
+//     })
+//     .catch((error) => {
+//       console.error(error);
+//     });
+// }
+
+//5월 9일 김희수 부서이름 수정
+function SelectCell({ positionName, onChange }) {
+  return (
+    <select value={positionName} onChange={e => onChange(e.target.value)}>
+
+      <option value="선택">부서이름을 선택하세요.</option>
+
+      <option value="인사팀">인사팀</option>
+      <option value="경영지원팀">경영지원팀</option>
+      <option value="영업팀">영업팀</option>
+      <option value="기획팀">기획팀</option>
+      <option value="개발팀">개발팀</option>
+    </select>
+  );
+}
+
 
 function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, handleAdd }) {
   const theme = useTheme();
@@ -63,7 +99,7 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
     getTableBodyProps,
     headerGroups,
     prepareRow,
-    setHiddenColumns,
+    // setHiddenColumns,
     // allColumns,
     visibleColumns,
     rows,
@@ -93,12 +129,13 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
   );
 
   useEffect(() => {
-    if (matchDownSM) {
-      setHiddenColumns(['age', 'contact', 'visits', 'email', 'status', 'avatar']);
-    } else {
-      setHiddenColumns(['avatar', 'email']);
-    }
+    // if (matchDownSM) {
+    //   setHiddenColumns(['age', 'contact', 'visits', 'email', 'status', 'avatar']);
+    // } else {
+    //   setHiddenColumns(['avatar', 'email']);
+    // }
     // eslint-disable-next-line
+    
   }, [matchDownSM]);
 
   return (
@@ -172,7 +209,9 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
         </Table>
       </Stack>
     </>
+    
   );
+  
 }
 
 ReactTable.propTypes = {
@@ -219,52 +258,53 @@ const StatusCell = ({ value }) => {
   }
 };
 
-const ActionCell = (row, setCustomer, setCustomerDeleteId, handleClose, theme) => {
-  const collapseIcon = row.isExpanded ? (
-    <CloseOutlined style={{ color: theme.palette.error.main }} />
-  ) : (
-    <EyeTwoTone twoToneColor={theme.palette.secondary.main} />
-  );
-  return (
-    <Stack direction="row" alignItems="center" justifyContent="center" spacing={0}>
-      <Tooltip title="View">
-        <IconButton
-          color="secondary"
-          onClick={(e) => {
-            e.stopPropagation();
-            row.toggleRowExpanded();
-          }}
-        >
-          {collapseIcon}
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="수정">
-        <IconButton
-          color="primary"
-          onClick={(e) => {
-            e.stopPropagation();
-            setCustomer(row.values);
-            handleAdd();
-          }}
-        >
-          <EditTwoTone twoToneColor={theme.palette.primary.main} />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Delete">
-        <IconButton
-          color="error"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleClose();
-            setCustomerDeleteId(row.values.fatherName);
-          }}
-        >
-          <DeleteTwoTone twoToneColor={theme.palette.error.main} />
-        </IconButton>
-      </Tooltip>
-    </Stack>
-  );
-};
+// const ActionCell = (row, setCustomerEditId, setCustomerDeleteId, handleClose, theme) => {
+//   const collapseIcon = row.isExpanded ? (
+//     <CloseOutlined style={{ color: theme.palette.error.main }} />
+//   ) : (
+//     <EyeTwoTone twoToneColor={theme.palette.secondary.main} />
+//   );
+//   return (
+//     <Stack direction="row" alignItems="center" justifyContent="center" spacing={0}>
+//       <Tooltip title="View">
+//         <IconButton
+//           color="secondary"
+//           onClick={(e) => {
+//             e.stopPropagation();
+//             row.toggleRowExpanded();
+//           }}
+//         >
+//           {collapseIcon}
+//         </IconButton>
+//       </Tooltip>
+//       <Tooltip title="수정">
+//         <IconButton
+//           color="primary"
+//           onClick={(e) => {
+//             e.stopPropagation();
+//             // setCustomer(row.values);
+//             // setCustomerEditId(row.values); 
+//             handleEditClick(row.values.deptid); 
+//           }}
+//         >
+//           <EditTwoTone twoToneColor={theme.palette.primary.main} />
+//         </IconButton>
+//       </Tooltip>
+//       <Tooltip title="Delete">
+//         <IconButton
+//           color="error"
+//           onClick={(e) => {
+//             e.stopPropagation();
+//             handleClose();
+//             setCustomerDeleteId(row.values.deptname);
+//           }}
+//         >
+//           <DeleteTwoTone twoToneColor={theme.palette.error.main} />
+//         </IconButton>
+//       </Tooltip>
+//     </Stack>
+//   );
+// };
 
 StatusCell.propTypes = {
   value: PropTypes.number
@@ -309,14 +349,15 @@ const CustomerListPage = () => {
 
   const [add, setAdd] = useState(false);
   const [open, setOpen] = useState(false);
-  const [customer, setCustomer] = useState();
-  const [customerDeleteId, setCustomerDeleteId] = useState();
+  const [customer, setCustomerEditId] = useState();
+  // 2023-05-09 김희수 setCustomerDeleteId 삭제
+  const [customerDeleteId] = useState();
 
   const handleAdd = () => {
     setAdd(!add);
-    if (customer && !add) setCustomer(null);
+    if (customer && !add) setCustomerEditId(null);
   };
-
+ 
   const handleClose = () => {
     setOpen(!open);
   };
@@ -351,17 +392,32 @@ const CustomerListPage = () => {
         className: 'cell-center'
       },
       {
-        Header: 'Actions',
+        Header: '부서이름 변경',
         className: 'cell-center',
         disableSortBy: true,
-        Cell: ({ row }) => ActionCell(row, setCustomer, setCustomerDeleteId, handleClose, theme)
+        // Cell: ({ row }) => ActionCell(row, setCustomerEditId, setCustomerDeleteId, handleClose, theme)
+        Cell: ({ value, row, setValue }) => {
+          const [selectedPosition, setSelectedPosition] = useState(value);
+          
+          const handlePositionChange = (newValue) => {
+            setSelectedPosition(newValue);
+            setValue(newValue, row.index, 'positionName', row.original.positionName);
+          };
+        
+          return (
+            <div>
+              <SelectCell positionName={selectedPosition} onChange={handlePositionChange} />
+              <button onClick={() => handleEdit({ ...row.original, positionName: selectedPosition })}>수정</button>
+            </div>
+          );
+        }
       }
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [theme]
   );
 
-  const renderRowSubComponent = useCallback(({ row }) => <CustomerView data={data[row.id]} />, [data]);
+  const renderRowSubComponent = useCallback(({ row }) => <CustomerView data={data[row.deptid]} />, [data]);
 
   return (
     <MainCard content={false}>
@@ -388,6 +444,20 @@ const CustomerListPage = () => {
       >
         <AddDepart customer={customer} onCancel={handleAdd} />
       </Dialog>
+
+      {/* <Dialog
+        maxWidth="sm"
+        TransitionComponent={PopupTransition}
+        keepMounted
+        fullWidth
+        onClose={setCustomerEditId}
+        open={add}
+        sx={{ '& .MuiDialog-paper': { p: 0 }, transition: 'transform 225ms' }}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <EditDepart customer={customer} onCancel={handleAdd} />
+      </Dialog> */}
+
     </MainCard>
   );
 };

@@ -18,4 +18,8 @@ public interface DepartmentService {
 			throws ServletException, IOException;
 	
 	public void addDepartment(DeptDTO dto) throws ServletException, IOException;
+	
+	//2023-05-09 김희수 추가
+	public void editDepartment(DeptDTO dto) 
+			throws ServletException, IOException; 
 }
