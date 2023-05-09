@@ -61,38 +61,68 @@ import { renderFilterTypes, GlobalFilter } from 'utils/react-table';
 //5월 4일 김성훈 handleAdd,삭제
 //function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, handleAdd })
 
-//5월 4일 김성훈 직원 직급 선택하기 
-function SelectCell({ positionName, onChange }) {
+//5월 8일 김성훈 직원 팀 선택하기 
+function SelectCell({ deptname, onChange, options }) {
+  const handleDeptChange = (event) => {
+    const newValue = event.target.value;
+    onChange(newValue);
+  };
+
   return (
-    <select value={positionName} onChange={e => onChange(e.target.value)}>
-
-      <option value="선택">선택</option>
-
-      <option value="사원">사원</option>
-      <option value="주임">주임</option>
-      <option value="대리">대리</option>
-      <option value="과장">과장</option>
-      <option value="부장">부장</option>
-      <option value="이사">이사</option>
-      <option value="대표이사">대표이사</option>
+    <select value={deptname} onChange={handleDeptChange}>
+      {options.map((option) => (
+        <option key={option} value={option}>
+          {option}
+        </option>
+      ))}
     </select>
   );
 }
 
-//5월 4일 김성훈 직급 등록 백엔드로 보내기 
-function handleEdit(rowData) {
-  const { id, positionName } = rowData;
-  console.log(id, positionName);
+//5월 8일 김성훈 팀 리스트 불러오기 
+const Cell = ({ value, row, setValue }) => {
+  const [selectedDept, setSelectedDept] = useState(value);
+  const [deptList, setDeptList] = useState([]);
 
-  axios.put(`http://localhost:8081/members/editPosition/${id}/${positionName}`)
+  const handleDeptChange = (newValue) => {
+    setSelectedDept(newValue);
+    setValue(newValue, row.index, 'DeptName', row.original.DeptName);
+  };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get('http://localhost:8081/department');
+        const deptData = response.data;
+        const deptNames = deptData.map((dept) => dept.deptname);
+        setDeptList(deptNames);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchUserData();
+  }, []);
+
+  return (
+    <div>
+      <SelectCell deptname={selectedDept} onChange={handleDeptChange} options={deptList} />
+      <button onClick={() => handleEdit({ ...row.original, DeptName: selectedDept })}>수정</button>
+    </div>
+  );
+};
+//5월 8일 김성훈 팀 등록 백엔드로 보내기 
+function handleEdit(rowData) {
+  const { id, DeptName } = rowData;
+  console.log(id, DeptName);
+
+  axios
+    .put(`http://localhost:8081/members/editDeptname/${id}/${DeptName}`)
     .then(() => {
       console.log('수정 성공');
-      // 서버에서 수정된 데이터를 받아올 경우 필요한 처리
-      window.location.reload(); // 자동 새로고침
+       window.location.reload(); 
     })
-    .catch(error => {
+    .catch((error) => {
       console.error('수정 실패', error);
-      // 에러 처리
     });
 }
 
@@ -376,7 +406,7 @@ const CustomerListPage = () => {
     setOpen(!open);
   };
 
-  //5월 4일 김성훈 내용 수정 
+  //5월 8일 김성훈 내용 수정 
   const columns = useMemo(
     () => [
       {
@@ -407,38 +437,48 @@ const CustomerListPage = () => {
         accessor: 'state',
         className: 'cell-center'
       },
-      {
-        Header: '부서',
-        accessor: 'deptName',
-        className: 'cell-right'
-      },
+
       {
         Header: '직급',
         accessor: 'positionName',
         className: 'cell-center',
       },
-
-      //5월 4일 수정 김성훈  직원 직급 수정 및 버튼 
       {
-        Header: '변경',
+        Header: '부서',
+        accessor: 'deptName',
+        className: 'cell-right'
+      },
+
+      // 5월 8일 김성훈 팀 리스트 보이기 및 선택하기
+      {
+        Header: '부서선택',
         className: 'cell-center',
         disableSortBy: true,
-        Cell: ({ value, row, setValue }) => {
-          const [selectedPosition, setSelectedPosition] = useState(value);
+        Cell: Cell,
+      },
+      
+
+      // //5월 4일 수정 김성훈  직원 직급 수정 및 버튼 
+      // {
+      //   Header: '변경',
+      //   className: 'cell-center',
+      //   disableSortBy: true,
+      //   Cell: ({ value, row, setValue }) => {
+      //     const [selectedPosition, setSelectedPosition] = useState(value);
           
-          const handlePositionChange = (newValue) => {
-            setSelectedPosition(newValue);
-            setValue(newValue, row.index, 'positionName', row.original.positionName);
-          };
+      //     const handlePositionChange = (newValue) => {
+      //       setSelectedPosition(newValue);
+      //       setValue(newValue, row.index, 'positionName', row.original.positionName);
+      //     };
         
-          return (
-            <div>
-              <SelectCell positionName={selectedPosition} onChange={handlePositionChange} />
-              <button onClick={() => handleEdit({ ...row.original, positionName: selectedPosition })}>수정</button>
-            </div>
-          );
-        }
-      }
+      //     return (
+      //       <div>
+      //         <SelectCell positionName={selectedPosition} onChange={handlePositionChange} />
+      //         <button onClick={() => handleEdit({ ...row.original, positionName: selectedPosition })}>수정</button>
+      //       </div>
+      //     );
+      //   }
+      // }
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [theme]
