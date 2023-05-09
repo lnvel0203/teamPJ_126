@@ -96,6 +96,7 @@ public class MemberServiceImpl implements MemberService{
 		model.addAttribute("list", list);
 		return list;
 	}
+	
 	//5월 4일 김성훈 추가  직급 수정 
 	@Override
 	public void editPosition(String id , String positionName) 
@@ -103,5 +104,16 @@ public class MemberServiceImpl implements MemberService{
 		System.out.println("서비스 - editPosition");
 		mapper.editPosition(id,positionName);
 	}
+	
+	// 5월 8일 김성훈 추가 팀 수정
+	@Override
+	public void editDeptname(String id, String DeptName) 
+			throws ServletException, IOException {
+		System.out.println("서비스 -editDeptname");
+
+		mapper.editDeptname(id, DeptName);
+	}
+
+
 
 }
