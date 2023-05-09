@@ -346,7 +346,7 @@ const CustomerListPage = () => {
         className: 'cell-center'
       },
       {
-        Header: '설립일',
+        Header: '설립일', // 날짜로 나오게 바꿔
         accessor: 'deptdate',
         className: 'cell-center'
       },
