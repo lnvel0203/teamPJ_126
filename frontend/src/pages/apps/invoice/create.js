@@ -1,239 +1,547 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+// import { useNavigate, useParams } from 'react-router';
+import { useNavigate } from 'react-router';
 
-import { Grid, InputLabel, FormHelperText, Stack, TextField } from '@mui/material';
+// project imports
 import MainCard from 'components/MainCard';
-import Info from './Info';
 
-const CreateDetail = ({ addId }) => {
-  // props 검증
-  CreateDetail.propTypes = {
-    addId: PropTypes.string
+// material-ui
+import { useTheme } from '@mui/material/styles';
+import {
+  Divider,
+  Grid,
+  InputLabel,
+  Typography,
+  Box,
+  Button,
+  FormControl,
+  MenuItem,
+  Select,
+  FormHelperText,
+  Stack,
+  TextField
+} from '@mui/material';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+
+// third-party
+import { format } from 'date-fns';
+import { Form, Formik } from 'formik';
+import * as yup from 'yup';
+
+// project import
+import Loader from 'components/Loader';
+import AddressModal from 'sections/apps/invoice/AddressModal';
+
+import { reviewInvoicePopup, customerPopup, toggleCustomerPopup, getInvoiceSingleList, getInvoiceUpdate } from 'store/reducers/invoice';
+import { useDispatch, useSelector } from 'store';
+import { openSnackbar } from 'store/reducers/snackbar';
+
+//asset
+import { PlusOutlined } from '@ant-design/icons';
+
+import CreateDetail from './CreateDetail';
+
+// localStorage의 id
+const loginId = localStorage.getItem('id');
+
+// 유효성 검사(Yup 라이브러리 사용)
+const validationSchema = yup.object({
+  // 날짜 필수 유효성 검사
+  date: yup.date().required('Invoice date is required'),
+
+  // 마감 날짜 필수 + 시작 날짜 이후인지 확인 하는 유효성 검사
+  due_date: yup
+    .date()
+    .required('Due date is required')
+    .when('date', (date, schema) => date && schema.min(date, "Due date can't be before invoice date"))
+    .nullable()
+
+  // 고객 정보 필수 유효성 검사
+  // customerInfo: yup
+  //   .object({
+  //     name: yup.string().required('Invoice receiver information is required')
+  //   })
+  //   .required('Invoice receiver information is required'),
+
+  // 문자열 필수 유효성 검사
+  // status: yup.string().required('Status selection is required')
+
+  // 배열 필수 유효성 검사 + 배열에 최소 1개 이상 있는지 확인
+  // invoice_detail: yup
+  //   .array()
+  //   .required('Invoice details is required')
+  //   .of(
+  //     yup.object().shape({
+  //       name: yup.string().required('Product name is required')
+  //     })
+  //   )
+  //   .min(1, 'Invoice must have at least 1 items')
+});
+
+// ==============================|| INVOICE - EDIT ||============================== //
+
+const Create = () => {
+  // 훅 사용
+  const theme = useTheme();
+  // const { id } = useParams();
+  const id = 1;
+  const navigation = useNavigate();
+  const dispatch = useDispatch();
+
+  // 로딩 상태 설정, useSelector 사용해서 Redux 스토어에서 필요한 상태를 가져옴
+  const [loading, setLoading] = useState(false);
+  const { open, isCustomerOpen, list } = useSelector((state) => state.invoice);
+
+  // useEffect 사용
+  // 컴포넌트 마운트될 때 invoice 정보 가져옴
+  // +  id를 의존성 배열에 넣어 id 값이 변경될 때마다 디스패치
+  // src\store\reducers\invoice.js 에서 getInvoiceSingleList 메서드 axios 요청으로 리스트를 가져옴
+  useEffect(() => {
+    dispatch(getInvoiceSingleList(Number(id))).then(() => setLoading(true));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
+  // invoiceSingleList 초기화
+  const invoiceSingleList = {
+    name: '',
+    address: '',
+    phone: '',
+    email: ''
   };
 
-  // 정보
-  const [infoId, setInfoId] = useState(0);
-  const [empId, setEmpId] = useState('');
-  const [baseSalary, setBaseSalary] = useState(0);
-  const [regularWeeklyHours, setRegularWeeklyHours] = useState(0);
+  // Note 글자 수 제한
+  const notesLimit = 500;
 
-  // 주말 제외 총 근무 시간
-  const [weeklyWorkingHours, setWeeklyWorkingHours] = useState(0);
+  const handlerEdit = (values) => {
+    // 입력한 값들을 새로운 객체에 할당
+    const NewList = {
+      id: Number(list?.id),
+      invoice_id: Number(values.invoice_id),
+      customer_name: values.cashierInfo?.name,
+      email: values.cashierInfo?.email,
+      avatar: Number(list?.avatar),
+      discount: Number(values.discount),
+      tax: Number(values.tax),
+      date: format(new Date(values.date), 'MM/dd/yyyy'),
+      due_date: format(new Date(values.due_date), 'MM/dd/yyyy'),
+      quantity: Number(
+        values.invoice_detail?.reduce((sum, i) => {
+          return sum + i.qty;
+        }, 0)
+      ),
+      status: values.status,
+      cashierInfo: values.cashierInfo,
+      customerInfo: values.customerInfo,
+      invoice_detail: values.invoice_detail,
+      notes: values.notes
+    };
 
-  // 주말 총 근무 시간
-  const [weekendWorkingHours, setWeekendWorkingHours] = useState(0);
+    // 업데이트 액션 디스패치
+    dispatch(getInvoiceUpdate(NewList)).then(() => {
+      dispatch(
+        // 성공 알림
+        openSnackbar({
+          open: true,
+          message: 'Invoice Updated successfully',
+          anchorOrigin: { vertical: 'top', horizontal: 'right' },
+          variant: 'alert',
+          alert: {
+            color: 'success'
+          },
+          close: true
+        })
+      );
+      navigation('/apps/invoice/list');
+    });
+  };
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        if (!addId) {
-          // id 값이 없으면 함수를 실행하지 않음
-          return;
-        }
-        const response = await axios.get(`http://localhost:8081/members/salaryCreateDetail?id=${addId}`);
-        setInfoId(response.data.infoId);
-        setEmpId(response.data.empId);
-        setBaseSalary(response.data.baseSalary);
-        setRegularWeeklyHours(response.data.regularWeeklyHours);
-      } catch (error) {
-        console.error(error);
-      }
-
-      // 계산에 필요한 것들 가져오는 요청
-      try {
-        if (!addId) {
-          // id 값이 없으면 함수를 실행하지 않음
-          return;
-        }
-        const response = await axios.get(`http://localhost:8081/members/salaryCreateInfo?id=${addId}`);
-        // 총 분에서 주 당 시간으로 변경
-        setWeeklyWorkingHours(response.data.weeklyWorkingHours / 60 / 4);
-        setWeekendWorkingHours(response.data.weekendWorkingHours / 60);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    fetchData();
-  }, [addId]);
-
-  // 연장근무 & 주말 근무 계산
-  // ============================================================================
-  // 연장근무 시간
-  const overtimeHours = Math.round(weeklyWorkingHours - regularWeeklyHours);
-  // 월 근무 시간
-  const monthlyWorkingHours = weeklyWorkingHours * 4;
-  // 시급
-  const hourlyWage = Math.round(baseSalary / monthlyWorkingHours);
-  // 연장 근무 수당 %
-  const overtimeRate = 1.5; // 150%의 시급으로 연장근로수당을 지급
-  // 연장 근무 수당
-  const overtimePay = weeklyWorkingHours <= regularWeeklyHours ? 0 : hourlyWage * overtimeHours * overtimeRate;
-
-  // 주말근무 시간
-  const weekendWorkPay = weekendWorkingHours <= 0 ? 0 : hourlyWage * weekendWorkingHours * overtimeRate;
-  // ============================================================================
-
-  // function calculateRestDayPay(monthlySalary, workDaysPerWeek) {
-  //   const daysPerMonth = 365 / 12; // 월 평균 일 수
-  //   const averageWorkingDaysPerMonth = daysPerMonth * (workDaysPerWeek / 7); // 월 평균 근무 일 수 (주휴일 포함)
-  //   const restDaysPerMonth = daysPerMonth - averageWorkingDaysPerMonth; // 월 평균 주휴일 수
-  //   const dailyWage = monthlySalary / averageWorkingDaysPerMonth; // 일급
-  //   const restDayPay = dailyWage * restDaysPerMonth; // 주휴수당
-  //   return restDayPay;
-  // }
+  // 로딩 중 상태 표시
+  if (!loading) return <Loader />;
 
   return (
-    <MainCard title="급여 상세 내역">
-      <Grid container spacing={2} alignItems="center">
-        {console.log(infoId + empId + baseSalary + regularWeeklyHours)}
-        {/* 월급 시작 */}
-        <Grid item xs={12}>
-          <MainCard>
-            <Stack spacing={0.5}>
-              <InputLabel>월급</InputLabel>
-              <TextField fullWidth value={baseSalary} />
-            </Stack>
-          </MainCard>
-        </Grid>
-        {/* 월급 끝 */}
-        {/* 급여 계산 시작 */}
-        <Grid item xs={12}>
-          <MainCard title="급여 계산">
-            <Grid container spacing={2} alignItems="center">
-              {/* 연장 근로 수당 시작 */}
-              <Grid item xs={12} lg={3}>
-                <Stack spacing={0.5}>
-                  <InputLabel>연장 근로 수당</InputLabel>
-                  <TextField fullWidth value={overtimePay} />
-                  {/* <FormHelperText>{'시급: ' + hourlyWage + '원 | 연장 근무 시간: ' + overtimeHours + '시간'}</FormHelperText> */}
-                  <FormHelperText>{hourlyWage + ' * ' + overtimeHours + ' * ' + overtimeRate + ' = ' + overtimePay}</FormHelperText>
-                </Stack>
-              </Grid>
-              {/* 연장 근로 수당 끝 */}
+    <MainCard>
+      <Formik
+        // enableReinitialize={true} - 초기값이 변경될 때마다 Formik 인스턴스를 다시 초기화
+        enableReinitialize={true}
+        // 초기값 지정
+        initialValues={{
+          empId: list?.customerInfo?.id || '',
+          invoice_id: list?.invoice_id || '',
+          status: list?.status || '',
+          // date: list?.date || null,
+          // due_date: list?.due_date || null,
+          cashierInfo: list?.cashierInfo || invoiceSingleList,
+          customerInfo: list?.customerInfo || invoiceSingleList,
+          invoice_detail: list?.invoice_detail || [],
+          discount: list?.discount || 0,
+          tax: list?.tax || 0,
+          notes: list?.notes || ''
+        }}
+        // 유효성 검사 스키마 적용
+        validationSchema={validationSchema}
+        // 폼 제출 할 때 실행할 함수(handlerEdit) 지정
+        onSubmit={(values) => {
+          handlerEdit(values);
+        }}
+      >
+        {({ errors, handleChange, handleSubmit, values, isValid, setFieldValue, touched }) => {
+          const subtotal =
+            values?.invoice_detail?.reduce((prev, curr) => {
+              if (curr.name.trim().length > 0) return prev + Number(curr.price * Math.floor(curr.qty));
+              else return prev;
+            }, 0) || 0;
 
-              {/* 주말 근로 수당 시작 */}
-              <Grid item xs={12} lg={3}>
-                <Stack spacing={0.5}>
-                  <InputLabel>주말 근로 수당</InputLabel>
-                  <TextField fullWidth value={weekendWorkPay} />
-                  <FormHelperText>
-                    {hourlyWage + ' * ' + weekendWorkingHours + ' * ' + overtimeRate + ' = ' + weekendWorkPay}
-                  </FormHelperText>
-                </Stack>
-              </Grid>
-              {/* 주말 근로 수당 끝 */}
+          // 계산들
+          const taxRate = (values?.tax * subtotal) / 100;
+          const discountRate = (values.discount * subtotal) / 100;
+          const total = subtotal - discountRate + taxRate;
 
-              {/* 주휴 수당 시작 */}
-              <Grid item xs={12} lg={3}>
-                <Stack spacing={0.5}>
-                  <InputLabel>주휴 수당</InputLabel>
-                  <TextField fullWidth />
-                  <FormHelperText>Please enter your contact</FormHelperText>
-                </Stack>
-              </Grid>
-              {/* 주휴 수당 끝 */}
+          return (
+            <Form onSubmit={handleSubmit}>
+              <Grid container spacing={2}>
+                {/* # 1 ======================================= */}
+                {/* Invoice Id 시작 */}
+                <Grid item xs={12} sm={6} md={3}>
+                  <Stack spacing={1}>
+                    <InputLabel>Invoice Id</InputLabel>
+                    <FormControl sx={{ width: '100%' }}>
+                      <TextField
+                        required
+                        disabled
+                        type="number"
+                        name="invoice_id"
+                        id="invoice_id"
+                        value={values.invoice_id}
+                        onChange={handleChange}
+                      />
+                    </FormControl>
+                  </Stack>
+                </Grid>
+                {/* Invoice Id 끝 */}
 
-              <Grid item xs={12} lg={3}>
-                <Stack spacing={0.5}>
-                  {/* TODO - 상여금 유효성 검사 하기(숫자만 입력 가능하게) */}
-                  <InputLabel>상여금</InputLabel>
-                  <TextField fullWidth />
-                  <FormHelperText>Please enter your contact</FormHelperText>
-                </Stack>
-              </Grid>
+                {/* Status 시작 */}
+                <Grid item xs={12} sm={6} md={3}>
+                  <Stack spacing={1}>
+                    <InputLabel>지급여부</InputLabel>
+                    {/* 폼 시작 */}
+                    <FormControl sx={{ width: '100%' }}>
+                      <Select
+                        value={values.status}
+                        displayEmpty
+                        name="status"
+                        renderValue={(selected) => {
+                          if (selected.length === 0) {
+                            return <Box sx={{ color: 'secondary.400' }}>Select status</Box>;
+                          }
+                          return selected;
+                        }}
+                        onChange={handleChange}
+                        error={Boolean(errors.status && touched.status)}
+                      >
+                        <MenuItem disabled value="">
+                          Select status
+                        </MenuItem>
+                        <MenuItem value="Paid">지급완료</MenuItem>
+                        <MenuItem value="Unpaid">미지급</MenuItem>
+                        <MenuItem value="Cancelled">취소</MenuItem>
+                      </Select>
+                    </FormControl>
+                    {/* 폼 시작 */}
+                  </Stack>
+                  {touched.status && errors.status && <FormHelperText error={true}>{errors.status}</FormHelperText>}
+                </Grid>
+                {/* Status 끝 */}
 
-              {/* 여백 시작 */}
-              <Grid item xs={12} lg={12} mb={3}>
-                <Stack spacing={0.5}></Stack>
-              </Grid>
-              {/* 여백 끝 */}
+                {/* Date 시작 */}
+                <Grid item xs={12} sm={6} md={3}>
+                  <Stack spacing={1}>
+                    <InputLabel>Date</InputLabel>
+                    <FormControl sx={{ width: '100%' }} error={Boolean(touched.date && errors.date)}>
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DatePicker
+                          inputFormat="yyyy/MM/dd"
+                          value={values.date}
+                          onChange={(newValue) => setFieldValue('date', newValue)}
+                          renderInput={(params) => <TextField {...params} />}
+                        />
+                      </LocalizationProvider>
+                    </FormControl>
+                  </Stack>
+                  {touched.date && errors.date && <FormHelperText error={true}>{errors.date}</FormHelperText>}
+                </Grid>
+                {/* Date 끝 */}
 
-              <Grid item xs={12} lg={8}>
-                <Stack spacing={0.5}></Stack>
-              </Grid>
+                {/* Due Date 시작 */}
+                <Grid item xs={12} sm={6} md={3}>
+                  <Stack spacing={1}>
+                    <InputLabel>Due Date</InputLabel>
+                    <FormControl sx={{ width: '100%' }} error={Boolean(touched.due_date && errors.due_date)}>
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DatePicker
+                          inputFormat="yyyy/MM/dd"
+                          value={values.due_date}
+                          onChange={(newValue) => setFieldValue('due_date', newValue)}
+                          renderInput={(params) => <TextField error={touched.due_date && Boolean(errors.due_date)} {...params} />}
+                        />
+                      </LocalizationProvider>
+                    </FormControl>
+                  </Stack>
+                  {touched.due_date && errors.due_date && <FormHelperText error={true}>{errors.due_date}</FormHelperText>}
+                </Grid>
+                {/* Due Date 끝 */}
 
-              <Grid item xs={12} lg={4}>
-                <Stack spacing={0.5}>
-                  <InputLabel>총액</InputLabel>
-                  <TextField fullWidth />
-                  <FormHelperText>Please enter your contact</FormHelperText>
-                </Stack>
-              </Grid>
-            </Grid>
-          </MainCard>
-        </Grid>
-        {/* 급여 계산 끝 */}
-        {/* 4대 보험료 시작 */}
-        <Grid item xs={12}>
-          <MainCard title="공제">
-            <Grid container spacing={2} alignItems="center">
-              {/* 연금보험료 시작 */}
-              <Grid item xs={12} lg={3}>
-                <Stack spacing={0.5}>
-                  <InputLabel>연금보험료</InputLabel>
-                  <TextField fullWidth />
-                  <FormHelperText>Please enter Password</FormHelperText>
-                </Stack>
-              </Grid>
-              {/* 연금보험료 끝 */}
+                {/* # 2 ======================================= */}
+                {/* From 카드 시작 */}
+                <Grid item xs={12} sm={6}>
+                  <MainCard sx={{ minHeight: 168 }}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} sm={8}>
+                        <Stack spacing={2}>
+                          <Typography variant="h5">From:</Typography>
+                          <Stack sx={{ width: '100%' }}>
+                            {/* #TODO - 이 부분 아이디에서 이름으로 바꾸기 */}
+                            <Typography variant="subtitle1">{loginId}</Typography>
+                            <Typography color="secondary">{values?.cashierInfo?.address}</Typography>
+                            <Typography color="secondary">{values?.cashierInfo?.phone}</Typography>
+                            <Typography color="secondary">{values?.cashierInfo?.email}</Typography>
+                          </Stack>
+                        </Stack>
+                      </Grid>
+                      <Grid item xs={12} sm={4}>
+                        <Box textAlign={{ xs: 'left', sm: 'right' }} color="grey.200">
+                          {/* Charge 버튼 눌렀을 때 뜨는 컴포넌트 */}
+                          <AddressModal
+                            open={open}
+                            setOpen={(value) =>
+                              dispatch(
+                                toggleCustomerPopup({
+                                  open: value
+                                })
+                              )
+                            }
+                            handlerAddress={(address) => setFieldValue('cashierInfo', address)}
+                          />
+                        </Box>
+                      </Grid>
+                    </Grid>
+                  </MainCard>
+                </Grid>
+                {/* From 카드 끝 */}
 
-              {/* 고용보험료 시작 */}
-              <Grid item xs={12} lg={3}>
-                <Stack spacing={0.5}>
-                  <InputLabel>고용보험료 </InputLabel>
-                  <TextField fullWidth />
-                  <FormHelperText>Please enter Password</FormHelperText>
-                </Stack>
-              </Grid>
-              {/* 고용보험료 끝 */}
+                {/* To 카드 시작 */}
+                <Grid item xs={12} sm={6}>
+                  <MainCard sx={{ minHeight: 168 }}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} sm={8}>
+                        <Stack spacing={2}>
+                          <Typography variant="h5">To:</Typography>
+                          <Stack sx={{ width: '100%' }}>
+                            <Typography variant="subtitle1">{values?.customerInfo?.name}</Typography>
+                            <Typography color="secondary">{values?.customerInfo?.address}</Typography>
+                            <Typography color="secondary">{values?.customerInfo?.phone}</Typography>
+                            <Typography color="secondary">{values?.customerInfo?.email}</Typography>
+                          </Stack>
+                        </Stack>
+                      </Grid>
+                      <Grid item xs={12} sm={4}>
+                        <Box textAlign="right" color="grey.200">
+                          <Button
+                            size="small"
+                            startIcon={<PlusOutlined />}
+                            color="secondary"
+                            variant="outlined"
+                            onClick={() =>
+                              dispatch(
+                                customerPopup({
+                                  isCustomerOpen: true
+                                })
+                              )
+                            }
+                          >
+                            Add
+                          </Button>
+                          <AddressModal
+                            open={isCustomerOpen}
+                            setOpen={(value) =>
+                              dispatch(
+                                customerPopup({
+                                  isCustomerOpen: value
+                                })
+                              )
+                            }
+                            handlerAddress={(value) => {
+                              setFieldValue('customerInfo', value);
+                            }}
+                          />
+                        </Box>
+                      </Grid>
+                    </Grid>
+                  </MainCard>
+                  {touched.customerInfo && errors.customerInfo && (
+                    <FormHelperText error={true}>{errors?.customerInfo?.name}</FormHelperText>
+                  )}
+                </Grid>
+                {/* To 카드 끝 */}
 
-              {/* 국민건강보험 시작 */}
-              <Grid item xs={12} lg={3}>
-                <Stack spacing={0.5}>
-                  <InputLabel>국민건강보험</InputLabel>
-                  <TextField fullWidth />
-                  <FormHelperText>Please enter Password</FormHelperText>
-                </Stack>
-              </Grid>
-              {/* 국민건강보험 끝 */}
+                {/* # 3 ======================================= */}
+                {/** 새 컴포넌트 */}
+                {/* Form Layout 시작 */}
+                <Grid item xs={12}>
+                  <CreateDetail addId={values?.customerInfo?.id} />
+                  {console.log('create 테스트: ' + values?.customerInfo?.id)}
+                </Grid>
 
-              {/* 산재보험료 시작 */}
-              <Grid item xs={12} lg={3}>
-                <Stack spacing={0.5}>
-                  <InputLabel>산재보험료</InputLabel>
-                  <TextField fullWidth />
-                  <FormHelperText>Please enter Password</FormHelperText>
-                </Stack>
-              </Grid>
-              {/* 산재보험료 끝 */}
+                {/* Form Layout 시작 끝 */}
 
-              {/* 여백 시작 */}
-              <Grid item xs={12} lg={12} mb={3}>
-                <Stack spacing={0.5}></Stack>
-              </Grid>
-              {/* 여백 끝 */}
+                <Divider />
+                {/*  */}
+                {touched.invoice_detail && errors.invoice_detail && !Array.isArray(errors?.invoice_detail) && (
+                  <Stack direction="row" justifyContent="center" sx={{ p: 1.5 }}>
+                    <FormHelperText error={true}>{errors.invoice_detail}</FormHelperText>
+                  </Stack>
+                )}
+                <Grid container justifyContent="right">
+                  <Grid item xs={12} md={4}>
+                    <Grid container justifyContent="space-between" spacing={2} sx={{ pt: 2.5, pb: 2.5 }}>
+                      {/* Discount(%) 시작 */}
+                      <Grid item xs={6}>
+                        <Stack spacing={1}>
+                          <InputLabel>공제액계(원)</InputLabel>
+                          <TextField
+                            type="number"
+                            style={{ width: '100%' }}
+                            name="discount"
+                            id="discount"
+                            placeholder="0.0"
+                            value={values.discount}
+                            onChange={handleChange}
+                          />
+                        </Stack>
+                      </Grid>
+                      {/* Discount(%) 끝 */}
 
-              <Grid item xs={12} lg={8}>
-                <Stack pr={3}>
-                  <Info />
-                </Stack>
-              </Grid>
+                      {/* Tax(%) 시작 */}
+                      <Grid item xs={6}>
+                        <Stack spacing={1}>
+                          <InputLabel>Tax(원)</InputLabel>
+                          <TextField
+                            type="number"
+                            style={{ width: '100%' }}
+                            name="tax"
+                            id="tax"
+                            placeholder="0.0"
+                            value={values.tax}
+                            onChange={handleChange}
+                          />
+                        </Stack>
+                      </Grid>
+                      {/* Tax(%) 끝 */}
+                    </Grid>
 
-              <Grid item xs={12} lg={4}>
-                <Stack spacing={0.5}>
-                  <InputLabel>총액</InputLabel>
-                  <TextField fullWidth />
-                  <FormHelperText>Please enter your contact</FormHelperText>
-                </Stack>
+                    <Grid item xs={12}>
+                      <Stack spacing={2}>
+                        {/* Sub Total 시작 */}
+                        <Stack direction="row" justifyContent="space-between">
+                          <Typography color={theme.palette.grey[500]}>지급액계:</Typography>
+                          <Typography>{subtotal.toFixed(2)}원</Typography>
+                        </Stack>
+                        {/* Sub Total 끝 */}
+
+                        {/* Discount 시작 */}
+                        <Stack direction="row" justifyContent="space-between">
+                          <Typography color={theme.palette.grey[500]}>공제액계:</Typography>
+                          <Typography variant="h6" color={theme.palette.success.main}>
+                            {discountRate.toFixed(2)}원
+                          </Typography>
+                        </Stack>
+                        {/* Discount 끝 */}
+
+                        {/* Tax 시작 */}
+                        <Stack direction="row" justifyContent="space-between">
+                          <Typography color={theme.palette.grey[500]}>Tax:</Typography>
+                          <Typography>{taxRate.toFixed(2)}원</Typography>
+                        </Stack>
+                        {/* Tax 끝 */}
+
+                        {/* Grand Total 시작 */}
+                        <Stack direction="row" justifyContent="space-between">
+                          <Typography variant="subtitle1">실 수령액:</Typography>
+                          <Typography variant="subtitle1"> {total % 1 === 0 ? total : total.toFixed(2)}원</Typography>
+                        </Stack>
+                        {/* Grand Total 끝 */}
+                      </Stack>
+                    </Grid>
+                  </Grid>
+                </Grid>
+
+                {/* # 4 ======================================= */}
+                {/* Notes 시작 */}
+                <Grid item xs={12}>
+                  <Stack spacing={1}>
+                    <InputLabel>Notes</InputLabel>
+                    <TextField
+                      placeholder="Address"
+                      rows={3}
+                      value={values.notes}
+                      multiline
+                      name="notes"
+                      onChange={handleChange}
+                      inputProps={{
+                        maxLength: notesLimit
+                      }}
+                      helperText={`${values.notes.length} / ${notesLimit}`}
+                      sx={{
+                        width: '100%',
+                        '& .MuiFormHelperText-root': {
+                          mr: 0,
+                          display: 'flex',
+                          justifyContent: 'flex-end'
+                        }
+                      }}
+                    />
+                  </Stack>
+                </Grid>
+                {/* Notes 끝 */}
+
+                {/* # 5 ======================================= */}
+                <Grid item xs={12} sm={6}>
+                  <Stack spacing={1}></Stack>
+                </Grid>
+
+                <Grid item xs={12} sm={6}>
+                  <Stack direction="row" justifyContent="flex-end" alignItems="flex-end" spacing={2} sx={{ height: '100%' }}>
+                    {/* Preview* 시작 */}
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      disabled={!isValid}
+                      sx={{ color: 'secondary.dark' }}
+                      onClick={() =>
+                        dispatch(
+                          reviewInvoicePopup({
+                            isOpen: true
+                          })
+                        )
+                      }
+                    >
+                      Preview
+                    </Button>
+                    {/* Preview* 끝 */}
+
+                    {/* Update & Send 버튼*/}
+                    <Button color="primary" variant="contained" type="submit">
+                      Update & Send
+                    </Button>
+                  </Stack>
+                </Grid>
               </Grid>
-            </Grid>
-          </MainCard>
-        </Grid>
-        {/* 4대 보험료 끝 */}
-      </Grid>
+            </Form>
+          );
+        }}
+      </Formik>
     </MainCard>
   );
 };
 
-export default CreateDetail;
+export default Create;

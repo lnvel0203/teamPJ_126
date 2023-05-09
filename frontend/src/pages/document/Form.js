@@ -1,27 +1,58 @@
-import { useState } from 'react';
-import EditorComponent from './EditorComponent';
+import React, { useState } from 'react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
-const Form = ({ documentType, author, retentionPeriod, securityLevel, approvers }) => {
-  const [content, setContent] = useState('');
+const Form = () => {
+  const [value, setValue] = useState('');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append('documentType', documentType);
-    formData.append('author', author);
-    formData.append('retentionPeriod', retentionPeriod);
-    formData.append('securityLevel', securityLevel);
-    formData.append('content', content);
-    formData.append('approvers', JSON.stringify(approvers));
+  const modules = {
+    toolbar: [
+      [{ font: [] }],
+      [{ header: [1, 2, 3, 4, false] }],
+      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+      ['link', 'image'],
+      [{ align: [] }, { color: [] }, { background: [] }],
+      ['clean']
+    ]
+  };
 
-    console.log(formData);
-    // Add logic to send formData to server using fetch or Axios
+  const formats = [
+    'font',
+    'header',
+    'bold',
+    'italic',
+    'underline',
+    'strike',
+    'blockquote',
+    'list',
+    'bullet',
+    'indent',
+    'link',
+    'image',
+    'align',
+    'color',
+    'background'
+  ];
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log('Submitted value:', value);
+    // Add logic to submit form data
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <div>
-        <EditorComponent value={content} onChange={setContent} />
+      <div style={{ height: '650px', width: '900px' }}>
+        <ReactQuill
+          style={{ height: '600px' }}
+          theme="snow"
+          modules={modules}
+          formats={formats}
+          value={value}
+          onChange={(content, delta, source, editor) => setValue(editor.getHTML())}
+        />
+        <div className="ql-editor" style={{ color: 'black' }}></div>
       </div>
       <div>
         <button type="submit">보내기</button>

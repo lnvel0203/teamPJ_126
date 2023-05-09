@@ -82,7 +82,7 @@ class AuthRegister extends Component {
 
   const MEMBER_API_BASE_URL = 'http://localhost:8081/members';
    
-    axios.post(MEMBER_API_BASE_URL+ "/join", member)
+    axios.post(MEMBER_API_BASE_URL+ "/register", member)
     .then(res =>{
       if(res.data === 1){
         window.location.href="/login";
