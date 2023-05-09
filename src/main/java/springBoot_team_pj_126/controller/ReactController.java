@@ -84,10 +84,10 @@ public class ReactController {
 			throws ServletException, IOException{
 		System.out.println("컨드롤-  memberPosition");
 		return service.memberPositionList(req, model);
-	}
-	
-	
-	//5월 8일  리엑트에서 아이디와 포지션 받아오기  포지선 수정 및 등록 
+  }
+  
+	//5월 8일  리엑트에서 아이디와 포지션 받아오기  포지선 수정 
+
 	@PutMapping("/editPosition/{id}/{positionName}")
 	public void PositionUpdata(UserDTO dto, Model model) 
 			throws ServletException, IOException{ 

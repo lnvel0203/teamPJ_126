@@ -21,8 +21,10 @@ public interface MemberRepository {
 	
 	//김성훈 5월 4일 추가
 	public List<UserDTO> memberPosition();  // 직원 리스트 보기 
+
 	public void editPosition(String id , String positionName);  // 직원 직급 수정 
 	public void editDeptname(String id , String DeptName);  // 직원 팀 수정 
 
 	
 }
+
