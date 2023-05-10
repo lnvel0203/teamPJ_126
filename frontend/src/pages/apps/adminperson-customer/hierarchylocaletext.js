@@ -63,6 +63,8 @@ import { renderFilterTypes, GlobalFilter } from 'utils/react-table';
 //function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, handleAdd })
 
 //5월 4일 김성훈 직원 직급 선택하기 
+
+
 function SelectCell({ positionName, onChange }) {
   return (
     <select value={positionName} onChange={e => onChange(e.target.value)}>
@@ -81,6 +83,7 @@ function SelectCell({ positionName, onChange }) {
 
 //5월 4일 김성훈 직급 등록 백엔드로 보내기 
 function handleEdit(rowData) {
+
   const { id, positionName } = rowData;
   console.log(id, positionName);
 
@@ -421,11 +424,15 @@ const CustomerListPage = () => {
       },
       {
         Header: '직급',
+
+      //5월 4일 수정 김성훈  직원 몬가 이상하다.!!
+
         accessor: 'positionName',
         className: 'cell-center',
       },
 
       //5월 4일 수정 김성훈  직원 직급 수정 및 버튼 
+
       {
         Header: '변경',
         className: 'cell-center',

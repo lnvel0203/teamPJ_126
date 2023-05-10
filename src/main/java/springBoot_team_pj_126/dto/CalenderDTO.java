@@ -12,15 +12,12 @@ import lombok.Data;
 public class CalenderDTO {
 	
 	@Id
-	private int NO;
-	private String startDate;
-	private String endDate;
-	private String title;
-	private String descriptions;
-	private String color;
-	private String id;
-	
-	
-	 
+	private int NO;				//번호
+	private String startDate;	//시작날짜
+	private String endDate;		//끝날짜
+	private String title;		//제목
+	private String descriptions;//내용
+	private String color;		//색상
+	private String id;			//사용자id
 
 }

@@ -21,6 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 import springBoot_team_pj_126.dto.CalenderDTO;
 import springBoot_team_pj_126.service.CalenderServiceImpl;
 
+
+
+
+
 @RestController
 @RequestMapping(value="/calender")
 public class ReactCalenderController {
@@ -35,10 +39,7 @@ public class ReactCalenderController {
 	public List<CalenderDTO> calenderList(@PathVariable String id, HttpServletRequest req, Model model)
 		throws ServletException ,IOException{
 		logger.info("<<<url - calenderList()>>>");
-
-		
-		System.out.println(id);
-		
+	
 		return service.listAll(id,req, model);
 		
 	}
@@ -51,7 +52,7 @@ public class ReactCalenderController {
 		service.insertCalender(calenderDTO);
 		System.out.println("calenderInsert  성공!~~");
 	}
-	
+	//갤린더 삭제 
 	@DeleteMapping("/delete/{title}")
 	public void calenderDelete(@PathVariable String title)
 			throws ServletException ,IOException{
