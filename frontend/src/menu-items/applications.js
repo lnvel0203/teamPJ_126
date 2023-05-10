@@ -187,20 +187,20 @@ const applications = {
           type: 'item',
           url: '/apps/adminperson-customer/hierarchylocaletext'
         },
-        {
-          // 인사평가 추가(2023-05-04 김희수)
-          id: 'Personnelevaluation',
-          title: <FormattedMessage id="인사평가" />,
-          type: 'item',
-          url: '/apps/adminperson-customer/Personnelevaluation'
-        },
-        {
-          // 근태 관리
-          id: 'AttendanceList',
-          title: <FormattedMessage id="근태 관리" />,
-          type: 'item',
-          url: '/apps/adminperson-customer/AttendanceList'
-        }
+        // {
+        //   // 인사평가 추가(2023-05-04 김희수)
+        //   id: 'Personnelevaluation',
+        //   title: <FormattedMessage id="인사평가" />,
+        //   type: 'item',
+        //   url: '/apps/adminperson-customer/Personnelevaluation'
+        // },
+        // {
+        //   // 근태 관리
+        //   id: 'AttendanceList',
+        //   title: <FormattedMessage id="근태 관리" />,
+        //   type: 'item',
+        //   url: '/apps/adminperson-customer/AttendanceList'
+        // }
       ]
     }
   ]
