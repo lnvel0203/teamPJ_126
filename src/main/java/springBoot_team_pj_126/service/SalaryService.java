@@ -1,30 +1,20 @@
 package springBoot_team_pj_126.service;
 
-import java.io.IOException;
-
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.ui.Model;
-
-import springBoot_team_pj_126.dto.SalaryDTO;
 import springBoot_team_pj_126.dto.SalaryInfoDTO;
+import springBoot_team_pj_126.dto.SalaryRecordsDTO;
 
 
 public interface SalaryService {
 
-	public List<SalaryDTO> salaryList(HttpServletRequest req, Model model) 
-			throws ServletException, IOException;
-
-	public void insertSalary(SalaryDTO dto) throws ServletException, IOException;
+	// 급여 관리 리스트
+	public ArrayList<Map<String, Object>> salaryList();
 	
-	public void updateSalary(SalaryDTO dto) throws ServletException, IOException;
+	// 급여 수정을 위한 상세 내역
+	public SalaryRecordsDTO salaryeditDetail(String id);
 	
-	public void deleteSalary(int salaryId) throws ServletException, IOException;
-
 	// ========================================================
 	// [급여 지급에 필요한 메서드]
 	
@@ -34,4 +24,10 @@ public interface SalaryService {
 	// 주말 제외 총 근무 시간
 	public Map<String, Object> salaryCreateInfo(String id);
 
+	// 급여 지급
+	public int invoiceCreate(Map<String, Object> data);
+
+
+	
+	// ========================================================
 }
