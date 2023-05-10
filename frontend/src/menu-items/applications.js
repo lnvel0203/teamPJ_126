@@ -54,7 +54,7 @@ const applications = {
       id: 'mail',
       title: <FormattedMessage id="mail" />,
       type: 'item',
-      url: '/mail',
+      url: '/apps/mail',
       icon: icons.MailOutlined
     },
     {
