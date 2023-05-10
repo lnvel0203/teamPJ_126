@@ -39,5 +39,15 @@ public class DepartmentServiceImpl implements DepartmentService {
 		
 	}
 
+	//2023-05-09 김희수 추가
+	@Override
+	public void editDepartment(DeptDTO dto) 
+			throws ServletException, IOException {
+		System.out.println("<<< 서비스 - 부서수정 >>>");
+		
+		mapper.editDepartment(dto);
+		
+	}
+
 	
 }

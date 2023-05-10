@@ -26,17 +26,16 @@ import springBoot_team_pj_126.service.CalenderServiceImpl;
 
 
 @RestController
-@RequestMapping(value="/members")
+@RequestMapping(value="/calender")
 public class ReactCalenderController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ReactCalenderController.class);
 
 	@Autowired
 	CalenderServiceImpl service;
-	
 	// localhost:8081/calender
-	// 갤린더 리스트 
-	@GetMapping("/calender/{id}")
+
+	@GetMapping("/getCalender/{id}")
 	public List<CalenderDTO> calenderList(@PathVariable String id, HttpServletRequest req, Model model)
 		throws ServletException ,IOException{
 		logger.info("<<<url - calenderList()>>>");
@@ -62,6 +61,15 @@ public class ReactCalenderController {
 		System.out.println("삭제 성공"+ title);
 	}
 	
-	
+	@GetMapping("/calender/getcontent/{id}")
+	public String calenderContent(@PathVariable String id)
+		throws ServletException ,IOException{
+		logger.info("<<<url - calenderContent()>>>");
+		System.out.println(id);
+		String content = service.selectCalender(id);
+		System.out.println(content);
+		return content;
+		
+	}
 	
 }

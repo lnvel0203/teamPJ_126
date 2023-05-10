@@ -47,8 +47,7 @@ public class MypageController {
 		UserDTO dto = mypage.userinfo(id);
 		
 		return dto;
-	}
-	
+  }
 	
 	// 내 정보 상세 업데이트
 	@PostMapping("/userInfoUpdate")

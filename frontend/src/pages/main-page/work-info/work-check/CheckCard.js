@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useDispatch } from 'react-redux';
-
+import { request } from '../../../../utils/axios';
 // material-ui
 import { Grid, Typography, Stack } from '@mui/material';
 // import { openSnackbar } from 'store/reducers/snackbar';
@@ -37,9 +36,13 @@ const CheckCard = ({ onStatusChange }) => {
   // 백엔드에서 외출 상태를 확인하는 함수
   const checkOutStatus = async () => {
     try {
-      const response = await axios.get(`http://localhost:8081/members/checkOutStatus?id=${id}`);
-      setIsOut(response.data === 1);
-      console.log('isOut?: ' + isOut);
+      request(
+        'GET',
+        `members/checkOutStatus?id=${id}`
+      ).then((response) => {
+        setIsOut(response.data === 1);
+        console.log('isOut?: ' + isOut);
+      });
     } catch (error) {
       console.error(error);
     }
@@ -64,21 +67,25 @@ const CheckCard = ({ onStatusChange }) => {
     // 출근 안했는데 버튼 다른 버튼 누를 때
     if (status !== 'start-work') {
       try {
-        const response = await axios.get(`http://localhost:8081/members/isStartWork?id=${id}`);
-        if (response.data == 0) {
-          dispatch(
-            openSnackbar({
-              open: true,
-              message: '먼저 출근 버튼을 누르세요.',
-              variant: 'alert',
-              alert: {
-                color: 'error'
-              }
-            })
-          );
-
-          return;
-        }
+    
+        request(
+          'GET',
+          `members/isStartWork?id=${id}`
+        ).then((response) => {
+          if (response.data == 0) {
+            dispatch(
+              openSnackbar({
+                open: true,
+                message: '먼저 출근 버튼을 누르세요.',
+                variant: 'alert',
+                alert: {
+                  color: 'error'
+                }
+              })
+            );
+            return;
+          }
+        });
       } catch (error) {
         console.error(error);
       }
@@ -109,27 +116,32 @@ const CheckCard = ({ onStatusChange }) => {
 
     // 퇴근 상태 확인
     try {
-      const response = await axios.get(`http://localhost:8081/members/isEndWork?id=${id}`);
-      if (response.data == 1) {
-        dispatch(
-          openSnackbar({
-            open: true,
-            message: '이미 퇴근한 상태입니다.',
-            variant: 'alert',
-            alert: {
-              color: 'error'
-            }
-          })
-        );
 
-        return;
-      } else if (response.data == 0) {
-        if (status === 'end-work') {
-          if (!window.confirm('퇴근 하시겠습니까?')) {
-            return;
+      request(
+        'GET',
+        `members/isEndWork?id=${id}`
+      ).then((response) => {
+        if (response.data == 1) {
+          dispatch(
+            openSnackbar({
+              open: true,
+              message: '이미 퇴근한 상태입니다.',
+              variant: 'alert',
+              alert: {
+                color: 'error'
+              }
+            })
+          );
+  
+          return;
+        } else if (response.data == 0) {
+          if (status === 'end-work') {
+            if (!window.confirm('퇴근 하시겠습니까?')) {
+              return;
+            }
           }
         }
-      }
+      });
     } catch (error) {
       console.error(error);
     }
@@ -137,41 +149,46 @@ const CheckCard = ({ onStatusChange }) => {
     // 출근 상태 확인
     if (status === 'start-work' && status !== 'end-work') {
       try {
-        const response = await axios.get(`http://localhost:8081/members/isStartWork?id=${id}`);
-        if (response.data == 1) {
-          dispatch(
-            openSnackbar({
-              open: true,
-              message: '이미 출근한 상태입니다.',
-              variant: 'alert',
-              alert: {
-                color: 'error'
-              }
-            })
-          );
-
-          return;
-        } else if (response.data == 0) {
-          if (!window.confirm('출근 하시겠습니까?')) {
+        request(
+          'GET',
+          `members/isStartWork?id=${id}`
+        ).then((response) => {
+          if (response.data == 1) {
+            dispatch(
+              openSnackbar({
+                open: true,
+                message: '이미 출근한 상태입니다.',
+                variant: 'alert',
+                alert: {
+                  color: 'error'
+                }
+              })
+            );
             return;
+          } else if (response.data == 0) {
+            if (!window.confirm('출근 하시겠습니까?')) {
+              return;
+            }
           }
-        }
+        });
       } catch (error) {
         console.error(error);
       }
     }
 
+
     // 근무 체크
-    axios
-      .post('http://localhost:8081/members/workCheck', { id: id, status: status })
-      .then((response) => {
-        console.log(response);
-        onStatusChange();
-        // props.onUpdate(); // 상태 변경
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    request(
+      'POST',
+      'members/workCheck', { id: id, status: status }
+    ).then((response) => {
+      console.log(response);
+      onStatusChange();
+      //props.onUpdate(); // 상태 변경
+    })
+    .catch((error) => {
+      console.error(error);
+    });
   };
 
   return (
