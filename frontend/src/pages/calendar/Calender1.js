@@ -5,7 +5,6 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { request } from '../../utils/axios';
 function Calendar() {
-                      
   const [calendars, setCalendars] = useState([]);
   const [events, setEvents] = useState([]);
 
@@ -14,12 +13,9 @@ function Calendar() {
   // - 캘린더 일정 목록 - REST API -백단연결
   useEffect(() => {
     const fetchCalendars = async () => {
-      request(
-        'GET',
-        '/calender/getCalender/' + id,
-      ).then(response => {
+      request('GET', '/calender/getCalender/' + id).then((response) => {
         setCalendars(response.data);
-      })
+      });
     };
 
     fetchCalendars();
@@ -28,17 +24,15 @@ function Calendar() {
   useEffect(() => {
     const calendarEvents = calendars.map((calendar) => ({
       userid: calendar.no,
-      userids:calendar.id,
+      userids: calendar.id,
       start: calendar.startDate,
       end: calendar.endDate,
       title: calendar.title,
       description: calendar.descriptions,
-      color: calendar.color,
+      color: calendar.color
     }));
     setEvents(calendarEvents);
-    
   }, [calendars, setEvents]);
-
 
   const handleDateSelect = (selectInfo) => {
     const formHtml = `
@@ -117,65 +111,60 @@ function Calendar() {
       </body>
     </html>
     `;
-  
-    const newWindow = window.open("", "Add Event", "width=500,height=400");
+
+    const newWindow = window.open('', 'Add Event', 'width=500,height=400');
     newWindow.document.body.innerHTML = formHtml;
-  
-    newWindow.document.getElementById("newEventForm").addEventListener("submit", (event) => {
+
+    newWindow.document.getElementById('newEventForm').addEventListener('submit', (event) => {
       event.preventDefault();
-  
-      const title = newWindow.document.getElementById("title").value;
-      const descriptions = newWindow.document.getElementById("description").value;
+
+      const title = newWindow.document.getElementById('title').value;
+      const descriptions = newWindow.document.getElementById('description').value;
       const selectedColor = newWindow.document.querySelectorAll('input[name="color"]:checked');
       const color = Array.from(selectedColor).map((checkbox) => checkbox.value)[0];
       const startDate = selectInfo.startStr;
       const endDate = selectInfo.endStr;
 
-   
       console.log(title);
-      console.log(descriptions); 
-      console.log(selectInfo.startStr); 
-      console.log(selectInfo.endStr); 
-      console.log(color); 
+      console.log(descriptions);
+      console.log(selectInfo.startStr);
+      console.log(selectInfo.endStr);
+      console.log(color);
 
       const newevent = {
-        id:id,
-        startDate : startDate,
-        endDate : endDate,
+        id: id,
+        startDate: startDate,
+        endDate: endDate,
         title: title,
         descriptions: descriptions,
         color: color
       };
 
-    console.log('insert 호출!!', newevent);
+      console.log('insert 호출!!', newevent);
 
-    // - 캘린더 일정 입력 - REST API -백단연결
-    request(
-        'POST',
-        '/calender/insert/',
-       {
-          id:id,
-          startDate : startDate,
-          endDate : endDate,
-          title: title,
-          descriptions: descriptions,
-          color: color
-        }
-      ).then(response => {
-        console.log(response.data);
-        alert('일정이 추가되었습니다.');
-        newWindow.close();
-        window.location.reload();
+      // - 캘린더 일정 입력 - REST API -백단연결
+      request('POST', '/calender/insert/', {
+        id: id,
+        startDate: startDate,
+        endDate: endDate,
+        title: title,
+        descriptions: descriptions,
+        color: color
       })
-      .catch(error => {
-        console.error(error);
-        alert('일정 추가에 실패했습니다.');
-        newWindow.close();
-      });
-
+        .then((response) => {
+          console.log(response.data);
+          alert('일정이 추가되었습니다.');
+          newWindow.close();
+          window.location.reload();
+        })
+        .catch((error) => {
+          console.error(error);
+          alert('일정 추가에 실패했습니다.');
+          newWindow.close();
+        });
     });
-  
-    newWindow.document.getElementById("cancelButton").addEventListener("click", (event) => {
+
+    newWindow.document.getElementById('cancelButton').addEventListener('click', (event) => {
       event.preventDefault();
       newWindow.close();
     });
@@ -184,26 +173,22 @@ function Calendar() {
   const handleEventClick = (clickInfo) => {
     const eventEl = clickInfo.el;
 
-    eventEl.querySelectorAll(".delete-button").forEach((btn) => {
+    eventEl.querySelectorAll('.delete-button').forEach((btn) => {
       btn.remove();
     });
 
-    const deleteBtn = document.createElement("button");
-    deleteBtn.innerHTML = "삭제";
-    deleteBtn.classList.add("delete-button");
+    const deleteBtn = document.createElement('button');
+    deleteBtn.innerHTML = '삭제';
+    deleteBtn.classList.add('delete-button');
     deleteBtn.onclick = () => {
-      if (window.confirm(`삭제 합니다.'${clickInfo.event.title}'?`))
-      {
+      if (window.confirm(`삭제 합니다.'${clickInfo.event.title}'?`)) {
         const deletes = clickInfo.event.title;
-        console.log('deletes 호출!!' ,deletes)
+        console.log('deletes 호출!!', deletes);
 
         // - 캘린더 일정 삭제 - REST API -백단연결
-        request(
-          'DELETE',
-          '/calender/delete/'+ deletes,
-        )
-          clickInfo.event.remove();
-          window.location.reload();
+        request('DELETE', '/calender/delete/' + deletes);
+        clickInfo.event.remove();
+        window.location.reload();
       }
     };
     eventEl.appendChild(deleteBtn);
@@ -221,13 +206,13 @@ function Calendar() {
   };
   return (
     <div>
-      <FullCalendar 
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}  // api에서 시간 떙겨옴. 확인
+      <FullCalendar
+        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]} // api에서 시간 떙겨옴. 확인
         initialView="dayGridMonth"
         headerToolbar={{
-          start: "today prev,next",
-          center: "title",
-          end: "dayGridMonth,timeGridWeek,timeGridDay",
+          start: 'today prev,next',
+          center: 'title',
+          end: 'dayGridMonth,timeGridWeek,timeGridDay'
         }}
         events={events}
         selectable={true}

@@ -50,6 +50,7 @@ import { renderFilterTypes, GlobalFilter } from 'utils/react-table';
 import { CloseOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
 
 // ==============================|| REACT TABLE ||============================== //
+
 const handleClick = (no) => {
   //미승인 상태 사원 -> 승인상태로 변경 및 승인버튼 삭제
 

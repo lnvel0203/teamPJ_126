@@ -3,6 +3,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useMemo, useState, Fragment } from 'react';
 import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 // material-ui
 import { alpha, useTheme } from '@mui/material/styles';
@@ -52,11 +53,14 @@ import { CloseOutlined, PlusOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } f
 // ==============================|| REACT TABLE ||============================== //
 
 function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, handleAdd }) {
+  const navigate = useNavigate();
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'));
 
   const filterTypes = useMemo(() => renderFilterTypes, []);
   const sortBy = { id: 'documentNo', desc: false };
+
+  
 
   const {
     getTableProps,
@@ -106,6 +110,11 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
     // eslint-disable-next-line
   }, [matchDownSM]);
 
+  const handleTitleClick = (documentNo) => {
+    console.log('documentNo',documentNo)
+    navigate('/documentDetail/'+documentNo);
+  };
+
   //  이 코드는 React로 작성된 컴포넌트의 JSX 코드입니다. 이 컴포넌트는 테이블을 렌더링하며, react-table 라이브러리를 사용하여 구현되었습니다.
   // 컴포넌트의 return문에서는 Fragment와 JSX 코드를 사용하여 테이블을 구성합니다. JSX 코드는 다음과 같은 구성요소로 이루어져 있습니다
 
@@ -151,21 +160,27 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
             ))}
           </TableHead>
           <TableBody {...getTableBodyProps()}>
-            {page.map((row, i) => {
-              prepareRow(row);
-              const rowProps = row.getRowProps();
-
+          {page.map((row, i) => {
+            prepareRow(row);
+            const rowProps = row.getRowProps();
               return (
                 <Fragment key={i}>
                   <TableRow
                     {...row.getRowProps()}
                     onClick={() => {
-                      row.toggleRowSelected();
+                      handleTitleClick(row.original.documentNo);
                     }}
                     sx={{ cursor: 'pointer', bgcolor: row.isSelected ? alpha(theme.palette.primary.lighter, 0.35) : 'inherit' }}
                   >
                     {row.cells.map((cell, index) => (
-                      <TableCell key={index} {...cell.getCellProps([{ className: cell.column.className }])}>
+                      <TableCell
+                        key={index}
+                        {...cell.getCellProps([{ className: cell.column.className }])}
+                        onClick={cell.column.id === 'selection' ? (e) => {
+                          e.stopPropagation();
+                          row.toggleRowSelected();
+                        } : undefined}
+                      >
                         {cell.render('Cell')}
                       </TableCell>
                     ))}
@@ -350,14 +365,19 @@ SelectionHeader.propTypes = {
 };
 
 const CustomerListPage = () => {
+  
+  const id = localStorage.getItem('id');
   const theme = useTheme();
+
+
+  
 
   const [userData, setUserData] = useState([]);
 
   // Fetch user data from the server
   const fetchUserData = useCallback(async () => {
     try {
-      const response = await axios.get('http://localhost:8081/members/document');
+      const response = await axios.get('http://localhost:8081/members/document/'+id);
       setUserData(response.data);
     } catch (error) {
       console.error(error);
@@ -369,7 +389,7 @@ const CustomerListPage = () => {
   }, [fetchUserData]);
 
   const data = useMemo(() => userData, [userData]);
-  console.log(data);
+  console.log('data',data);
   const [add, setAdd] = useState(false);
   const [open, setOpen] = useState(false);
   const [customer, setCustomer] = useState();
@@ -408,7 +428,7 @@ const CustomerListPage = () => {
       },
       {
         Header: '상태',
-        accessor: 'docState',
+        accessor: 'documentState',
         className: 'cell-left'
       },
       {
@@ -417,14 +437,21 @@ const CustomerListPage = () => {
         className: 'cell-left'
       },
       {
-        Header: '제목',
-        accessor: 'title'
+        Header: '작성자',
+        accessor: 'author',
+        className: 'cell-left'
       },
+      {
+        Header: '제목',
+        accessor: 'title',
+      }
+      ,
       {
         Header: '작성일',
         accessor: 'draftDate',
         className: 'cell-left',
-        Cell: ({ value }) => format(new Date(value), 'yyyy-MM-dd')
+        Cell: ({ value }) => format(new Date(value), 'yyyy-mm-dd HH:mm:ss')
+
       },
       {
         Header: 'Actions',

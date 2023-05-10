@@ -4,7 +4,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-const DocumentWritePage = () => {
+const documentDetail = () => {
   
   const navigate = useNavigate();
   const [documentType,setDocumentType] = useState('');
@@ -279,4 +279,4 @@ const DocumentWritePage = () => {
     );
 }
 
-export default DocumentWritePage;
+export default documentDetail;
