@@ -16,6 +16,8 @@ public interface MypageService {
 	public List<UserDTO> mypageList(HttpServletRequest req, Model model) 
 			throws ServletException, IOException;
 		
+	public UserDTO userinfo(String id) throws ServletException, IOException;
+	
 //	public void insertMember(MemberDTO dto) throws ServletException, IOException;
 //	
 //	public void updateMember(MemberDTO dto) throws ServletException, IOException;
