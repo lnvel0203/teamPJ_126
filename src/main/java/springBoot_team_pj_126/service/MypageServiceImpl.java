@@ -38,6 +38,14 @@ public class MypageServiceImpl implements MypageService{
 		return list;
 	}
 	
+	public UserDTO userinfo(String id) throws ServletException, IOException {
+		System.out.println(" 서비스 - userinfo ");
+		UserDTO dto = mapper.userinfo(id);  //내정보조회
+		
+		return dto;
+		
+	}
+	
 //	@Override
 //	public void insertMember(MemberDTO dto) throws ServletException, IOException {
 //		System.out.println("서비스 - insert");

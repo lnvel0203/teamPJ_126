@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -18,20 +19,51 @@ import ProfileTab from './ProfileTab';
 // import { FacebookFilled, LinkedinFilled, MoreOutlined, TwitterSquareFilled, CameraOutlined } from '@ant-design/icons';
 import { MoreOutlined, CameraOutlined } from '@ant-design/icons';
 
-const avatarImage = require.context('assets/images/users', true);
+
 
 // ==============================|| USER PROFILE - TAB CONTENT ||============================== //
 
 const ProfileTabs = ({ focusInput }) => {
+
+  const id = localStorage.getItem("id");
+  console.log('id',id)
+  const [name, setName] = useState('');
+  const [positionName, setPositionName] = useState('');
+  const [deptName, setDeptName] = useState('');
+ 
+ 
   const theme = useTheme();
   const [selectedImage, setSelectedImage] = useState(undefined);
-  const [avatar, setAvatar] = useState(avatarImage(`./default.png`));
-
+  const [avatar, setAvatar] = useState('./default.png');
+  
   useEffect(() => {
     if (selectedImage) {
-      setAvatar(URL.createObjectURL(selectedImage));
+      setAvatar(URL.createObjectURL(selectedImage));  //URL 대신 지정경로 이미지 삽입
     }
   }, [selectedImage]);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axios.get('http://localhost:8081/members/mypage/'+id);
+        console.log("성공",response.data)
+        setName(response.data.name)
+        setPositionName(response.data.positionName)
+        setDeptName(response.data.deptName)
+        
+        console.log('이름',response.data.name);
+        
+        setIsLoading(false); // 추가 폼 렌더링 관련
+         
+      } catch (error) {
+        console.error('Error fetching data', error);
+        setIsLoading(false); // 추가 폼 렌더링 관련
+      }
+    }
+
+    fetchData();
+  }, []);
+
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -43,6 +75,8 @@ const ProfileTabs = ({ focusInput }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  
 
   return (
     <MainCard>
@@ -138,8 +172,9 @@ const ProfileTabs = ({ focusInput }) => {
               onChange={(e) => setSelectedImage(e.target.files?.[0])}
             />
             <Stack spacing={0.5} alignItems="center">
-              <Typography variant="h5">Stebin Ben</Typography>
-              <Typography color="secondary">Full Stack Developer</Typography>
+              <Typography variant="h5">{name}</Typography>
+              
+              <Typography color="secondary">{positionName}</Typography>
             </Stack>
             {/* SNS 링크 삭제 */}
             {/* <Stack direction="row" spacing={3} sx={{ '& svg': { fontSize: '1.15rem', cursor: 'pointer' } }}>
@@ -163,7 +198,7 @@ const ProfileTabs = ({ focusInput }) => {
             </Stack>
             <Divider orientation="vertical" flexItem />
             <Stack spacing={0.5} alignItems="center">
-              <Typography variant="h5">개발</Typography>
+              <Typography variant="h5">{deptName}</Typography>
               <Typography color="secondary">부서</Typography>
             </Stack>
           </Stack>
