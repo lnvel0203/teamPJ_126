@@ -1,5 +1,6 @@
 // Import Axios Services
-import axios from 'axios';
+//import axios from 'axios';
+import { request } from '../../../utils/axios';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useMemo, useState, Fragment } from 'react';
 
@@ -158,7 +159,7 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
           <Stack direction={matchDownSM ? 'column' : 'row'} alignItems="center" spacing={1}>
             {/* <SortingSelect sortBy={sortBy.id} setSortBy={setSortBy} allColumns={allColumns} /> */}
             <Button variant="contained" startIcon={<PlusOutlined />} onClick={handleAdd} size="small">
-              Add Customer
+              부서 추가
             </Button>
             <CSVExport data={selectedFlatRows.length > 0 ? selectedFlatRows.map((d) => d.original) : data} filename={'customer-list.csv'} />
           </Stack>
@@ -334,8 +335,13 @@ const CustomerListPage = () => {
   // 서버에서 회원 정보를 패치해옴
   const fetchUserData = useCallback(async () => {
     try {
-      const response = await axios.get('http://localhost:8081/department'); //컨트롤러 주소
-      setUserData(response.data);
+      request(
+        'GET',
+        '/department'
+      ).then(response => {
+        setUserData(response.data);
+        console.log(response.data);
+      })
     } catch (error) {
       console.error(error);
     }

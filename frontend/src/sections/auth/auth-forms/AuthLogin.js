@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 //import qs from 'qs';
 //import { Box} from "@mui/material";
 //import axios from 'axios';
-import { requestLogin, setAuthToken, setId } from '../../../utils/axios';
+import { request, setAuthToken, setId } from '../../../utils/axios';
 
 import { InputLabel, Grid, Stack, Button, Divider, Typography, Link } from '@mui/material';
 
@@ -34,7 +34,7 @@ class AuthLogin extends Component {
     localStorage.clear();
     //여기부터
     e.preventDefault();
-    requestLogin(
+    request(
       'POST',
 
       //axios_helpers 에서 디폴트 URL을 써서 가능한거다.

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+//import axios from 'axios';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import { request } from '../../../../utils/axios';
 
 export default function Hours() {
   const [totalHours, setTotalHours] = useState(null);
@@ -12,9 +13,10 @@ export default function Hours() {
   const id = localStorage.getItem('id');
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:8081/members/getHour?id=${id}`)
-      .then((response) => {
+      request(
+        'GET',
+        `members/getHour?id=${id}`
+      ).then((response) => {
         setTotalHours(response.data.totalHours);
         setTotalDays(response.data.totalDays);
       })

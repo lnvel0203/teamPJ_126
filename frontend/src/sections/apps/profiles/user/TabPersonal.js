@@ -15,13 +15,11 @@ import {
   FormHelperText,
   Grid,
   InputLabel,
-  MenuItem,
-  Select,
+
   Stack,
   TextField
 } from '@mui/material';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+
 
 // third party
 import * as Yup from 'yup';
@@ -37,15 +35,15 @@ import MainCard from 'components/MainCard';
 // import { CloseOutlined } from '@ant-design/icons';
 
 // styles & constant
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
-    }
-  }
-};
+//const ITEM_HEIGHT = 48;
+//const ITEM_PADDING_TOP = 8;
+//const MenuProps = {
+ // PaperProps: {
+  //  style: {
+ //     maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
+//    }
+//  }
+//};
 
 // const skills = [];
 
@@ -56,18 +54,17 @@ function useInputRef() {
 // ==============================|| TAB - PERSONAL ||============================== //
 
 const TabPersonal = () => {
-  const handleChangeDay = (event, date, setFieldValue) => {
-    setFieldValue('dob', new Date(date.setDate(parseInt(event.target.value, 10))));
-  };
 
-  const handleChangeMonth = (event, date, setFieldValue) => {
-    setFieldValue('dob', new Date(date.setMonth(parseInt(event.target.value, 10))));
-  };
 
+  const id = localStorage.getItem("id");
+  console.log('id',id)
   const maxDate = new Date();
   maxDate.setFullYear(maxDate.getFullYear() - 18);
+  const [hireDate, setHireDate] = useState('');
+  const [hp, setHp] = useState('');
 
   const dispatch = useDispatch();
+  
 
   // # 추가 axios 요청 ==============================================================
   const [fetchedData, setFetchedData] = useState(null);
@@ -76,8 +73,14 @@ const TabPersonal = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get('http://localhost:8081/members/userInfoDetail');
+        const response = await axios.get('http://localhost:8081/members/mypage/'+id);
         setFetchedData(response.data);
+        console.log("성공",response.data)
+        console.log("입사일",response.data.hireDate)
+        setHireDate(response.data.hireDate)
+        setHp(response.data.hp)
+        format(new Date(hireDate), 'yyyy-MM-dd')
+
         setIsLoading(false); // 추가 폼 렌더링 관련
         // console.log(response.data.name);
       } catch (error) {
@@ -121,7 +124,7 @@ const TabPersonal = () => {
               name: fetchedData?.name || '',
               lastname: fetchedData?.lastname || '',
               email: fetchedData?.email || '',
-              dob: fetchedData?.dob ? new Date(fetchedData.dob) : new Date(),
+             // dob: fetchedData?.dob ? new Date(fetchedData.dob) : new Date(),
               countryCode: fetchedData?.countryCode || '',
               contact: fetchedData?.contact || '',
               designation: fetchedData?.designation || '',
@@ -172,7 +175,7 @@ const TabPersonal = () => {
               }
             }}
           >
-            {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, setFieldValue, touched, values }) => (
+            {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting,  touched, values }) => (
               <form noValidate onSubmit={handleSubmit}>
                 <Box sx={{ p: 2.5 }}>
                   {/* Personal Information 시작 */}
@@ -238,6 +241,7 @@ const TabPersonal = () => {
                           onChange={handleChange}
                           id="personal-email"
                           placeholder="Email Address"
+                          inputRef={inputRef}
                         />
                         {touched.email && errors.email && (
                           <FormHelperText error id="personal-email-helper">
@@ -248,7 +252,7 @@ const TabPersonal = () => {
                     </Grid>
                     {/* 이메일 끝 */}
 
-                    {/* 입사일 시작 */}
+                    {/* 입사일 시작 
                     <Grid item xs={12} sm={6}>
                       <Stack spacing={1.25}>
                         <InputLabel htmlFor="personal-date">입사일</InputLabel>
@@ -316,9 +320,61 @@ const TabPersonal = () => {
                         )}
                       </Stack>
                     </Grid>
-                    {/* 생년월일 끝 */}
+                    생년월일 끝 */}
+
+                      {/* 입사일 시작 */}
+                      <Grid item xs={12} sm={6}>
+                      <Stack spacing={1.25}>
+                        <InputLabel htmlFor="personal-hireDate">입사일</InputLabel>
+                        {/* {console.log('values:', values)} */}
+
+                        <TextField
+                          fullWidth
+                          id="hireDate"
+                          value={hireDate}
+                          name="hireDate"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          placeholder="hireDate"
+                          autoFocus
+                          
+                        />
+                        {touched.hireDate && errors.hireDate && (
+                          <FormHelperText error id="personal-hireDate-helper">
+                            {errors.firstname}
+                          </FormHelperText>
+                        )}
+                      </Stack>
+                    </Grid>
+                    {/* 입사일 끝 */}
 
                     {/* 전화번호 시작 */}
+                    <Grid item xs={12} sm={6}>
+                      <Stack spacing={1.25}>
+                        <InputLabel htmlFor="personal-first-name">phone</InputLabel>
+                        {/* {console.log('values:', values)} */}
+
+                        <TextField
+                          fullWidth
+                          id="hp"
+                          value={hp}
+                          name="hp"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          placeholder="phone"
+                          autoFocus
+                          
+                        />
+                        {touched.firstname && errors.firstname && (
+                          <FormHelperText error id="personal-first-name-helper">
+                            {errors.contact}
+                          </FormHelperText>
+                        )}
+                      </Stack>
+                    </Grid>
+                    {/* 전화번호 끝 */}
+
+                    {/* 전화번호 시작 
                     <Grid item xs={12} sm={6}>
                       <Stack spacing={1.25}>
                         <InputLabel htmlFor="personal-phone">Phone</InputLabel>
@@ -345,7 +401,7 @@ const TabPersonal = () => {
                         )}
                       </Stack>
                     </Grid>
-                    {/* 전화번호 끝 */}
+                    전화번호 끝 */}
 
                     {/* 직책인 것 같아요 */}
                     {/* <Grid item xs={12} sm={6}>
@@ -388,7 +444,7 @@ const TabPersonal = () => {
                           name="address"
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          placeholder="Address 01"
+                          placeholder="Address"
                         />
                         {touched.address && errors.address && (
                           <FormHelperText error id="personal-address-helper">
@@ -399,7 +455,7 @@ const TabPersonal = () => {
                     </Grid>
                     {/* 주소1 끝 */}
 
-                    {/* 주소2 시작 */}
+                    {/* 주소2 시작 
                     <Grid item xs={12} sm={6}>
                       <Stack spacing={1.25}>
                         <InputLabel htmlFor="personal-addrees2">상세주소</InputLabel>
@@ -416,7 +472,7 @@ const TabPersonal = () => {
                         />
                       </Stack>
                     </Grid>
-                    {/* 주소2 끝 */}
+                     주소2 끝 */}
                   </Grid>
                 </Box>
                 {/* Address 끝 */}

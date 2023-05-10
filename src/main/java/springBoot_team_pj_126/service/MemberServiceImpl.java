@@ -58,6 +58,8 @@ public class MemberServiceImpl implements MemberService{
 	public void deleteMember(String id) throws ServletException, IOException {
 		System.out.println("서비스 - delete");
 		mapper.deleteById(id);
+		
+		
 	}
 	
 	//5월 4일 김성훈 추가 직원 리스트 
@@ -77,6 +79,15 @@ public class MemberServiceImpl implements MemberService{
 			throws ServletException, IOException {
 		System.out.println("서비스 - editPosition");
 		mapper.editPosition(id,positionName);
+	}
+	
+	// 5월 8일 김성훈 추가 팀 수정
+	@Override
+	public void editDeptname(String id, String DeptName) 
+			throws ServletException, IOException {
+		System.out.println("서비스 -editDeptname");
+
+		mapper.editDeptname(id, DeptName);
 	}
 
 

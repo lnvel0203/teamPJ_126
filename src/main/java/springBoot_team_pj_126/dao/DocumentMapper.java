@@ -10,9 +10,11 @@ import springBoot_team_pj_126.dto.UserDTO;
 @Mapper
 public interface DocumentMapper {
 
-	public List<DocumentDTO> documentList();
+	public List<DocumentDTO> documentList(String id);
 	
 	public List<UserDTO> approverList();
+	
+	public void addDocument(DocumentDTO dto);
 	
 }
 

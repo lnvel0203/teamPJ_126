@@ -1,5 +1,6 @@
 package springBoot_team_pj_126.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -17,7 +18,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.nimbusds.jose.shaded.json.JSONObject;
 
 import springBoot_team_pj_126.dto.DocumentDTO;
 import springBoot_team_pj_126.dto.UserDTO;
@@ -33,13 +38,15 @@ public class DocumentController {
 	//http://localhost:8081/members	
 	//localhost:8080/members =>가 첫 url인데
 	
-	@GetMapping("/document")
-	public List<DocumentDTO> DocumentList(HttpServletRequest req, Model model) 
+	@GetMapping("/document/{id}")
+	public List<DocumentDTO> DocumentList(@PathVariable String id, HttpServletRequest req, Model model) 
 			throws ServletException, IOException{
 		System.out.println("컨트롤러 - DocumentList");
-		List<DocumentDTO> list = service.documentList(req, model);
+		System.out.println("id"+id);
+		List<DocumentDTO> list = service.documentList(id,req, model);
 		System.out.println("list : " + list);
-		return service.documentList(req, model);
+		
+		return list;
 	}
 	
 	@GetMapping("/approver")
@@ -51,66 +58,77 @@ public class DocumentController {
 		return service.approverList(req, model);
 	}
 	
-//	//RESTAPI를 쓰고있다. ? 이 매핑이 restAPI인가?
-//	@PostMapping("/join")
-//	public void memberInsert(@RequestBody MemberDTO member) throws ServletException, IOException{
-//		//리스트 데이터를 넘긴다. -- 리액트에 넘긴다, 주소는 jsp나 타입리프에 넘기는것이다. 지금은 리액트 화면에 넘기기위해 데이터만 넘긴다.
-//		System.out.println("컨트롤러 - insert");
-//		mservice.insertMember(member);
-//		System.out.println("insert [성공]");
-//	}
-//	
 	
-//	//RESTAPI를 쓰고있다. ? 이 매핑이 restAPI인가?
-//	@PostMapping("/login")
-//	public void login(@RequestBody MemberDTO member) throws ServletException, IOException{
-//		//리스트 데이터를 넘긴다. -- 리액트에 넘긴다, 주소는 jsp나 타입리프에 넘기는것이다. 지금은 리액트 화면에 넘기기위해 데이터만 넘긴다.
-//		System.out.println("컨트롤러 - login");
-//		
-//		System.out.println(member.getId());
-//		System.out.println(member.getPassword());
-//		
-//		mservice.selectMember(member);
-//		
-//		// JWT 인증을 해야한다
-//		
-//		System.out.println("login [성공]");
-//		
-//	}
-//	
+	@PostMapping("/addDocument")
+	public void addDocument(@RequestParam("fileData") MultipartFile fileData, 
+							@RequestParam(value = "approverNo0", required = false) Integer storedApprover0,
+							@RequestParam(value = "approverNo1", required = false) Integer storedApprover1,
+							@RequestParam(value = "approverNo2", required = false) Integer storedApprover2,
+							@RequestParam(value = "approverNo3", required = false) Integer storedApprover3,
+							@RequestParam("documentType") String documentType,
+							@RequestParam("author") String author,
+							@RequestParam("retentionPeriod") String retentionPeriod,
+							@RequestParam("securityLevel") String securityLevel,
+							@RequestParam("title") String title,
+							@RequestParam("content") String content,
+							@RequestParam("id") String id,
+							DocumentDTO dto) throws ServletException, IOException {
 
-//	
-//	@GetMapping("/{id}") // select할때 key값전달을 위함이다.
-//	public MemberDTO fetchMemberID(@PathVariable MemberDTO member) throws ServletException, IOException{
-//		//리스트 데이터를 넘긴다. -- 리액트에 넘긴다, 주소는 jsp나 타입리프에 넘기는것이다. 지금은 리액트 화면에 넘기기위해 데이터만 넘긴다.
-//		System.out.println("컨트롤러 - select");
-//		return mservice.selectMember(member);
-//	}
-//	
-//	
-//	
-//	
-//	//!!!! 반드시 @RequestBody를 쓰는 이유를 알아야만 리액트를 쓸수있다.
-//	//url 상에 추가된것! put공부하기
-//	@PutMapping("/{id}") //-> @PathVariale로 받는다
-//	public void memberUpdate(@PathVariable int id, @RequestBody MemberDTO member) throws ServletException, IOException{ //@RequestBody ==> req.getParameter("dto");
-//		//리스트 데이터를 넘긴다. -- 리액트에 넘긴다, 주소는 jsp나 타입리프에 넘기는것이다. 지금은 리액트 화면에 넘기기위해 데이터만 넘긴다.
-//		System.out.println("컨트롤러 - update");
-//		mservice.updateMember(member);
-//		
-//		System.out.println("update [성공]");
-//		
-//	}
-//	//주의 사항 - 엑소시오 의 능력과 restAPI에 대해서 알아보기
-//	@DeleteMapping("/{id}") 
-//	public void memberDelete(@PathVariable int id) throws ServletException, IOException{
-//		
-//		System.out.println("컨트롤러 - delete");
-//		mservice.deleteMember(id);
-//		
-//		System.out.println("delete [성공]");
-//		
-//	}
+	    File directory = new File("C:/Users/KOSMO/Desktop/파일저장");
+	    if (!directory.exists()) {
+	        directory.mkdirs(); // 폴더가 존재하지 않는 경우, 폴더를 생성합니다.
+	    }
+
+	    // 파일 처리 로직
+	    if (fileData != null && !fileData.isEmpty()) {
+	        try {
+	            String fileName = fileData.getOriginalFilename();
+	            File file = new File(directory + "/" + fileName);
+	            fileData.transferTo(file);
+	            System.out.println("File saved: " + file.getAbsolutePath());
+
+	            // 저장된 파일의 경로를 dto 객체에 설정
+	            dto.setFilePath(file.getAbsolutePath());
+	        } catch (IOException e) {
+	            System.err.println("File save error: " + e.getMessage());
+	        }
+	    }
+	    
+	    Integer[] approverNos = {storedApprover0, storedApprover1, storedApprover2, storedApprover3};
+
+	    for (int i = 0; i < approverNos.length; i++) {
+	        if (approverNos[i] != null) {
+	            switch (i) {
+	                case 0:
+	                    dto.setFirstApproverNo(approverNos[i]);
+	                    break;
+	                case 1:
+	                    dto.setSecondApproverNo(approverNos[i]);
+	                    break;
+	                case 2:
+	                    dto.setThirdApproverNo(approverNos[i]);
+	                    break;
+	                case 3:
+	                    dto.setFourthApproverNo(approverNos[i]);
+	                    break;
+	            }
+	        }
+	    }
+	    dto.setDocumentType(documentType);
+	    dto.setAuthor(author);
+	    dto.setRetentionPeriod(retentionPeriod);
+	    dto.setSecurityLevel(securityLevel);
+	    dto.setTitle(title);
+	    dto.setContent(content);
+	    dto.setId(id);
+
+	    System.out.println("storedApprover0: " + storedApprover0);
+	    System.out.println(dto);
+	    service.addDocument(dto);
+	    System.out.println("등록성공");
+	}
+
+
 
 	
 }

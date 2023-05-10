@@ -14,27 +14,20 @@ import org.springframework.ui.Model;
 import springBoot_team_pj_126.dao.CalenderMapper;
 import springBoot_team_pj_126.dto.CalenderDTO;
 
-
-
 @Service
 public class CalenderServiceImpl implements CalenderService{
 
 	@Autowired
 	private CalenderMapper dao;
-
+	
+	//갤린더 리스트 
 	@Override
 	public List<CalenderDTO> listAll(String id, HttpServletRequest req, Model model) 
 			throws ServletException,IOException {
 		System.out.println("서비스 -calenderlistAll ");
-		
-		
-	
-		
 		List<CalenderDTO> list = dao.calenderList(id);
-
 		
 		System.out.println("list" + list);
-		
 		return list;
 	}
 	
@@ -49,6 +42,7 @@ public class CalenderServiceImpl implements CalenderService{
 		return content.getDescriptions();
 	}
 
+	//갤린더 추가 
 	@Override
 	public void insertCalender(CalenderDTO calenderDTO) 
 			throws ServletException, IOException {
@@ -56,22 +50,21 @@ public class CalenderServiceImpl implements CalenderService{
 		
 		dao.inserCalender(calenderDTO);
 	}
-//
-//	@Override
-//	public void updateCalender(CalenderDTO calenderDTO) 
-//			throws ServletException, IOException {
-//		
-//		
-//	}
-//
+
+	//갤린더 삭제 
 	@Override
 	public void deleteCalender(String title) 
 			throws ServletException, IOException {
 		System.out.println("서비스 -deleteCalender ");
 		dao.deleteById(title);
 	}
-
-
+//
+//	@Override
+//	public CalenderDTO selectCalender(String userid) 
+//			throws ServletException, IOException {
+//		
+//		return null;
+//	}
 
 
 
