@@ -25,7 +25,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { useFormik, Form, FormikProvider } from 'formik';
 
 // project imports
-import AlertCustomerDelete from './AlertCustomerDelete';
+import AlertCustomerDelete from '../customer/AlertCustomerDelete';
 
 // ==============================|| CUSTOMER ADD / EDIT / DELETE ||============================== //
 
@@ -36,6 +36,7 @@ const AddCustomer = ({ customer, onCancel }) => {
   const handleAlertClose = () => {
     setOpenAlert(!openAlert);
     onCancel();
+    
   };
   const formik = useFormik({
 
@@ -58,16 +59,17 @@ const AddCustomer = ({ customer, onCancel }) => {
 
     e.preventDefault();
     console.log(dept);
-    axios.post(API_BASE_URL + "/addDepartment", dept)
+    axios.post(API_BASE_URL + "/editDepartment", dept)
   
     .then(response => {
       onCancel();
       console.log(response.data);
-      alert('부서가 추가되었습니다.');
+      alert('부서가 수정되었습니다.');
     })
     .catch(error => {
       console.error(error);
     });
+    window.location.reload(); // 자동 새로고침
   }
   return (
     <>
@@ -97,11 +99,11 @@ const AddCustomer = ({ customer, onCancel }) => {
                   <Grid container spacing={5}>
                     <Grid item xs={9}>
                       <Stack spacing={1.25}>
-                        <InputLabel htmlFor="customer-name">부서번호</InputLabel>
+                        <InputLabel htmlFor="deptid">부서번호</InputLabel>
                         <TextField
                           fullWidth
-                          id="customer-name"
-                          placeholder="Enter Department Number"
+                          id="deptid"
+                          placeholder="부서 번호를 입력하세요"
                           name='deptid'
                           onChange={onChange}
 

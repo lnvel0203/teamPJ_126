@@ -12,12 +12,15 @@ import { PopupTransition } from 'components/@extended/Transitions';
 import { DeleteFilled } from '@ant-design/icons';
 
 // ==============================|| CUSTOMER - DELETE ||============================== //
-const deleteCustomer = ({ id }) => {
+const deleteCustomer = ( id ) => {
   try {
     const response = axios.delete(`http://localhost:8081/members/deleteEmployee/${id}`, id);
+    //이거 필요해? 내일 삭제해
     if (response.status === 200) {
       console.log('Customer deleted successfully');
+      
     }
+    window.location.reload();
   } catch (error) {
     console.error('Error deleting customer:', error);
   }
