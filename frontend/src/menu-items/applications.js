@@ -168,6 +168,7 @@ const applications = {
           url: '/apps/adminperson-customer/customlocaletext'
         },
         {
+          // 부서관리 추가(2023-05-03 김희수)
           id: 'departloaletext',
           title: <FormattedMessage id="부서관리" />,
           type: 'item',

@@ -13,4 +13,7 @@ public interface DepartmentMapper {
 	public List<DeptDTO> departmentList();
 
 	public void addDeptment(DeptDTO dto);
+	
+	//2023-05-09 김희수 추가
+	public void editDepartment(DeptDTO dto);
 }

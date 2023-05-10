@@ -46,21 +46,14 @@ public class MemberServiceImpl implements MemberService{
 		return list;
 	}
 	
-	
-	
-//	@Override
-//	public void insertMember(MemberDTO dto) throws ServletException, IOException {
-//		System.out.println("서비스 - insert");
-//		
-//		mapper.insertMember(dto);
-//	}
-//
+// < 4월 28일 김희수 미승인 상태 변경 - 상태업데이트문 >	
 	@Override
 	public void editEmployee(UserDTO dto) throws ServletException, IOException {
 		System.out.println("서비스 - update");
 		mapper.editEmployee(dto);
 	}
 
+// < 5월 2일 김희수 추가 >	
 	@Override
 	public void deleteMember(String id) throws ServletException, IOException {
 		System.out.println("서비스 - delete");
@@ -68,25 +61,6 @@ public class MemberServiceImpl implements MemberService{
 		
 		
 	}
-//
-//	@Override
-//	public MemberDTO selectMember(MemberDTO dto) throws ServletException, IOException {
-//		System.out.println("서비스 - select");
-//		
-//		
-//		Map<String, Object> map = new HashMap<String, Object>();
-//
-//		map.put("id", dto.getId());
-//		map.put("password", dto.getPassword());
-//		
-//		MemberDTO dot = mapper.findById(map);
-//		if(dot !=null) {
-//			System.out.println("성공");
-//		}
-//		return dot;
-//	}
-	
-	
 	
 	//5월 4일 김성훈 추가 직원 리스트 
 	@Override

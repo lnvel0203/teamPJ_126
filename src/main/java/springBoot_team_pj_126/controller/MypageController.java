@@ -47,21 +47,7 @@ public class MypageController {
 		UserDTO dto = mypage.userinfo(id);
 		
 		return dto;
-	}
-	
-
-	
-	// 내 정보 상세
-	@GetMapping("/userInfoDetail")
-	public ResponseEntity<Map<String, Object>> userInfo() {
-		logger.info("MypageController - userInfo()");
-		
-		Map<String, Object> testData = new HashMap<>();
-		testData.put("name", "김인간");
-        testData.put("email", "kim.human@example.com");
-
-	    return ResponseEntity.ok(testData);
-	}
+  }
 	
 	// 내 정보 상세 업데이트
 	@PostMapping("/userInfoUpdate")
@@ -69,7 +55,7 @@ public class MypageController {
 			throws ServletException, IOException {
 		logger.info("MypageController - userInfoUpdate()");
 		
-		System.out.println("근태 컨트롤러 - userInfoUpdate");
+		System.out.println(" MypageController - userInfoUpdate");
 		System.out.println("DTO : " + NewLists);
 		
 		return 1;

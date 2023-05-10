@@ -10,6 +10,16 @@
    select * from EMPLOYEES_TBL where id=#{id}
 </select>
 
+<update id="userInfoUpdate" parameterType="springBoot_team_pj_126.dto.UserDTO">
+	update EMPLOYEES_TBL
+	set name = #{name},
+		email = #{email},
+		hireDate = #{hireDate},
+		address = #{address},
+		hp = #{hp}
+	where id=#{id}
+</update>
+
 <!-- <2insert id="insertMember" parameterType="com.example.react.dto.MemberDTO">
 	INSERT INTO mvc_member_tbl values((select nvl(max(id)+1,1)from mvc_member_tbl), #{password}, #{username},#{age},#{email},#{address},#{salary})
 </insert>	
