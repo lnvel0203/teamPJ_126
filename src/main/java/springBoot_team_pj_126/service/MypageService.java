@@ -18,6 +18,8 @@ public interface MypageService {
 		
 	public UserDTO userinfo(String id) throws ServletException, IOException;
 	
+	
+	
 //	public void insertMember(MemberDTO dto) throws ServletException, IOException;
 //	
 //	public void updateMember(MemberDTO dto) throws ServletException, IOException;

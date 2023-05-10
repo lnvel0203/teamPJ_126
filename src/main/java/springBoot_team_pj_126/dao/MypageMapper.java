@@ -16,6 +16,7 @@ public interface MypageMapper {
 	public List<UserDTO> mypageList();
 	public UserDTO userinfo(String id);
 	
+	
 }
 
 
