@@ -6,8 +6,11 @@
      
 <mapper namespace="springBoot_team_pj_126.dao.MypageMapper">
 
+
 <select id="userinfo" resultType="springBoot_team_pj_126.dto.UserDTO">
-   select * from EMPLOYEES_TBL where id=#{id}
+SELECT *
+  FROM EMPLOYEES_TBL 
+  WHERE id = #{id}
 </select>
 
 <update id="userInfoUpdate" parameterType="springBoot_team_pj_126.dto.UserDTO">

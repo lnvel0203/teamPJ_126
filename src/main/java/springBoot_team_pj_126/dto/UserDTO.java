@@ -1,6 +1,7 @@
 package springBoot_team_pj_126.dto;
 
 import java.util.ArrayList;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,6 +41,7 @@ public class UserDTO {
 	private String deptName;
 	private String stemp;
 	private String positionName;
+	private int tardy;
 
 
 }

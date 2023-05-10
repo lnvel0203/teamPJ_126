@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import springBoot_team_pj_126.dto.UserDTO;
+import springBoot_team_pj_126.service.AttendanceService;
 import springBoot_team_pj_126.service.MemberService;
 import springBoot_team_pj_126.service.MypageService;
 
@@ -35,6 +36,11 @@ public class MypageController {
 	@Autowired(required=true)
 	private MypageService mypage;
 	
+	@Autowired(required=true)
+	private AttendanceService attendance;
+	
+	
+	
 	private static final Logger logger = LoggerFactory.getLogger(MypageController.class);
 	
 	// ========================================================
@@ -45,6 +51,8 @@ public class MypageController {
 		logger.info("MypageController - mypage()");
 		System.out.println("id"+ id);
 		UserDTO dto = mypage.userinfo(id);
+		attendance.attendanceList(id);
+		
 		
 		return dto;
 	}
