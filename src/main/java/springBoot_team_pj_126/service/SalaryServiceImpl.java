@@ -84,9 +84,9 @@ public class SalaryServiceImpl implements SalaryService{
 	}
 
 	@Override
-	public void deleteSalary(int salaryId) throws ServletException, IOException {
+	public void deleteSalary(int salaryRecordId) throws ServletException, IOException {
 		System.out.println("서비스 - delete");
-		mapper.deleteSalary(salaryId);
+		mapper.deleteSalary(salaryRecordId);
 	}
 //
 //	@Override

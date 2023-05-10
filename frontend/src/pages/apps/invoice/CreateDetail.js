@@ -73,8 +73,7 @@ const CreateDetail = ({ addId }) => {
   // ============================================================================
   // 연장근무 시간
   const overtimeHours = weeklyWorkingHours <= regularWeeklyHours ? 0 : Math.round(weeklyWorkingHours - regularWeeklyHours);
-  console.log('#' + weeklyWorkingHours);
-  console.log('#' + regularWeeklyHours);
+
   // 월 근무 시간
   const monthlyWorkingHours = weeklyWorkingHours * 4;
   // 시급
@@ -86,6 +85,14 @@ const CreateDetail = ({ addId }) => {
 
   // 주말근무 시간
   const weekendWorkPay = weekendWorkingHours <= 0 ? 0 : hourlyWage * weekendWorkingHours * overtimeRate;
+
+  //  주휴 수당
+  const calculateRestDayPay = 4 * (weeklyWorkingHours / 40) * 8 * hourlyWage;
+
+  console.log('#' + weeklyWorkingHours);
+  console.log('#' + hourlyWage);
+  console.log('#' + calculateRestDayPay);
+
   // ============================================================================
 
   // function calculateRestDayPay(monthlySalary, workDaysPerWeek) {
@@ -123,6 +130,7 @@ const CreateDetail = ({ addId }) => {
             </Stack>
           </MainCard>
         </Grid>
+
         {/* 월급 끝 */}
         {/* 급여 계산 시작 */}
         <Grid item xs={12}>
@@ -164,7 +172,7 @@ const CreateDetail = ({ addId }) => {
                   <InputLabel>주휴 수당</InputLabel>
                   <TextField
                     fullWidth
-                    value={formatter.format(formatter.format(restDayPayForm))}
+                    value={formatter.format(calculateRestDayPay)}
                     onChange={(e) => setRestDayPayForm(Number(e.target.value) || 0)}
                   />
                   <FormHelperText>Please enter your contact</FormHelperText>
@@ -174,7 +182,6 @@ const CreateDetail = ({ addId }) => {
 
               <Grid item xs={12} lg={3}>
                 <Stack spacing={0.5}>
-                  {/* TODO - 상여금 유효성 검사 하기(숫자만 입력 가능하게) */}
                   <InputLabel>상여금</InputLabel>
                   <TextField fullWidth value={formatter.format(bonusForm)} onChange={(e) => setBonusForm(Number(e.target.value) || 0)} />
                   <FormHelperText>Please enter your contact</FormHelperText>
