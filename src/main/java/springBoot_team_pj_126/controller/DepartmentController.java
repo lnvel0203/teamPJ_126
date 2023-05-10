@@ -44,7 +44,7 @@ public class DepartmentController {
 	}
 	
 	// < 5월 9일 김희수 부서 수정  - 추가 >
-	@PutMapping("/editDepartment/{deptid}") 
+	@PutMapping("/editDepartment") 
 	public void departmentUpdate(DeptDTO dto, Model model) 
 			throws ServletException, IOException{ //@RequestBody ==> req.getParameter("dto");
 		//리스트 데이터를 넘긴다. -- 리액트에 넘긴다, 주소는 jsp나 타입리프에 넘기는것이다. 지금은 리액트 화면에 넘기기위해 데이터만 넘긴다.
