@@ -90,3 +90,22 @@
   max-width: 900px;
   height: 120px;
 }
+
+.title-input-container {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 900px;
+  height: 40px;
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+  font-weight: bold;
+  color: black;
+}
+
+.title-input {
+  width: 80%;
+  margin-left: 50px;
+}
