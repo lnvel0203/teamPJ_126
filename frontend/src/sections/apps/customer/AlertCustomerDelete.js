@@ -59,7 +59,7 @@ export default function AlertCustomerDelete({ title, open, handleClose }) {
               color="error"
               variant="contained"
               onClick={async () => {
-                await deleteCustomer(customerId);
+                await deleteCustomer(title);
                 handleClose(true);
               }}
               autoFocus

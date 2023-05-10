@@ -19,3 +19,12 @@ public class DeptDTO {
    private String deptreadername;
 
 }
+
+
+
+/*
+ * private int deptId;
+ * private String deptName;
+ * private Date deptDate;
+ * private String deptReaderName;
+ */

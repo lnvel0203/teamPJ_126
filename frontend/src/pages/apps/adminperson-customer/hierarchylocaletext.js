@@ -1,5 +1,6 @@
 // Import Axios Services
-import axios from 'axios';
+//import axios from 'axios';
+import { request } from '../../../utils/axios';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useMemo, useState, Fragment } from 'react';
 
@@ -67,7 +68,6 @@ function SelectCell({ positionName, onChange }) {
     <select value={positionName} onChange={e => onChange(e.target.value)}>
 
       <option value="선택">선택</option>
-
       <option value="사원">사원</option>
       <option value="주임">주임</option>
       <option value="대리">대리</option>
@@ -84,16 +84,18 @@ function handleEdit(rowData) {
   const { id, positionName } = rowData;
   console.log(id, positionName);
 
-  axios.put(`http://localhost:8081/members/editPosition/${id}/${positionName}`)
-    .then(() => {
-      console.log('수정 성공');
-      // 서버에서 수정된 데이터를 받아올 경우 필요한 처리
-      window.location.reload(); // 자동 새로고침
-    })
-    .catch(error => {
-      console.error('수정 실패', error);
-      // 에러 처리
-    });
+  request(
+    'PUT',
+    `members/editPosition/${id}/${positionName}`
+  ) .then(() => {
+    console.log('수정 성공');
+    // 서버에서 수정된 데이터를 받아올 경우 필요한 처리
+    window.location.reload(); // 자동 새로고침
+  })
+  .catch(error => {
+    console.error('수정 실패', error);
+    // 에러 처리
+  });
 }
 
 
@@ -346,8 +348,12 @@ const CustomerListPage = () => {
   // 서버에서 회원 정보를 패치해옴
   const fetchUserData = useCallback(async () => {
     try {
-      const response = await axios.get('http://localhost:8081/members/position'); //컨트롤러 주소
-      setUserData(response.data);
+      request(
+        'GET',
+        'members/position'
+      ).then((response) => {
+        setUserData(response.data);
+      })
     } catch (error) {
       console.error(error);
     }

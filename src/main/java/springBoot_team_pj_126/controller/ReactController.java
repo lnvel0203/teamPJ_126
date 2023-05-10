@@ -70,7 +70,7 @@ public class ReactController {
 	@DeleteMapping("/deleteEmployee/{id}") 
 	public void memberDelete(@PathVariable String id) 
 			throws ServletException, IOException{
-		
+		System.out.println("id" + id);
 		System.out.println("컨트롤러 - delete");
 		service.deleteMember(id);
 		

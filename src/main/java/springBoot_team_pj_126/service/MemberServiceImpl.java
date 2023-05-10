@@ -69,6 +69,8 @@ public class MemberServiceImpl implements MemberService{
 	public void deleteMember(String id) throws ServletException, IOException {
 		System.out.println("서비스 - delete");
 		mapper.deleteById(id);
+		
+		
 	}
 //
 //	@Override

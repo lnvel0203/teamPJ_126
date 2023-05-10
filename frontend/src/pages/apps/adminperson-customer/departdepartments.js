@@ -1,5 +1,6 @@
 // Import Axios Services
-import axios from 'axios';
+//import axios from 'axios';
+import { request } from '../../../utils/axios';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useMemo, useState, Fragment } from 'react';
 
@@ -29,15 +30,11 @@ import { useFilters, useExpanded, useGlobalFilter, useRowSelect, useSortBy, useT
 // project import
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
-//5월 8일 수정 김성훈  삭제 요청
-// import IconButton from 'components/@extended/IconButton';
 import { PopupTransition } from 'components/@extended/Transitions';
 import {
   CSVExport,
   HeaderSort,
   IndeterminateCheckbox,
-  //5월4일 김성훈 수정 삭제 요청 
-  //SortingSelect,
   TablePagination,
   TableRowSelection
 } from 'components/third-party/ReactTable';
@@ -84,16 +81,32 @@ function handleEdit(rowData) {
   const { id, positionName } = rowData;
   console.log(id, positionName);
 
-  axios.put(`http://localhost:8081/members/editPosition/${id}/${positionName}`)
-    .then(() => {
-      console.log('수정 성공');
-      // 서버에서 수정된 데이터를 받아올 경우 필요한 처리
-      window.location.reload(); // 자동 새로고침
-    })
-    .catch(error => {
-      console.error('수정 실패', error);
-      // 에러 처리
-    });
+
+
+
+  request(
+    'PUT',
+    `members/editPosition/${id}/${positionName}`
+  ) .then(() => {
+    console.log('수정 성공');
+    // 서버에서 수정된 데이터를 받아올 경우 필요한 처리
+    window.location.reload(); // 자동 새로고침
+  })
+  .catch(error => {
+    console.error('수정 실패', error);
+    // 에러 처리
+  });
+
+  // axios.put(`http://localhost:8081/members/editPosition/${id}/${positionName}`)
+  //   .then(() => {
+  //     console.log('수정 성공');
+  //     // 서버에서 수정된 데이터를 받아올 경우 필요한 처리
+  //     window.location.reload(); // 자동 새로고침
+  //   })
+  //   .catch(error => {
+  //     console.error('수정 실패', error);
+  //     // 에러 처리
+  //   });
 }
 
 
@@ -268,54 +281,6 @@ const StatusCell = ({ value }) => {
   }
 };
 
-//    5월 8일 수정   사용 안함 삭제 
-// const ActionCell = (row, setCustomer, setCustomerDeleteId, handleClose, theme) => {
-//   const collapseIcon = row.isExpanded ? (
-//     <CloseOutlined style={{ color: theme.palette.error.main }} />
-//   ) : (
-//     <EyeTwoTone twoToneColor={theme.palette.secondary.main} />
-//   );
-//   return (
-//     <Stack direction="row" alignItems="center" justifyContent="center" spacing={0}>
-//       <Tooltip title="View">
-//         <IconButton
-//           color="secondary"
-//           onClick={(e) => {
-//             e.stopPropagation();
-//             row.toggleRowExpanded();
-//           }}
-//         >
-//           {collapseIcon}
-//         </IconButton>
-//       </Tooltip>
-//       <Tooltip title="Edit">
-//         <IconButton
-//           color="primary"
-//           onClick={(e) => {
-//             e.stopPropagation();
-//             setCustomer(row.values);
-//             handleAdd();
-//           }}
-//         >
-//           <EditTwoTone twoToneColor={theme.palette.primary.main} />
-//         </IconButton>
-//       </Tooltip>
-//       <Tooltip title="Delete">
-//         <IconButton
-//           color="error"
-//           onClick={(e) => {
-//             e.stopPropagation();
-//             handleClose();
-//             setCustomerDeleteId(row.values.fatherName);
-//           }}
-//         >
-//           <DeleteTwoTone twoToneColor={theme.palette.error.main} />
-//         </IconButton>
-//       </Tooltip>
-//     </Stack>
-//   );
-// };
-
 StatusCell.propTypes = {
   value: PropTypes.number
 };
@@ -346,8 +311,13 @@ const CustomerListPage = () => {
   // 서버에서 회원 정보를 패치해옴
   const fetchUserData = useCallback(async () => {
     try {
-      const response = await axios.get('http://localhost:8081/members/position'); //컨트롤러 주소
-      setUserData(response.data);
+      request(
+        'GET',
+        '/members/position'
+      ).then(response => {
+        setUserData(response.data);
+      })
+
     } catch (error) {
       console.error(error);
     }

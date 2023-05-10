@@ -26,11 +26,6 @@ export const getUsers = () => axiosServices.get('/members');
 // 업데이트
 export const updateUser = (id, updateData) => axiosServices.put(`/users/${id}`, updateData);
 
-// export const getUser = (id) => axiosInstance.get(`/users/${id}`);
-// export const addUser = (userData) => axiosInstance.post('/users', userData);
-// export const updateUser = (id, updateData) => axiosInstance.put(`/users/${id}`, updateData);
-// export const deleteUser = (id) => axiosInstance.delete(`/users/${id}`);
-
 //부석현
 //axios.helper
 axios.defaults.baseURL = 'http://localhost:8081';
@@ -47,17 +42,18 @@ export const setId = (id) => {
 export const setAuthToken = (token) => {
   //토큰이름은 내맘데로
   window.localStorage.setItem('auth_token', token);
-
+  
   //alert(token);
   //setAuth_token(token)과 같다
 };
 
-export const requestLogin = (method, url, data) => {
+export const request = (method, url, data) => {
   let headers = {};
 
   if (getAuthToken() !== null && getAuthToken() !== 'null') {
     headers = {
-      Authorization: 'Bearer ${getAuthToken()'
+      Authorization: 'Bearer ' + getAuthToken()
+      //Authorization: 'Bearer ${getAuthToken()'
     };
   }
 
