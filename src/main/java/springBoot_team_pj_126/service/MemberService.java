@@ -28,8 +28,11 @@ public interface MemberService {
 			throws ServletException, IOException;
 	
 	//5월 4일 추가 김성훈   // 지원 직급 수정 
-	public void editPosition(String id , String positionName) throws ServletException, IOException;
-	
-	
-	
+	public void editPosition(String id , String positionName) 
+			throws ServletException, IOException;
+
+	// 5월 8일 추가 김성훈 // 팀 수정
+	public void editDeptname(String id ,String DeptName)
+			throws ServletException,IOException;
+
 }

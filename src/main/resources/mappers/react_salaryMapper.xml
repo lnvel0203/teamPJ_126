@@ -32,7 +32,7 @@
    SELECT * FROM salary_TBL where id =#{id}
 </select> -->
 
- <insert id="insertSalary" parameterType="springBoot_team_pj_126.dto.SalaryDTO">
+<insert id="insertSalary" parameterType="springBoot_team_pj_126.dto.SalaryDTO">
    INSERT INTO salary_TBL values((select nvl(max(salaryId)+1,1)from salary_TBL), #{basicSalary}, #{name},#{payDay},#{paymentstatus},#{taxtionId},#{nontaxtionId},#{taxId},,#{overtimePay})
 </insert>   
 

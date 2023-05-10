@@ -13,13 +13,13 @@ import springBoot_team_pj_126.auth.entities.User;
 public interface UserMapper {
 
 	
-	UserDTO toUserDTO(User user);
+	User toUserDTO(User user);
 	
 	User signUpToUser(SignDTO userDTO);
 	
 	public User findById(String id);
 	
-	public User join(User dto);
+	public void join(User dto);
 	
 	public Optional<User> selectId(String id);
 }

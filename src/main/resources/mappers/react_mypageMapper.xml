@@ -6,8 +6,8 @@
      
 <mapper namespace="springBoot_team_pj_126.dao.MypageMapper">
 
-<select id="memberList" resultType="springBoot_team_pj_126.dto.UserDTO">
-   SELECT * FROM EMPLOYEES_TBL where id ={id}
+<select id="userinfo" resultType="springBoot_team_pj_126.dto.UserDTO">
+   select * from EMPLOYEES_TBL where id=#{id}
 </select>
 
 <!-- <2insert id="insertMember" parameterType="com.example.react.dto.MemberDTO">

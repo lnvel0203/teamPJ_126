@@ -14,13 +14,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import springBoot_team_pj_126.dto.UserDTO;
 import springBoot_team_pj_126.service.MemberService;
+import springBoot_team_pj_126.service.MypageService;
 
 @RequestMapping(value="/members")
 @RestController
@@ -29,17 +32,24 @@ public class MypageController {
 	@Autowired(required=true)
 	private MemberService service;
 	
+	@Autowired(required=true)
+	private MypageService mypage;
+	
 	private static final Logger logger = LoggerFactory.getLogger(MypageController.class);
 	
 	// ========================================================
 
-	@GetMapping("/mypage")
-	public List<UserDTO> mypageList(HttpServletRequest req, Model model) 
+	@GetMapping("/mypage/{id}")
+	public UserDTO userinfo(@PathVariable String id) 
 			throws ServletException, IOException{
 		logger.info("MypageController - mypage()");
+		System.out.println("id"+ id);
+		UserDTO dto = mypage.userinfo(id);
 		
-		return service.listAll(req, model);
+		return dto;
 	}
+	
+
 	
 	// 내 정보 상세
 	@GetMapping("/userInfoDetail")

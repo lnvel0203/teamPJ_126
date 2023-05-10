@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-
+//import axios from 'axios';
+import { request } from '../../../../utils/axios';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 
@@ -101,12 +101,29 @@ const ApexRedialBarChart = () => {
   const error = theme.palette.error.main;
 
   const fetchData = async () => {
-    try {
-      const response = await axios.get(`http://localhost:8081/members/attendanceList?id=${id}`);
-      const { earlyLeave, absence, unchecked, tardy } = response.data;
-      setSeries([tardy, earlyLeave, absence, unchecked]);
+    
+
+
+
+    // try {
+    //   const response = await axios.get(`http://localhost:8081/members/attendanceList?id=${id}`);
+    //   const { earlyLeave, absence, unchecked, tardy } = response.data;
+    //   setSeries([tardy, earlyLeave, absence, unchecked]);
+    // } catch (error) {
+    //   console.error('Error fetching data:', error);
+    // }
+
+try {
+      request(
+        'GET',
+        `members/attendanceList?id=${id}`
+      ).then((response) => {
+        const { earlyLeave, absence, unchecked, tardy } = response.data;
+        setSeries([tardy, earlyLeave, absence, unchecked]);
+      });
+     
     } catch (error) {
-      console.error('Error fetching data:', error);
+       console.error('Error fetching data:', error);
     }
   };
 

@@ -1,4 +1,5 @@
-import axios from 'axios';
+//import axios from 'axios';
+import { request } from '../../../utils/axios';
 import PropTypes from 'prop-types';
 import { useMemo, useEffect, Fragment, useState, useRef } from 'react';
 import { useNavigate } from 'react-router';
@@ -328,15 +329,25 @@ const List = () => {
   const [alertPopup, setAlertPopup] = useState(false);
 
   useEffect(() => {
-    axios
-      .get('http://localhost:8081/members/salary')
-      .then((response) => {
-        setList(response.data);
-      })
-      .catch((error) => {
-        // Handle error
-        console.log(error);
-      });
+    request(
+      'GET',
+      'members/salary'
+    ).then((response) => {
+      setList(response.data);
+    })
+    .catch((error) => {
+      // Handle error
+      console.log(error);
+    });
+    // axios
+    //   .get('http://localhost:8081/members/salary')
+    //   .then((response) => {
+    //     setList(response.data);
+    //   })
+    //   .catch((error) => {
+    //     // Handle error
+    //     console.log(error);
+    //   });
   }, []);
 
   const [invoiceId, setInvoiceId] = useState(0);

@@ -3,37 +3,23 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import axios from 'axios';
-
+import { request } from '../../utils/axios';
 function Calendar() {
-  const API_BASE_URL = 'http://localhost:8081/members/calender';
                       
   const [calendars, setCalendars] = useState([]);
   const [events, setEvents] = useState([]);
 
   const id = localStorage.getItem('id');
 
+  // - 캘린더 일정 목록 - REST API -백단연결
   useEffect(() => {
     const fetchCalendars = async () => {
-
-      try {
-        // const API_BASE_URL = 'http://localhost:8081/members/delete';
-        // const deletes = clickInfo.event.title;
-        // console.log('deletes 호출!!' ,deletes)
-        // axios.delete(API_BASE_URL+"/"+ deletes)
-        const headers = {
-          Authorization: 'Bearer ${getAuthToken()'
-        };
-
-        const response = await axios.get(API_BASE_URL+"/" + id, headers);
-        
-        console.log(response.data); 
+      request(
+        'GET',
+        '/calender/getCalender/' + id,
+      ).then(response => {
         setCalendars(response.data);
-     
-        
-      } catch (error) {
-        console.error('Error fetching calendars:', error);
-      }
+      })
     };
 
     fetchCalendars();
@@ -152,11 +138,7 @@ function Calendar() {
       console.log(selectInfo.endStr); 
       console.log(color); 
 
-      const API_BASE_URL = 'http://localhost:8081/members';
-
       const newevent = {
-        
-        //아이디?
         id:id,
         startDate : startDate,
         endDate : endDate,
@@ -165,24 +147,32 @@ function Calendar() {
         color: color
       };
 
-      console.log('insert 호출!!', newevent);
+    console.log('insert 호출!!', newevent);
 
+    // - 캘린더 일정 입력 - REST API -백단연결
+    request(
+        'POST',
+        '/calender/insert/',
+       {
+          id:id,
+          startDate : startDate,
+          endDate : endDate,
+          title: title,
+          descriptions: descriptions,
+          color: color
+        }
+      ).then(response => {
+        console.log(response.data);
+        alert('일정이 추가되었습니다.');
+        newWindow.close();
+        window.location.reload();
+      })
+      .catch(error => {
+        console.error(error);
+        alert('일정 추가에 실패했습니다.');
+        newWindow.close();
+      });
 
-      axios.post(API_BASE_URL + "/insert", newevent)
-        .then(response => {
-          console.log(response.data);
-          alert('일정이 추가되었습니다.');
-          newWindow.close();
-          window.location.reload();
-        })
-        .catch(error => {
-          console.error(error);
-          alert('일정 추가에 실패했습니다.');
-          newWindow.close();
-        });
-
-
-  
     });
   
     newWindow.document.getElementById("cancelButton").addEventListener("click", (event) => {
@@ -191,9 +181,6 @@ function Calendar() {
     });
   };
 
-
-  
-  
   const handleEventClick = (clickInfo) => {
     const eventEl = clickInfo.el;
 
@@ -207,51 +194,34 @@ function Calendar() {
     deleteBtn.onclick = () => {
       if (window.confirm(`삭제 합니다.'${clickInfo.event.title}'?`))
       {
-        const API_BASE_URL = 'http://localhost:8081/members/delete';
         const deletes = clickInfo.event.title;
         console.log('deletes 호출!!' ,deletes)
-        axios.delete(API_BASE_URL+"/"+ deletes)
-        clickInfo.event.remove();
-        window.location.reload();
 
-
-
-
+        // - 캘린더 일정 삭제 - REST API -백단연결
+        request(
+          'DELETE',
+          '/calender/delete/'+ deletes,
+        )
+          clickInfo.event.remove();
+          window.location.reload();
       }
     };
     eventEl.appendChild(deleteBtn);
   };
-
   const eventContent = (eventInfo) => {
     return (
-
       <>
-
-
-
-
         <b>{eventInfo.timeText}</b>
         <p>
           <h3>{eventInfo.event.title}</h3>
         </p>
         <p>{eventInfo.event.extendedProps.description}</p>
-
-
-
-
       </>
     );
   };
-
   return (
-
-    
     <div>
-        
       <FullCalendar 
-      
-
-
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}  // api에서 시간 떙겨옴. 확인
         initialView="dayGridMonth"
         headerToolbar={{
@@ -259,12 +229,7 @@ function Calendar() {
           center: "title",
           end: "dayGridMonth,timeGridWeek,timeGridDay",
         }}
-
-        //if?
         events={events}
-
-
-        
         selectable={true}
         selectMirror={true}
         dayMaxEvents={true}
@@ -274,8 +239,6 @@ function Calendar() {
         eventRemove={(info) => {
           setEvents(events.filter((event) => event !== info.event));
         }}
-
-       
       />
     </div>
   );
