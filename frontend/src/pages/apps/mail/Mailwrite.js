@@ -1,23 +1,16 @@
 import React, { useState,useEffect } from 'react';
-import './DocumentComponent.css';
+
+
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 const DocumentWritePage = () => {
   
-  const navigate = useNavigate();
   const [documentType,setDocumentType] = useState('');
   const [author,setAuthor] = useState('');
   const [retentionPeriod,setRetentionPeriod] = useState('');
   const [securityLevel,setSecurityLevel] = useState('');
   const [approver, setApprover] = useState([]);
-  const [selectedFile, setSelectedFile] = useState(null);
   const id = localStorage.getItem('id');
-  const [title, setTitle] = useState('');
-
-
-  
   
  
   const handleDocumentTypeChange = (event) => {
@@ -47,7 +40,6 @@ const DocumentWritePage = () => {
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
-    setSelectedFile(file);
     console.log('Selected file:', file);
     // Add logic to upload file to server or do something with it
   };  
@@ -71,16 +63,6 @@ const DocumentWritePage = () => {
     };
   }, []);
 
-  useEffect(() => {
-    
-    // Add logic to upload file to server or do something with it
-  }, [selectedFile]);
-
-  const handleTitleChange = (event) => {
-    setTitle(event.target.value);
-  };
-  
-
   const [value, setValue] = useState('');
 
   const modules = {
@@ -94,7 +76,6 @@ const DocumentWritePage = () => {
       ['clean']
     ]
   };
-
   const formats = [
     'font',
     'header',
@@ -113,52 +94,30 @@ const DocumentWritePage = () => {
     'background'
   ];
 
-  const handleAddDocument = async (event) => { 
-
+  const handleSubmit = async (event) => {
     event.preventDefault();
     
-    const storedApprover = JSON.parse(localStorage.getItem('approver')) || [];
-    setApprover(storedApprover);
-    
     const formData = new FormData();
-
-    storedApprover.forEach((apv, index) => {
-    formData.append(`storedApprover${index}`, JSON.stringify(apv));
-    // Add approver number to formData
-    formData.append(`approverNo${index}`, apv.no);
-  });
-    
-    formData.append('id',id);
     formData.append('documentType', documentType);
     formData.append('author', author);
     formData.append('retentionPeriod', retentionPeriod);
     formData.append('securityLevel', securityLevel);
-    formData.append('title', title);
-    formData.append('content', value); 
-
-    storedApprover.forEach((apv, index) => {
-      formData.append(`storedApprover${index}`, JSON.stringify(apv));
+  
+    approver.forEach((apv, index) => {
+      formData.append(`approver${index}`, JSON.stringify(apv));
     });
   
-    if (selectedFile) {
-      formData.append('fileData', selectedFile, selectedFile.name);
-    }
-
-    for (const [key, value] of formData.entries()) {
-      console.log('aasdlf;kajdsjlk;',`${key}: ${value}`);
-    }
-    console.log('selectedFile',selectedFile)
-    console.log("전송시작")
+    formData.append('file', selectedFile);
   
     try {
-      const response = await axios.post('http://localhost:8081/members/addDocument', formData);
+      const response = await axios.post('http://localhost:8081/documents', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
       console.log('Insert success:', response.data);
-      console.log("성공한듯 ? ")
-      navigate('/apps/document/documentList', { state: { id: id } });
-      
       // 이후 처리 (예: 페이지 이동 등)
     } catch (error) {
-      console.log("되겠냐고 ㅋ ");
       console.error('Insert error:', error);
       // 이후 처리 (예: 에러 메시지 표시 등)
     }
@@ -252,13 +211,7 @@ const DocumentWritePage = () => {
         </table>
         <br />
         <h1>상세 입력</h1>
-        <div className="title-input-container">
-  <label htmlFor="document-title">제목: </label>
-  <input type="text" id="document-title" className="title-input" value={title} onChange={handleTitleChange} />
-</div>
-
-
-        
+        <form onSubmit={handleSubmit}>
       <div style={{ height: '650px', width: '900px' }}>
         <ReactQuill
           style={{ height: '600px' }}
@@ -271,10 +224,10 @@ const DocumentWritePage = () => {
         <div className="ql-editor" style={{ color: 'black' }}></div>
       </div>
       <div>
-        <button type="button" onClick={handleAddDocument}>보내기</button>
+        <button type="submit">보내기</button>
         <button type="button">취소</button>
       </div>
-    
+    </form>
       </div>
     );
 }

@@ -17,7 +17,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 import lombok.RequiredArgsConstructor;
-import springBoot_team_pj_126.auth.dto.UserDTO;
+import springBoot_team_pj_126.auth.entities.User;
 import springBoot_team_pj_126.auth.serivce.UserService;
 
 @RequiredArgsConstructor
@@ -39,11 +39,7 @@ public class UserAuthProvider {
 		// 일단 text로 된 비밀키를 피하기 위해 base64로 인코딩한다.
 		secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
 		System.out.println("secretKey : " +secretKey);
-		
-		
 	}
-	
-	
 	public String createToken(String id) {
 		System.out.println("UserAuthProvider - token");
 		Date now = new Date();
@@ -71,8 +67,8 @@ public class UserAuthProvider {
 		
 		System.out.println("UserAuthProvider - validateToken2");
 		
-		UserDTO user = userService.findById(decoded.getIssuer());
-		
+		User user = userService.findById(decoded.getIssuer());
+		System.out.println("JWTuser : " + user);
 		//사용자가 내 데이터베이스에 존재하는지 확인하기.
 		return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
 		

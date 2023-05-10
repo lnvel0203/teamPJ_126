@@ -120,7 +120,7 @@ const DocumentForm = Loadable(lazy(() => import('pages/document/Form')));
 const DocumentList = Loadable(lazy(() => import('pages/document/list')));
 const Documentwrite = Loadable(lazy(() => import('pages/document/write')));
 const AttendanceList = Loadable(lazy(() => import('pages/attendance/AttendanceList')));
-
+const Mail = Loadable(lazy(() => import('pages/apps/mail/Mail')));
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -170,6 +170,10 @@ const MainRoutes = {
             {
               path: 'main-page',
               element: <MainPage />
+            },
+            {
+              path: 'mail',
+              element: <Mail />
             },
             // {
             //   path: 'chat',

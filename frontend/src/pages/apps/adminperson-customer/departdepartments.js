@@ -449,7 +449,7 @@ const CustomerListPage = () => {
         className: 'cell-right'
       },
 
-      // 5월 8일 김성훈 팀 리스트 보이기 및 선택하기
+      // 5월 8일 김성훈 팀 보이기 확긴하기!
       {
         Header: '부서선택',
         className: 'cell-center',

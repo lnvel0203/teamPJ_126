@@ -9,13 +9,17 @@
 <insert id="join" parameterType="springBoot_team_pj_126.auth.entities.User">
  	INSERT INTO EMPLOYEES_TBL(NO, ID,PWD ,NAME,BIRTH, EMAIL,ADDRESS,HP,hireDate,STATE,annualCount,welfarePoint,ROLE) values((select nvl(max(no)+1,1)from EMPLOYEES_TBL),#{id}, #{pwd}, #{name}, #{birth}, #{email}, #{address}, #{hp}, default, default, default, default, default)
 
- </insert>
+</insert>
  
- <select id="duplecate" parameterType="springBoot_team_pj_126.dto.UserDTO" resultType="springBoot_team_pj_126.dto.UserDTO">
+<select id="duplecate" parameterType="springBoot_team_pj_126.dto.UserDTO" resultType="springBoot_team_pj_126.dto.UserDTO">
  	select * from EMPLOYEES_TBL where name = #{name}
  </select>
  
   <select id="findById" parameterType="String" resultType="springBoot_team_pj_126.auth.entities.User">
+	select * from EMPLOYEES_TBL where id=#{id}
+</select> 
+
+  <select id="toUserDTO" parameterType="springBoot_team_pj_126.auth.entities.User" resultType="springBoot_team_pj_126.auth.entities.User">
 	select * from EMPLOYEES_TBL where id=#{id}
 </select> 
 

@@ -1,10 +1,10 @@
-import axios from 'axios';
+//import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { CardContent, Grid, Typography } from '@mui/material';
 import MainCard from 'components/MainCard';
 import Avatar from 'components/@extended/Avatar';
 import { CheckSquareFilled } from '@ant-design/icons';
-
+import { request } from '../../../../utils/axios';
 const WorkStatus = ({ refresh }) => {
   const [attendanceList, setAttendanceList] = useState([]);
 
@@ -12,15 +12,17 @@ const WorkStatus = ({ refresh }) => {
   const id = localStorage.getItem('id');
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:8081/members/statusList?id=${id}`)
-      .then((response) => {
-        console.log(response.data);
+    request(
+      'GET',
+      `/members/statusList?id=${id}`
+    ).then(response => {
+      console.log(response.data);
         setAttendanceList(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
+
   }, [refresh]);
 
   return (

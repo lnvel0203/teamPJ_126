@@ -1,11 +1,6 @@
-import React, { Component } from "react";
+//import React, { Component, useState } from "react";
+import React, { useState } from 'react';
 import axios from 'axios'; 
-
-//import ApiService from "../../../ApiService";
-
-//import ApiService from "../../../ApiService";
-//import "./join.css";
-
 import AnimateButton from 'components/@extended/AnimateButton';
 
 import {
@@ -22,88 +17,146 @@ import {
   Stack,
   Typography
 } from '@mui/material';
-class AuthRegister extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      id: "",
-      hp:"",
-      birth:"",
-      address:"",
-      name: "",
-      pwd: "",
-      email: "",
-      message: null,
-    };
+
+//class AuthRegister extends Component {
+
+  function AuthRegister() {
+
+    const [id, setUserId] = useState("");
+    const [pwd, setPassword] = useState("");
+    const [name, setUserName] = useState("");
+    const [email, setEmail] = useState("");
+    const [hp, setHp] = useState("");
+    const [birth, setBirth] = useState("");
+    const [address, setAddress] = useState("");
+    
+    const [userIdError, setUserIdError] = useState(false);
+    const [passwordError, setPasswordError] = useState(false);
+    const [userNameError, setUserNameError] = useState(false);
+    const [emailError, setEmailError] = useState(false);
+
+const onChangeUserId = (e) => {
+    const userIdRegex = /^[A-Za-z0-9+]{5,}$/;
+    if ((!e.target.value || (userIdRegex.test(e.target.value)))) setUserIdError(false);
+    else setUserIdError(true);
+    setUserId(e.target.value);
+};
+const onChangePassword = (e) => {
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    if ((!e.target.value || (passwordRegex.test(e.target.value)))) setPasswordError(false);
+    else setPasswordError(true);
+    setPassword(e.target.value);
+
+};
+
+const onChangeUserName = (e) => {
+    setUserNameError(false);
+    setUserName(e.target.value)
+};
+const onChangeEmail = (e) => {
+    const emailRegex = /^(([^<>(),[\].,;:\s@"]+(\.[^<>(),[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+    if (!e.target.value || emailRegex.test(e.target.value)) setEmailError(false);
+    else setEmailError(true);
+    setEmail(e.target.value);
+};
+
+const onChangeDate = (e) => {
+  
+  setBirth(e.target.value);
+ 
+};
+
+const onChangeHp = (e) => {
+  
+  setHp(e.target.value);
+
+};
+const onChangeAddress = (e) => {
+  
+  setAddress(e.target.value);
+
+};
+
+const validation = () => {
+  if(!id) setUserIdError(true);
+  if(!pwd) setPasswordError(true);
+  if(!name) setUserNameError(true);
+  if(!email) setEmailError(true);
+
+  if(id && pwd && name && email){
+    return true;
+  } 
+  else {
+    return false;
+  }
+}
+
+
+const dupleChk = (e) =>{
+
+  const MEMBER_API_BASE_URL = 'http://localhost:8081/members';
+  //const headers = {"Content-type":"application/x-www-form-urlencoded"}
+  e.preventDefault();
+
+  let memberId = {
+    id:id,
   }
 
-  onChange = (e) => {
-
-    this.setState({
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  
-  dupleChk = (e) =>{
-    e.preventDefault();
-
-    let memberId = {
-      id: this.state.id,
-      
-
-  };
-
-    const MEMBER_API_BASE_URL = 'http://localhost:8081/members';
+  if(id === ""){
+    alert("아이디를 입력해주세요.");
+  }else{
 
     axios.post(MEMBER_API_BASE_URL+ "/dupleChk", memberId)
     .then(res => {
      
         if(res.data === 0){
             alert("중복된 아이디입니다.");
+            
+
         }else{
             alert("사용 가능한 아이디입니다.");
+         
         }
-     })
+     });
+  }
 }
-  signOn = (e) => {
-    
+  const signOn = (e) => {
+    const MEMBER_API_BASE_URL = 'http://localhost:8081/members';
     e.preventDefault();
     let member = {
-      id: this.state.id,
-      pwd: this.state.pwd,
-      name: this.state.name,
-      hp:this.state.hp,
-      birth:this.state.birth,
-      email:this.state.email,
-      address:this.state.address,
+       id:id,
+       pwd:pwd,
+       name:name,
+       hp:hp,
+       birth:birth,
+       email:email,
+       address:address,
+    };
 
-  };
+    if(validation() === false){
+      alert("회원가입 절차를 맞춰서 진행해주세요.");
+      window.location.reload();
+    }else{
 
-  const MEMBER_API_BASE_URL = 'http://localhost:8081/members';
-   
-    axios.post(MEMBER_API_BASE_URL+ "/register", member)
-    .then(res =>{
-      if(res.data === 1){
-        window.location.href="/login";
-     
-      }else{
-        console.error();
-      }
+      axios.post(MEMBER_API_BASE_URL+ "/register", member)
+      .then(res =>{
+          if(res.data === 1){
+            window.location.href="/login";
+        
+          }else{
+            console.error();
+          }
+        }
+       );
     }
-    );
-
   };
-
-  render() {
     const style = {
       width:390,
       height:50,
       
     }
-
+  
     const styleMargin = {
-
       marginBottom:20
     }
 
@@ -111,40 +164,43 @@ class AuthRegister extends Component {
       <div >
         <form>
 
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12} md={12}>
                   <Stack spacing={1}>
-                  <InputLabel htmlFor="firstname-signup">아이디*</InputLabel>
+                  <InputLabel htmlFor="firstname-signup"> 아이디* </InputLabel>
+                  
                    <div style={styleMargin}>
                     <input style={style}
                         type="text"
                         id="id"
                         name="id"
-                        value={this.state.id}
+                        value={id}
                         className="text_input"
                         placeholder="아이디를 입력하세요"
-                        onChange={this.onChange}
+                        onChange={onChangeUserId}
                       />
+                    <Button disableElevation onClick={dupleChk} fullWidth size="small" type="button" variant="contained" color="primary">중복확인</Button>
+                    <div>{userIdError && <div className="invalid-input">아이디는 5자이상 입력해야 합니다.</div>}</div> 
                     </div>
                     </Stack>
                     </Grid>
-
                     <Grid item xs={12} md={6}>
                     <Stack spacing={1}>
                     <InputLabel htmlFor="firstname-signup">비밀번호*</InputLabel>
                     <div style={styleMargin}>
-                 <input style={style}
+                     <input style={style}
                         type="password"
                         id="pwd"
                         name="pwd"
-                        value={this.state.pwd}
+                        value={pwd}
                         className="text_input"
                         placeholder="비밀번호를 입력하세요"
-                        onChange={this.onChange}
+                        onChange={onChangePassword}
+                        
                       />
                     </div>
+                    <div className='join_Chk'>{passwordError && <div className="invalid-input">비밀번호는 8자리 이상 영문+숫자를 입력해야 합니다. </div>}</div>
                     </Stack>
                     </Grid>
-
                     <Grid item xs={12}>
                     <Stack spacing={1}>
                     <InputLabel htmlFor="firstname-signup">이름*</InputLabel>
@@ -153,12 +209,13 @@ class AuthRegister extends Component {
                         type="text"
                         id="name"
                         name="name"
-                        value={this.state.name}
+                        value={name}
                         className="text_input"
                         placeholder="이름을 입력하세요"
-                        onChange={this.onChange}
+                        onChange={onChangeUserName}
                       />
                     </div>
+                    <div className='join_Chk'>{userNameError && <div className="invalid-input">반드시 입력해야 합니다.</div>}</div>
                     </Stack>
                     </Grid>
                     <Grid item xs={12}>
@@ -170,37 +227,33 @@ class AuthRegister extends Component {
                         type="email"
                         id="email"
                         name="email"
-                        value={this.state.email}
+                        value={email}
                         className="text_input"
                         placeholder="이메일을 입력하세요"
-                        onChange={this.onChange}
+                        onChange={onChangeEmail}
                       />
                     <FormHelperText error id="helper-text-firstname-signup">
-                   
                     </FormHelperText>
                     </div>
-                     
+                    <div className='join_Chk'>{emailError && <div className="invalid-input">이메일 형식을 맞춰서 입력해야 합니다.</div>}</div>
                     </Stack>
                     </Grid>
-                    
                     <Grid item xs={12}>
-
                     <Stack spacing={1}>
                     <InputLabel htmlFor="firstname-signup">생년월일*</InputLabel>
                     <div style={styleMargin}>
                     <input style={style}
-                        type="text"
+                        type="date"
                         id="birth"
                         name="birth"
-                        value={this.state.birth}
+                        value={birth}
                         className="text_input"
                         placeholder="생년월일을 입력하세요"
-                        onChange={this.onChange}
+                        onChange={onChangeDate}
                       />
                     </div>
                     </Stack>
                     </Grid>
-
                     <Grid item xs={12} md={6}>
                     <Stack spacing={1}>
                     <InputLabel htmlFor="firstname-signup">핸드폰번호*</InputLabel>
@@ -209,17 +262,16 @@ class AuthRegister extends Component {
                         type="text"
                         id="hp"
                         name="hp"
-                        value={this.state.hp}
+                        value={hp}
                         className="text_input"
                         placeholder="핸드폰번호를 입력하세요"
-                        onChange={this.onChange}
+                        onChange={onChangeHp}
                       />
                     </div>
                     </Stack>
                     </Grid>
 
                     <Grid item xs={12}>
-
                     <Stack spacing={1}>
                     <InputLabel htmlFor="firstname-signup">집 주소*</InputLabel>
                     <div style={styleMargin}>
@@ -227,10 +279,10 @@ class AuthRegister extends Component {
                         type="text"
                         id="address"
                         name="address"
-                        value={this.state.address}
+                        value={address}
                         className="text_input"
                         placeholder="집 주소를 입력하세요"
-                        onChange={this.onChange}
+                        onChange={onChangeAddress}
                       />
                     </div>
 
@@ -253,7 +305,7 @@ class AuthRegister extends Component {
                     <div>
                     <Grid item xs={12}>
                 <AnimateButton>
-                  <Button disableElevation onClick={this.signOn}  fullWidth size="large" type="button" variant="contained" color="primary">
+                  <Button disableElevation onClick={signOn}  fullWidth size="large" type="button" variant="contained" color="primary">
                     Create Account
                   </Button>
                 </AnimateButton>
@@ -264,7 +316,7 @@ class AuthRegister extends Component {
       </div>
 
     );
-  }
+  
 }
 
 export default AuthRegister;

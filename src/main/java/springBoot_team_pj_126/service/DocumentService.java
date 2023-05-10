@@ -9,17 +9,19 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.ui.Model;
 
 import springBoot_team_pj_126.dto.DocumentDTO;
-import springBoot_team_pj_126.dto.MemberDTO;
 import springBoot_team_pj_126.dto.UserDTO;
 
 
 public interface DocumentService {
 
-	public List<DocumentDTO> documentList(HttpServletRequest req, Model model) 
+	public List<DocumentDTO> documentList(String id,HttpServletRequest req, Model model) 
 			throws ServletException, IOException;
 	
 	public List<UserDTO> approverList(HttpServletRequest req, Model model) 
 			throws ServletException, IOException;
+	
+	public void addDocument(DocumentDTO dto) throws ServletException, IOException;
+	
 		
 //	public void insertMember(MemberDTO dto) throws ServletException, IOException;
 //	

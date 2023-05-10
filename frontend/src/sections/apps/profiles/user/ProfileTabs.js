@@ -38,8 +38,11 @@ const ProfileTabs = ({ focusInput }) => {
   const [selectedImage, setSelectedImage] = useState(undefined);
   const [avatar, setAvatar] = useState('./default.png');
   
+  const [avatar, setAvatar] = useState('./default.png');
+  
   useEffect(() => {
     if (selectedImage) {
+      setAvatar(URL.createObjectURL(selectedImage));  //URL 대신 지정경로 이미지 삽입
       setAvatar(URL.createObjectURL(selectedImage));  //URL 대신 지정경로 이미지 삽입
     }
   }, [selectedImage]);
