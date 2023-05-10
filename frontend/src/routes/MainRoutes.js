@@ -118,6 +118,7 @@ const AddApprover = Loadable(lazy(() => import('pages/document/AddApprover')));
 const EditorComponent = Loadable(lazy(() => import('pages/document/EditorComponent')));
 const DocumentForm = Loadable(lazy(() => import('pages/document/Form')));
 const DocumentList = Loadable(lazy(() => import('pages/document/list')));
+const documentDetail = Loadable(lazy(() => import('pages/document/documentDetail')));
 const Documentwrite = Loadable(lazy(() => import('pages/document/write')));
 const AttendanceList = Loadable(lazy(() => import('pages/attendance/AttendanceList')));
 
@@ -216,6 +217,10 @@ const MainRoutes = {
                 {
                   path: 'Documentwrite',
                   element: <Documentwrite />
+                },
+                {
+                  path: 'DocumentDetail',
+                  element: <documentDetail />
                 }
               ]
             },

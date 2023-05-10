@@ -29,15 +29,39 @@ public class DocumentServiceImpl implements DocumentService{
 	private DocumentMapper mapper;
 
 	@Override
-	public List<DocumentDTO> documentList(HttpServletRequest req, Model model) 
+	public List<DocumentDTO> documentList(String id,HttpServletRequest req, Model model) 
 			throws ServletException, IOException {
 		System.out.println("서비스 - list");
-		List<DocumentDTO> list = mapper.documentList();
-		System.out.println(list);
+		
+		List<DocumentDTO> list = mapper.documentList(id);
+		System.out.println("servicelist"+list);
 		
 		model.addAttribute("list", list);
 		return list;
 	}
+
+	@Override
+	   public List<UserDTO> approverList(HttpServletRequest req, Model model) 
+	         throws ServletException, IOException {
+	      System.out.println("서비스 - approverList");
+	      List<UserDTO> list = mapper.approverList();
+	      System.out.println(list);
+	      
+	      model.addAttribute("list", list);
+	      return list;
+	   }
+
+
+	@Override
+	public void addDocument(DocumentDTO dto) 
+			throws ServletException, IOException {
+		
+		System.out.println("<<< 서비스 - 문서작성 >>>");
+		
+		mapper.addDocument(dto);		
+	}
+	
+	
 	
 //	@Override
 //	public void insertMember(MemberDTO dto) throws ServletException, IOException {

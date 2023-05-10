@@ -7,8 +7,9 @@
 <mapper namespace="springBoot_team_pj_126.dao.DocumentMapper">
 
 <select id="documentList" resultType="springBoot_team_pj_126.dto.DocumentDTO">
-		SELECT * FROM document_tbl
+    select * from document_tbl where id =#{id}
 </select>
+
 
 <select id="approverList" resultType="springBoot_team_pj_126.dto.UserDTO">
 		SELECT e.NO,e.name,d.deptname,e.stemp, p.POSITIONNAME,e.positionId 
@@ -16,6 +17,55 @@
 		WHERE e.DEPTID = d.DEPTID 
 		AND e.POSITIONID = p.POSITIONID
 </select>
+
+
+<insert id="addDocument" parameterType="springBoot_team_pj_126.dto.DocumentDTO">
+    <![CDATA[
+        INSERT INTO document_tbl (
+            documentNo,
+            title,
+            author,
+            draftDate,
+            documentType,
+            documentState,
+            retentionPeriod,
+            securityLevel,
+            content,
+            firstApproverNo,
+            secondApproverNo,
+            thirdApproverNo,
+            fourthApproverNo,
+            firstApproverState,
+            secondApproverState,
+            thirdApproverState,
+            fourthApproverState,
+            fileData,
+            id
+        )
+        VALUES (
+            (SELECT NVL(MAX(documentNo) + 1, 1) FROM document_tbl),
+            #{title},
+            #{author},
+            SYSDATE,
+            #{documentType},
+            '결재진행중',
+            #{retentionPeriod},
+            #{securityLevel},
+            #{content},
+            #{firstApproverNo},
+            #{secondApproverNo},
+            #{thirdApproverNo, jdbcType=NUMERIC},
+            #{fourthApproverNo, jdbcType=NUMERIC},
+            '결재중',
+            '대기중',
+            '대기중',
+            '대기중',
+            #{filePath},
+            #{id}
+        )
+    ]]>
+</insert>
+
 
 <!-- <insert id="insertMember" parameterType="com.example.react.dto.MemberDTO">
 	INSERT INTO mvc_member_tbl values((select nvl(max(id)+1,1)from mvc_member_tbl), #{password}, #{username},#{age},#{email},#{address},#{salary})
