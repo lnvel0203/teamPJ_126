@@ -1,16 +1,14 @@
 package springBoot_team_pj_126.controller;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import springBoot_team_pj_126.dto.SalaryDTO;
 import springBoot_team_pj_126.dto.SalaryInfoDTO;
+import springBoot_team_pj_126.dto.SalaryRecordsDTO;
 import springBoot_team_pj_126.service.SalaryService;
 
 @RequestMapping(value="/members")
@@ -34,15 +33,26 @@ public class SalaryController {
 	
 	// ========================================================
 	
-	@GetMapping("/salary")
-	public List<SalaryDTO> SalaryList(HttpServletRequest req, Model model) 
-			throws ServletException, IOException{
-		logger.info("SalaryController - SalaryList()");
+	// 급여 관리 리스트
+	@GetMapping("/salaryList")
+	public ArrayList<Map<String, Object>> salaryList() {
+		logger.info("SalaryController - salaryList()");
 		
-		List<SalaryDTO> list = service.salaryList(req, model);
-		System.out.println("컨트롤러 : list : " + list);
+		ArrayList<Map<String, Object>> map = service.salaryList();
 		
-		return service.salaryList(req, model);
+		return map;
+	}
+	
+	// 급여 수정을 위한 상세 내역
+	// TODO - id랑 날짜 둘 다 아 아니네 recordId로 바꾸기
+	@GetMapping("/salaryeditDetail")
+	public SalaryRecordsDTO salaryeditDetail(@RequestParam String id){
+		logger.info("SalaryController - salaryeditDetail()");
+		
+		SalaryRecordsDTO dto = service.salaryeditDetail(id);
+		System.out.println("dto: " + dto);
+		
+		return dto;
 	}
 	
 	// ========================================================
@@ -69,32 +79,20 @@ public class SalaryController {
 		
 		return data;
 	}
+	
+	// 급여 지급
+	@PostMapping("/invoiceCreate")
+	public int workCheck(@RequestBody Map<String, Object> map) {
+		logger.info("SalaryController - invoiceCreate()");
+		
+		System.out.println(map);
+		Map<String, Object> data = (Map<String, Object>) map.get("sendData");
+		
+		int insertCnt = service.invoiceCreate(data);
+		
+		return insertCnt;
+	}
 
-
-	   @PostMapping("/insertSalary")
-	   public void InsertSalary(@RequestBody SalaryDTO salary) throws ServletException, IOException{
-	      System.out.println("컨트롤러 - insertSalary");
-	      service.insertSalary(salary);
-	      System.out.println("insert [성공]");
-	   }
-	   
-	   
-
-	   @PostMapping("/updateSalary")
-	   public void updateSalary(@RequestBody SalaryDTO salary) throws ServletException, IOException{
-	      System.out.println("컨트롤러 - updateSalary");
-	      service.updateSalary(salary);
-	      System.out.println("update [성공]");
-	      
-	   }
-	   
-
-	   @PostMapping("/deleteSalary")
-	   public void deleteSalary(@RequestBody int salary) throws ServletException, IOException{
-	      System.out.println("컨트롤러 - deleteSalary");
-	      service.deleteSalary(salary);
-	      System.out.println("delete [성공]");
-	      
-	   }
+	// ========================================================
 	
 }

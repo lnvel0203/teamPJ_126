@@ -43,5 +43,14 @@
 	WHERE id = #{id}
 </update> 
 
+<!-- 5월 9일 김성훈 추가 팀  수정 -->
+<update id="editDeptname" parameterType="String">
+	UPDATE employees_tbl SET deptid = (SELECT deptid 
+	FROM department_tbl 
+	WHERE DeptName = #{DeptName} AND ROWNUM = 1)
+	WHERE id = #{id}
+</update> 
+
+
 
 </mapper>

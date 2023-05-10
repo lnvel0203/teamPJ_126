@@ -13,6 +13,6 @@ public class SalaryInfoDTO {
 	@Id
 	private int infoId;		// 급여 정보 고유 번호 (PK)
 	private String empId;		// 직원 고유 번호(FK)
-	private int baseSalary;	// 기본급
+	private double baseSalary;	// 기본급
 	private int regularWeeklyHours;	// 주당 근로 시간
 }

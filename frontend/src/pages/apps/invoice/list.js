@@ -94,8 +94,8 @@ function ReactTable({ columns, data }) {
 
   // ================ Tab ================
 
-  const groups = ['All', ...new Set(data.map((item) => item.status))];
-  const countGroup = data.map((item) => item.status);
+  const groups = ['All', ...new Set(data.map((item) => item.PAYMENTSTATUS))];
+  const countGroup = data.map((item) => item.PAYMENTSTATUS);
   const counts = countGroup.reduce(
     (acc, value) => ({
       ...acc,
@@ -107,7 +107,7 @@ function ReactTable({ columns, data }) {
   const [activeTab, setActiveTab] = useState(groups[0]);
 
   useEffect(() => {
-    setFilter('status', activeTab === 'All' ? '' : activeTab);
+    setFilter('PAYMENTSTATUS', activeTab === 'All' ? '' : activeTab);
     // eslint-disable-next-line
   }, [activeTab]);
 
@@ -258,34 +258,39 @@ StatusCell.propTypes = {
 const ActionCell = (row, setGetInvoiceId, setInvoiceId, navigation, theme) => {
   return (
     <Stack direction="row" alignItems="center" justifyContent="center" spacing={0}>
+      {/* 상세 버튼 */}
       <Tooltip title="View">
         <IconButton
           color="secondary"
           onClick={(e) => {
             e.stopPropagation();
-            navigation(`/apps/invoice/details/${row.values.id}`);
+            navigation(`/apps/invoice/details/${row.values.SALARYRECORDID}`);
           }}
         >
           <EyeTwoTone twoToneColor={theme.palette.secondary.main} />
         </IconButton>
       </Tooltip>
+
+      {/* 수정 버튼 */}
       <Tooltip title="Edit">
         <IconButton
           color="primary"
           onClick={(e) => {
             e.stopPropagation();
-            navigation(`/apps/invoice/edit/${row.values.id}`);
+            navigation(`/apps/invoice/edit/${row.values.SALARYRECORDID}`);
           }}
         >
           <EditTwoTone twoToneColor={theme.palette.primary.main} />
         </IconButton>
       </Tooltip>
+
+      {/* 삭제 버튼 */}
       <Tooltip title="Delete">
         <IconButton
           color="error"
           onClick={(e) => {
             e.stopPropagation();
-            setInvoiceId(row.values.id);
+            setInvoiceId(row.values.SALARYRECORDID);
             setGetInvoiceId(row.original.invoice_id);
             dispatch(
               alertPopupToggle({
@@ -329,7 +334,7 @@ const List = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:8081/members/salary')
+      .get('http://localhost:8081/members/salaryList')
       .then((response) => {
         setList(response.data);
       })
@@ -380,37 +385,35 @@ const List = () => {
         disableFilters: true
       },
       {
-        Header: 'No',
-        accessor: 'SalaryId',
+        Header: 'NO',
+        accessor: 'SALARYRECORDID',
         className: 'cell-center',
         disableFilters: true
       },
       {
-        Header: '이름',
-        accessor: 'name',
-        className: 'cell-center',
-        disableFilters: true,
+        Header: 'ID',
+        accessor: 'ID',
+        className: 'cell-center'
       },
       {
-        Header: 'Avatar',
-        accessor: 'avatar',
-        disableSortBy: true,
+        Header: '이름',
+        accessor: 'NAME',
+        className: 'cell-center',
         disableFilters: true
       },
       {
         Header: '지급액',
-        accessor: 'basicSalary',
+        accessor: 'NETSALARY',
         disableFilters: true
       },
-
       {
         Header: '지급날짜',
-        accessor: 'payDay',
+        accessor: 'PAYDATE',
         disableFilters: true
       },
       {
         Header: '지급상태',
-        accessor: 'status',
+        accessor: 'PAYMENTSTATUS',
         disableFilters: true,
         filter: 'includes',
         Cell: StatusCell
