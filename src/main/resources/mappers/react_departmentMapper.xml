@@ -6,13 +6,22 @@
      
 <mapper namespace="springBoot_team_pj_126.dao.DepartmentMapper">
 
-
+<!-- 5월 9일 김희수 직원목록 sql문 수정  -->
 <select id="departmentList" resultType="springBoot_team_pj_126.dto.DeptDTO">
-	SELECT * FROM DEPARTMENT_TBL
+	SELECT deptid, deptname, deptdate, deptreadername
+	FROM department_tbl 
+	ORDER BY deptid DESC
 </select>
 
 <insert id="addDeptment" parameterType="springBoot_team_pj_126.dto.DeptDTO">
-	INSERT INTO DEPARTMENT_TBL values(#{deptid}, #{deptname}, default, null)
+	INSERT INTO DEPARTMENT_TBL values(#{deptid}, #{deptname}, sysdate, null)
 </insert>
+
+ <!-- 5월 9일 김희수 부서 수정  -->
+<update id="editDepartment" parameterType="springBoot_team_pj_126.dto.DeptDTO">
+	UPDATE department_tbl
+	SET deptname = #{deptname}
+	WHERE deptid = #{deptid}
+</update>
 
 </mapper>

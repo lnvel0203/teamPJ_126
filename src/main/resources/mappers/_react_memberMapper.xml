@@ -6,15 +6,20 @@
      
 <mapper namespace="springBoot_team_pj_126.dao.MemberRepository">
 
+ <!-- 4월 25일 김희수 직원목록  -->
+ <!-- 5월 9일 김희수 직원목록 sql문 수정  -->
 <select id="memberList" resultType="springBoot_team_pj_126.dto.UserDTO">
-	SELECT * FROM EMPLOYEES_TBL
+	SELECT NO,id,name,email,birth,address,role
+	FROM EMPLOYEES_TBL
+	ORDER BY NO ASC
 </select>
 
-
+ <!-- 5월 2일 김희수 직원삭제  -->
 <delete id="deleteById" parameterType="String">
 	delete from EMPLOYEES_TBL where id=#{id} 
 </delete>
 
+ <!-- 4월 28일 김희수 승인상태 변경  -->
 <update id="editEmployee" parameterType="springBoot_team_pj_126.dto.UserDTO">
 	UPDATE employees_tbl SET ROLE='승인' WHERE no=#{no}
 </update>
@@ -42,6 +47,15 @@
 	FROM position_tbl WHERE positionName = #{positionName})
 	WHERE id = #{id}
 </update> 
+
+<!-- 5월 9일 김성훈 추가 팀  수정 -->
+<update id="editDeptname" parameterType="String">
+	UPDATE employees_tbl SET deptid = (SELECT deptid 
+	FROM department_tbl 
+	WHERE DeptName = #{DeptName} AND ROWNUM = 1)
+	WHERE id = #{id}
+</update> 
+
 
 
 </mapper>

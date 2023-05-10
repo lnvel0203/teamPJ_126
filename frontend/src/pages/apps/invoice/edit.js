@@ -1,182 +1,182 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import axios from 'axios';
+
 // import { useNavigate, useParams } from 'react-router';
-import { useNavigate } from 'react-router';
+import React, { useCallback } from 'react';
+
+// project imports
+import MainCard from 'components/MainCard';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import {
-  Autocomplete,
-  Box,
-  Button,
   Divider,
-  FormControl,
   Grid,
   InputLabel,
+  Typography,
+  Box,
+  Button,
+  FormControl,
   MenuItem,
   Select,
   FormHelperText,
   Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TextField,
-  Typography
+  TextField
 } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 // third-party
-import { v4 as UIDV4 } from 'uuid';
-import { format } from 'date-fns';
-import { FieldArray, Form, Formik } from 'formik';
-import * as yup from 'yup';
+// import { format } from 'date-fns';
+import { Form, Formik } from 'formik';
 
 // project import
-import Loader from 'components/Loader';
-import MainCard from 'components/MainCard';
-import InvoiceItem from 'sections/apps/invoice/InvoiceItem';
-import InvoiceModal from 'sections/apps/invoice/InvoiceModal';
 import AddressModal from 'sections/apps/invoice/AddressModal';
 
-import {
-  reviewInvoicePopup,
-  customerPopup,
-  toggleCustomerPopup,
-  selectCountry,
-  getInvoiceSingleList,
-  getInvoiceUpdate
-} from 'store/reducers/invoice';
+// import { reviewInvoicePopup, customerPopup, toggleCustomerPopup, getInvoiceSingleList, getInvoiceUpdate } from 'store/reducers/invoice';
+import { reviewInvoicePopup, customerPopup, toggleCustomerPopup } from 'store/reducers/invoice';
 import { useDispatch, useSelector } from 'store';
-import { openSnackbar } from 'store/reducers/snackbar';
+// import { openSnackbar } from 'store/reducers/snackbar';
+import { openSnackbar } from '../../../store/reducers/snackbar';
 
 //asset
-import { EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 
-// 유효성 검사(Yup 라이브러리 사용)
-const validationSchema = yup.object({
-  // 날짜 필수 유효성 검사
-  date: yup.date().required('Invoice date is required'),
+import CreateDetail from './CreateDetail';
 
-  // 마감 날짜 필수 + 시작 날짜 이후인지 확인 하는 유효성 검사
-  due_date: yup
-    .date()
-    .required('Due date is required')
-    .when('date', (date, schema) => date && schema.min(date, "Due date can't be before invoice date"))
-    .nullable(),
+// localStorage의 id
+const loginId = localStorage.getItem('id');
 
-  // 고객 정보 필수 유효성 검사
-  customerInfo: yup
-    .object({
-      name: yup.string().required('Invoice receiver information is required')
-    })
-    .required('Invoice receiver information is required'),
-
-  // 문자열 필수 유효성 검사
-  status: yup.string().required('Status selection is required'),
-
-  // 배열 필수 유효성 검사 + 배열에 최소 1개 이상 있는지 확인
-  invoice_detail: yup
-    .array()
-    .required('Invoice details is required')
-    .of(
-      yup.object().shape({
-        name: yup.string().required('Product name is required')
-      })
-    )
-    .min(1, 'Invoice must have at least 1 items')
-});
+// 돈 포맷
+const formatter = new Intl.NumberFormat('ko-KR');
 
 // ==============================|| INVOICE - EDIT ||============================== //
 
-const Create = () => {
+const Edit = () => {
+  const [addId, setAddId] = useState(0);
+
+  const [totalAdditionalPay, setTotalAdditionalPay] = useState(0);
+  const [totalInsurancePay, setTotalInsurancePay] = useState(0);
+  const [incomeTax, setIncomeTax] = useState(0);
+  const [netSalary, setNetSalary] = useState(0);
+  // -------------------------------------------------------------
+  const [overtimePay, setOvertimePay] = useState(0);
+  const [weekendWorkPay, setWeekendWorkPay] = useState(0);
+  const [calculateRestDayPay, setCalculateRestDayPay] = useState(0);
+  const [bonusForm, setBonusForm] = useState(0);
+  const [pensionInsurance, setPensionInsurance] = useState(0);
+  const [employeeInsurance, setEmployeeInsurance] = useState(0);
+  const [healthInsurance, setHealthInsurance] = useState(0);
+  const [compensationInsurance, setCompensationInsurance] = useState(0);
+
+  // CreateDetail에서 totalAdditionalPay, totalInsurancePay, incomeTax 받아옴
+  const handleValuesChanged = useCallback((values) => {
+    const {
+      overtimePay,
+      weekendWorkPay,
+      calculateRestDayPay,
+      bonusForm,
+      totalAdditionalPay,
+      pensionInsurance,
+      employeeInsurance,
+      healthInsurance,
+      compensationInsurance,
+      totalInsurancePay,
+      incomeTax,
+      netSalary
+    } = values;
+
+    setTotalAdditionalPay(totalAdditionalPay);
+    setTotalInsurancePay(totalInsurancePay);
+    setIncomeTax(incomeTax);
+    setNetSalary(netSalary);
+    setOvertimePay(overtimePay);
+    setWeekendWorkPay(weekendWorkPay);
+    setCalculateRestDayPay(calculateRestDayPay);
+    setBonusForm(bonusForm);
+    setPensionInsurance(pensionInsurance);
+    setEmployeeInsurance(employeeInsurance);
+    setHealthInsurance(healthInsurance);
+    setCompensationInsurance(compensationInsurance);
+  }, []);
+
   // 훅 사용
   const theme = useTheme();
-  // const { id } = useParams();
-  const id = 1;
-  const navigation = useNavigate();
+
   const dispatch = useDispatch();
 
-  // 로딩 상태 설정, useSelector 사용해서 Redux 스토어에서 필요한 상태를 가져옴
-  const [loading, setLoading] = useState(false);
-  const { open, isCustomerOpen, countries, country, isOpen, list } = useSelector((state) => state.invoice);
-
-  // useEffect 사용
-  // 컴포넌트 마운트될 때 invoice 정보 가져옴
-  // +  id를 의존성 배열에 넣어 id 값이 변경될 때마다 디스패치
-  // src\store\reducers\invoice.js 에서 getInvoiceSingleList 메서드 axios 요청으로 리스트를 가져옴
-  useEffect(() => {
-    dispatch(getInvoiceSingleList(Number(id))).then(() => setLoading(true));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
-
-  // invoiceSingleList 초기화
-  const invoiceSingleList = {
-    name: '',
-    address: '',
-    phone: '',
-    email: ''
-  };
+  const { open, isCustomerOpen, list } = useSelector((state) => state.invoice);
 
   // Note 글자 수 제한
   const notesLimit = 500;
 
-  const handlerEdit = (values) => {
+  const handleSubmit = async () => {
     // 입력한 값들을 새로운 객체에 할당
-    const NewList = {
-      id: Number(list?.id),
-      invoice_id: Number(values.invoice_id),
-      customer_name: values.cashierInfo?.name,
-      email: values.cashierInfo?.email,
-      avatar: Number(list?.avatar),
-      discount: Number(values.discount),
-      tax: Number(values.tax),
-      date: format(new Date(values.date), 'MM/dd/yyyy'),
-      due_date: format(new Date(values.due_date), 'MM/dd/yyyy'),
-      quantity: Number(
-        values.invoice_detail?.reduce((sum, i) => {
-          return sum + i.qty;
-        }, 0)
-      ),
-      status: values.status,
-      cashierInfo: values.cashierInfo,
-      customerInfo: values.customerInfo,
-      invoice_detail: values.invoice_detail,
-      notes: values.notes
+    const sendData = {
+      addId: addId,
+      totalAdditionalPay: totalAdditionalPay,
+      totalInsurancePay: totalInsurancePay,
+      incomeTax: incomeTax,
+      netSalary: netSalary,
+      overtimePay: overtimePay,
+      weekendWorkPay: weekendWorkPay,
+      calculateRestDayPay: calculateRestDayPay,
+      bonusForm: bonusForm,
+      pensionInsurance: pensionInsurance,
+      employeeInsurance: employeeInsurance,
+      healthInsurance: healthInsurance,
+      compensationInsurance: compensationInsurance
     };
 
-    // 업데이트 액션 디스패치
-    dispatch(getInvoiceUpdate(NewList)).then(() => {
-      dispatch(
-        // 성공 알림
-        openSnackbar({
-          open: true,
-          message: 'Invoice Updated successfully',
-          anchorOrigin: { vertical: 'top', horizontal: 'right' },
-          variant: 'alert',
-          alert: {
-            color: 'success'
-          },
-          close: true
+    // axios 요청
+
+    // 상세 내역 요청
+    try {
+      axios
+        .get(`http://localhost:8081/members/salaryeditDetail?id=${id}`)
+        .then((response) => {
+          console.log(response.data);
+          setAttendanceList(response.data);
         })
-      );
-      navigation('/apps/invoice/list');
-    });
-  };
+        .catch((error) => {
+          console.log(error);
+        });
+    } catch (error) {
+      console.error(error);
+    }
 
-  // Add Item 했을 때 추가 해주는 함수
-  const addNextInvoiceHandler = () => {
-    dispatch(
-      reviewInvoicePopup({
-        isOpen: false
-      })
-    );
-  };
+    // 수정요청
+    try {
+      const response = await axios.put('http://localhost:8081/members/invoiceCreate', { sendData });
+      if (response.data == 1) {
+        dispatch(
+          openSnackbar({
+            open: true,
+            message: '작성이 완료되었습니다.',
+            variant: 'alert',
+            alert: {
+              color: 'success'
+            }
+          })
+        );
 
-  // 로딩 중 상태 표시
-  if (!loading) return <Loader />;
+        return;
+      } else if (response.data == 0) {
+        dispatch(
+          openSnackbar({
+            open: true,
+            message: '작성에 실패하였습니다.',
+            variant: 'alert',
+            alert: {
+              color: 'error'
+            }
+          })
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <MainCard>
@@ -185,55 +185,52 @@ const Create = () => {
         enableReinitialize={true}
         // 초기값 지정
         initialValues={{
-          id: list?.id || '',
+          empId: list?.customerInfo?.id || '',
           invoice_id: list?.invoice_id || '',
           status: list?.status || '',
           date: list?.date || null,
           due_date: list?.due_date || null,
-          cashierInfo: list?.cashierInfo || invoiceSingleList,
-          customerInfo: list?.customerInfo || invoiceSingleList,
           invoice_detail: list?.invoice_detail || [],
           discount: list?.discount || 0,
           tax: list?.tax || 0,
           notes: list?.notes || ''
         }}
-        // 유효성 검사 스키마 적용
-        validationSchema={validationSchema}
         // 폼 제출 할 때 실행할 함수(handlerEdit) 지정
-        onSubmit={(values) => {
-          handlerEdit(values);
-        }}
+        onSubmit={handleSubmit}
       >
-        {({ handleBlur, errors, handleChange, handleSubmit, values, isValid, setFieldValue, touched }) => {
-          const subtotal =
-            values?.invoice_detail?.reduce((prev, curr) => {
-              if (curr.name.trim().length > 0) return prev + Number(curr.price * Math.floor(curr.qty));
-              else return prev;
-            }, 0) || 0;
-
-          // 계산들
-          const taxRate = (values?.tax * subtotal) / 100;
-          const discountRate = (values.discount * subtotal) / 100;
-          const total = subtotal - discountRate + taxRate;
-
+        {({ errors, handleChange, values, isValid, setFieldValue, touched }) => {
           return (
             <Form onSubmit={handleSubmit}>
+              {
+                // #TODO - 삭제
+                console.log(
+                  '연장 근로 수당: ' +
+                    overtimePay +
+                    '주말 근로 수당, : ' +
+                    weekendWorkPay +
+                    ', 주휴 수당: ' +
+                    calculateRestDayPay +
+                    ', 상여급: ' +
+                    bonusForm +
+                    ', 연금 보험료: ' +
+                    pensionInsurance +
+                    ', 고용 보험료: ' +
+                    employeeInsurance +
+                    ', 건강 보험료: ' +
+                    healthInsurance +
+                    ', 산재 보험료: ' +
+                    compensationInsurance +
+                    addId
+                )
+              }
               <Grid container spacing={2}>
                 {/* # 1 ======================================= */}
                 {/* Invoice Id 시작 */}
                 <Grid item xs={12} sm={6} md={3}>
                   <Stack spacing={1}>
-                    <InputLabel>Invoice Id</InputLabel>
+                    <InputLabel>No</InputLabel>
                     <FormControl sx={{ width: '100%' }}>
-                      <TextField
-                        required
-                        disabled
-                        type="number"
-                        name="invoice_id"
-                        id="invoice_id"
-                        value={values.invoice_id}
-                        onChange={handleChange}
-                      />
+                      <TextField required disabled type="number" name="invoice_id" id="invoice_id" onChange={handleChange} />
                     </FormControl>
                   </Stack>
                 </Grid>
@@ -243,6 +240,7 @@ const Create = () => {
                 <Grid item xs={12} sm={6} md={3}>
                   <Stack spacing={1}>
                     <InputLabel>지급여부</InputLabel>
+                    {/* 폼 시작 */}
                     <FormControl sx={{ width: '100%' }}>
                       <Select
                         value={values.status}
@@ -265,6 +263,7 @@ const Create = () => {
                         <MenuItem value="Cancelled">취소</MenuItem>
                       </Select>
                     </FormControl>
+                    {/* 폼 시작 */}
                   </Stack>
                   {touched.status && errors.status && <FormHelperText error={true}>{errors.status}</FormHelperText>}
                 </Grid>
@@ -277,7 +276,7 @@ const Create = () => {
                     <FormControl sx={{ width: '100%' }} error={Boolean(touched.date && errors.date)}>
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DatePicker
-                          inputFormat="dd/MM/yyyy"
+                          inputFormat="yyyy/MM/dd"
                           value={values.date}
                           onChange={(newValue) => setFieldValue('date', newValue)}
                           renderInput={(params) => <TextField {...params} />}
@@ -296,7 +295,7 @@ const Create = () => {
                     <FormControl sx={{ width: '100%' }} error={Boolean(touched.due_date && errors.due_date)}>
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DatePicker
-                          inputFormat="dd/MM/yyyy"
+                          inputFormat="yyyy/MM/dd"
                           value={values.due_date}
                           onChange={(newValue) => setFieldValue('due_date', newValue)}
                           renderInput={(params) => <TextField error={touched.due_date && Boolean(errors.due_date)} {...params} />}
@@ -317,7 +316,9 @@ const Create = () => {
                         <Stack spacing={2}>
                           <Typography variant="h5">From:</Typography>
                           <Stack sx={{ width: '100%' }}>
-                            <Typography variant="subtitle1">{values?.cashierInfo?.name}</Typography>
+                            {/* #TODO - 이 부분 아이디에서 이름으로 바꾸기 */}
+                            <Typography variant="subtitle1">{loginId}</Typography>
+
                             <Typography color="secondary">{values?.cashierInfo?.address}</Typography>
                             <Typography color="secondary">{values?.cashierInfo?.phone}</Typography>
                             <Typography color="secondary">{values?.cashierInfo?.email}</Typography>
@@ -326,21 +327,6 @@ const Create = () => {
                       </Grid>
                       <Grid item xs={12} sm={4}>
                         <Box textAlign={{ xs: 'left', sm: 'right' }} color="grey.200">
-                          <Button
-                            variant="outlined"
-                            startIcon={<EditOutlined />}
-                            color="secondary"
-                            onClick={() =>
-                              dispatch(
-                                toggleCustomerPopup({
-                                  open: true
-                                })
-                              )
-                            }
-                            size="small"
-                          >
-                            Change
-                          </Button>
                           {/* Charge 버튼 눌렀을 때 뜨는 컴포넌트 */}
                           <AddressModal
                             open={open}
@@ -401,7 +387,10 @@ const Create = () => {
                                 })
                               )
                             }
-                            handlerAddress={(value) => setFieldValue('customerInfo', value)}
+                            handlerAddress={(value) => {
+                              setFieldValue('customerInfo', value);
+                              setAddId(values?.customerInfo?.id);
+                            }}
                           />
                         </Box>
                       </Grid>
@@ -414,163 +403,60 @@ const Create = () => {
                 {/* To 카드 끝 */}
 
                 {/* # 3 ======================================= */}
+                {/** 새 컴포넌트 */}
+                {/* Form Layout 시작 */}
                 <Grid item xs={12}>
-                  <Typography variant="h5">급여상세내역</Typography>
+                  <CreateDetail addId={values?.customerInfo?.id} onValuesChanged={handleValuesChanged} />
                 </Grid>
 
-                <Grid item xs={12}>
-                  <FieldArray
-                    name="invoice_detail"
-                    render={({ remove, push }) => {
-                      return (
-                        <>
-                          {/* 테이블 시작 */}
-                          <TableContainer>
-                            <Table sx={{ minWidth: 650 }}>
-                              <TableHead>
-                                <TableRow>
-                                  <TableCell>No</TableCell>
-                                  <TableCell>지급내역</TableCell>
-                                  <TableCell>지급액</TableCell>
-                                  <TableCell>공제내역</TableCell>
-                                  <TableCell>공제액</TableCell>
-                                  {/* <TableCell align="right">차인지급액</TableCell> */}
-                                  <TableCell align="right">Action</TableCell>
-                                </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                {values?.invoice_detail?.map((item, index) => (
-                                  <TableRow key={item.id}>
-                                    <TableCell>{values?.invoice_detail.indexOf(item) + 1}</TableCell>
-                                    <InvoiceItem
-                                      key={item.id}
-                                      id={item.id}
-                                      index={index}
-                                      PaymentHistory={item.getPaymentHistory}
-                                      PaymentAmount={item.getPaymentAmount}
-                                      DeductionHistory={item.getDeductionHistory}
-                                      DeductionAmount={item.getDeductionAmount}
-                                      NetPaymentAmount={item.getNetPaymentAmount}
-                                      onDeleteItem={(index) => remove(index)}
-                                      onEditItem={handleChange}
-                                      Blur={handleBlur}
-                                      errors={errors}
-                                      touched={touched}
-                                    />
-                                  </TableRow>
-                                ))}
-                              </TableBody>
-                            </Table>
-                          </TableContainer>
-                          {/* 테이블 끝 */}
+                {/* Form Layout 시작 끝 */}
 
-                          <Divider />
-                          {touched.invoice_detail && errors.invoice_detail && !Array.isArray(errors?.invoice_detail) && (
-                            <Stack direction="row" justifyContent="center" sx={{ p: 1.5 }}>
-                              <FormHelperText error={true}>{errors.invoice_detail}</FormHelperText>
-                            </Stack>
-                          )}
-                          <Grid container justifyContent="space-between">
-                            {/* Add Item 버튼 시작 */}
-                            <Grid item xs={12} md={8}>
-                              <Box sx={{ pt: 2.5, pr: 2.5, pb: 2.5, pl: 0 }}>
-                                <Button
-                                  color="primary"
-                                  startIcon={<PlusOutlined />}
-                                  onClick={() =>
-                                    push({
-                                      id: UIDV4(),
-                                      name: '',
-                                      description: '',
-                                      qty: 1,
-                                      price: '1.00'
-                                    })
-                                  }
-                                  variant="dashed"
-                                  sx={{ bgcolor: 'transparent !important' }}
-                                >
-                                  항목추가
-                                </Button>
-                              </Box>
-                            </Grid>
-                            {/* Add Item 버튼 끝 */}
+                <Divider />
+                {/*  */}
+                {touched.invoice_detail && errors.invoice_detail && !Array.isArray(errors?.invoice_detail) && (
+                  <Stack direction="row" justifyContent="center" sx={{ p: 1.5 }}>
+                    <FormHelperText error={true}>{errors.invoice_detail}</FormHelperText>
+                  </Stack>
+                )}
+                <Grid container justifyContent="right">
+                  <Grid item xs={12} md={4}>
+                    <Grid container justifyContent="space-between" spacing={2} sx={{ pt: 2.5, pb: 2.5 }}></Grid>
 
-                            <Grid item xs={12} md={4}>
-                              <Grid container justifyContent="space-between" spacing={2} sx={{ pt: 2.5, pb: 2.5 }}>
-                                {/* Discount(%) 시작 */}
-                                <Grid item xs={6}>
-                                  <Stack spacing={1}>
-                                    <InputLabel>공제액계(원)</InputLabel>
-                                    <TextField
-                                      type="number"
-                                      style={{ width: '100%' }}
-                                      name="discount"
-                                      id="discount"
-                                      placeholder="0.0"
-                                      value={values.discount}
-                                      onChange={handleChange}
-                                    />
-                                  </Stack>
-                                </Grid>
-                                {/* Discount(%) 끝 */}
+                    <Grid item xs={12}>
+                      <Stack spacing={2}>
+                        {/* Sub Total 시작 */}
+                        <Stack direction="row" justifyContent="space-between">
+                          <Typography color={theme.palette.grey[500]}>추가 급여 :</Typography>
+                          <Typography>{formatter.format(totalAdditionalPay)}원</Typography>
+                        </Stack>
+                        {/* Sub Total 끝 */}
 
-                                {/* Tax(%) 시작 */}
-                                <Grid item xs={6}>
-                                  <Stack spacing={1}>
-                                    <InputLabel>Tax(원)</InputLabel>
-                                    <TextField
-                                      type="number"
-                                      style={{ width: '100%' }}
-                                      name="tax"
-                                      id="tax"
-                                      placeholder="0.0"
-                                      value={values.tax}
-                                      onChange={handleChange}
-                                    />
-                                  </Stack>
-                                </Grid>
-                                {/* Tax(%) 끝 */}
-                              </Grid>
+                        {/* Discount 시작 */}
+                        <Stack direction="row" justifyContent="space-between">
+                          <Typography color={theme.palette.grey[500]}>보험료 :</Typography>
+                          <Typography variant="h6">{formatter.format(Math.round(totalInsurancePay))}원</Typography>
+                        </Stack>
+                        {/* Discount 끝 */}
 
-                              <Grid item xs={12}>
-                                <Stack spacing={2}>
-                                  {/* Sub Total 시작 */}
-                                  <Stack direction="row" justifyContent="space-between">
-                                    <Typography color={theme.palette.grey[500]}>지급액계:</Typography>
-                                    <Typography>{subtotal.toFixed(2)}원</Typography>
-                                  </Stack>
-                                  {/* Sub Total 끝 */}
+                        {/* Tax 시작 */}
+                        <Stack direction="row" justifyContent="space-between">
+                          <Typography color={theme.palette.grey[500]}>소득세 :</Typography>
+                          <Typography>{formatter.format(Math.round(incomeTax))}원</Typography>
+                        </Stack>
+                        {/* Tax 끝 */}
 
-                                  {/* Discount 시작 */}
-                                  <Stack direction="row" justifyContent="space-between">
-                                    <Typography color={theme.palette.grey[500]}>공제액계:</Typography>
-                                    <Typography variant="h6" color={theme.palette.success.main}>
-                                      {discountRate.toFixed(2)}원
-                                    </Typography>
-                                  </Stack>
-                                  {/* Discount 끝 */}
-
-                                  {/* Tax 시작 */}
-                                  <Stack direction="row" justifyContent="space-between">
-                                    <Typography color={theme.palette.grey[500]}>Tax:</Typography>
-                                    <Typography>{taxRate.toFixed(2)}원</Typography>
-                                  </Stack>
-                                  {/* Tax 끝 */}
-
-                                  {/* Grand Total 시작 */}
-                                  <Stack direction="row" justifyContent="space-between">
-                                    <Typography variant="subtitle1">실 수령액:</Typography>
-                                    <Typography variant="subtitle1"> {total % 1 === 0 ? total : total.toFixed(2)}원</Typography>
-                                  </Stack>
-                                  {/* Grand Total 끝 */}
-                                </Stack>
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                        </>
-                      );
-                    }}
-                  />
+                        {/* Grand Total 시작 */}
+                        <Stack direction="row" justifyContent="space-between">
+                          <Typography variant="subtitle1">실 수령액 :</Typography>
+                          <Typography variant="subtitle1" color={theme.palette.success.main}>
+                            {' '}
+                            {formatter.format(Math.round(netSalary))}원
+                          </Typography>
+                        </Stack>
+                        {/* Grand Total 끝 */}
+                      </Stack>
+                    </Grid>
+                  </Grid>
                 </Grid>
 
                 {/* # 4 ======================================= */}
@@ -581,7 +467,6 @@ const Create = () => {
                     <TextField
                       placeholder="Address"
                       rows={3}
-                      value={values.notes}
                       multiline
                       name="notes"
                       onChange={handleChange}
@@ -604,74 +489,7 @@ const Create = () => {
 
                 {/* # 5 ======================================= */}
                 <Grid item xs={12} sm={6}>
-                  {/* Set Currency* 시작 */}
-                  <Stack spacing={1}>
-                    <InputLabel>Set Currency*</InputLabel>
-                    <FormControl sx={{ width: { xs: '100%', sm: 250 } }}>
-                      <Autocomplete
-                        id="country-select-demo"
-                        fullWidth
-                        options={countries}
-                        defaultValue={countries[2]}
-                        value={countries.find((option) => option.code === country?.code)}
-                        onChange={(event, value) => {
-                          dispatch(
-                            selectCountry({
-                              country: value
-                            })
-                          );
-                        }}
-                        autoHighlight
-                        getOptionLabel={(option) => option.label}
-                        renderOption={(props, option) => (
-                          <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                            {option.code && (
-                              <img
-                                loading="lazy"
-                                width="20"
-                                src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                                srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                                alt=""
-                              />
-                            )}
-                            {option.label}
-                          </Box>
-                        )}
-                        renderInput={(params) => {
-                          const selected = countries.find((option) => option.code === country?.code);
-                          return (
-                            <TextField
-                              {...params}
-                              name="phoneCode"
-                              placeholder="Select"
-                              InputProps={{
-                                ...params.InputProps,
-                                startAdornment: (
-                                  <>
-                                    {selected && selected.code !== '' && (
-                                      <img
-                                        style={{ marginRight: 6 }}
-                                        loading="lazy"
-                                        width="20"
-                                        src={`https://flagcdn.com/w20/${selected.code.toLowerCase()}.png`}
-                                        srcSet={`https://flagcdn.com/w40/${selected.code.toLowerCase()}.png 2x`}
-                                        alt=""
-                                      />
-                                    )}
-                                  </>
-                                )
-                              }}
-                              inputProps={{
-                                ...params.inputProps,
-                                autoComplete: 'new-password' // disable autocomplete and autofill
-                              }}
-                            />
-                          );
-                        }}
-                      />
-                    </FormControl>
-                  </Stack>
-                  {/* Set Currency* 끝 */}
+                  <Stack spacing={1}></Stack>
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
@@ -698,29 +516,6 @@ const Create = () => {
                     <Button color="primary" variant="contained" type="submit">
                       Update & Send
                     </Button>
-
-                    {/* Add Item 했을 때 행 추가 컴포넌트 시작 */}
-                    <InvoiceModal
-                      isOpen={isOpen}
-                      setIsOpen={(value) =>
-                        dispatch(
-                          reviewInvoicePopup({
-                            isOpen: value
-                          })
-                        )
-                      }
-                      key={values.invoice_id}
-                      invoiceInfo={{
-                        ...values,
-                        subtotal,
-                        taxRate,
-                        discountRate,
-                        total
-                      }}
-                      items={values?.invoice_detail}
-                      onAddNextInvoice={addNextInvoiceHandler}
-                    />
-                    {/* Add Item 했을 때 행 추가 컴포넌트 끝 */}
                   </Stack>
                 </Grid>
               </Grid>
@@ -732,4 +527,4 @@ const Create = () => {
   );
 };
 
-export default Create;
+export default Edit;

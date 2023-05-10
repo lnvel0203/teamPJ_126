@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,7 +31,7 @@ public class DepartmentController {
    @GetMapping
    public List<DeptDTO> getDepartmentList(HttpServletRequest req, Model model) 
          throws ServletException, IOException{
-      System.out.println("컨트롤러 - DepartmentList");
+      System.out.println("<<< 컨트롤러 - 부서리스트 >>>");
 
       return service.DepartmentList(req, model);
    }
@@ -40,6 +41,18 @@ public class DepartmentController {
 		System.out.println(dto);
 		service.addDepartment(dto);
 
+	}
+	
+	// < 5월 9일 김희수 부서 수정  - 추가 >
+	@PutMapping("/editDepartment") 
+	public void departmentUpdate(DeptDTO dto, Model model) 
+			throws ServletException, IOException{ //@RequestBody ==> req.getParameter("dto");
+		//리스트 데이터를 넘긴다. -- 리액트에 넘긴다, 주소는 jsp나 타입리프에 넘기는것이다. 지금은 리액트 화면에 넘기기위해 데이터만 넘긴다.
+		System.out.println("<<< 컨트롤러 - 부서수정 >>>");
+
+		service.editDepartment(dto);
+
+		System.out.println("update [성공]");
 	}
 
 }

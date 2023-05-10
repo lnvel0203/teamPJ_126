@@ -52,10 +52,8 @@ public class ReactController {
 	}
 	
 
-	
-//	@PostMapping("/editEmployee")
+// < 4월 28일 김희수 미승인 상태 변경 - 상태업데이트문 >
 	@PutMapping("/editEmployee/{no}") //-> @PathVariale로 받는다
-//	@GetMapping
 	public void memberUpdate(UserDTO dto, Model model) 
 			throws ServletException, IOException{ //@RequestBody ==> req.getParameter("dto");
 		//리스트 데이터를 넘긴다. -- 리액트에 넘긴다, 주소는 jsp나 타입리프에 넘기는것이다. 지금은 리액트 화면에 넘기기위해 데이터만 넘긴다.
@@ -65,12 +63,12 @@ public class ReactController {
 	
 		System.out.println("update [성공]");
 	}
-
-	//주의 사항 - 엑소시오 의 능력과 restAPI에 대해서 알아보기
+	
+// < 5월 2일 김희수 추가 >
 	@DeleteMapping("/deleteEmployee/{id}") 
 	public void memberDelete(@PathVariable String id) 
 			throws ServletException, IOException{
-		
+		System.out.println("id" + id);
 		System.out.println("컨트롤러 - delete");
 		service.deleteMember(id);
 		
@@ -84,10 +82,10 @@ public class ReactController {
 			throws ServletException, IOException{
 		System.out.println("컨드롤-  memberPosition");
 		return service.memberPositionList(req, model);
-	}
-	
-	
+  }
+  
 	//5월 8일  리엑트에서 아이디와 포지션 받아오기  포지선 수정 
+
 	@PutMapping("/editPosition/{id}/{positionName}")
 	public void PositionUpdata(UserDTO dto, Model model) 
 			throws ServletException, IOException{ 
@@ -100,4 +98,16 @@ public class ReactController {
 		System.out.println("update [성공]");
 	}
 	
+	//5월 9일 리엑트에서 아이디와 부서이름을 받아와서 팀 수정 및 등록
+	@PutMapping("/editDeptname/{id}/{DeptName}")
+	public void DeptUpdata(UserDTO dto, Model model) 
+			throws ServletException, IOException{ 
+		System.out.println("컨트롤러 - DeptUpdata");
+		String id = dto.getId();
+		String DeptName =dto.getDeptName();
+		System.out.println("id확인:  " + id);
+		System.out.println("DeptName: " +DeptName );
+		service.editDeptname(id ,DeptName);
+		System.out.println("update [성공]");
+	}
 }

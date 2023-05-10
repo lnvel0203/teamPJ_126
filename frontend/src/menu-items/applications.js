@@ -54,7 +54,7 @@ const applications = {
       id: 'mail',
       title: <FormattedMessage id="mail" />,
       type: 'item',
-      url: '/mail',
+      url: '/apps/mail',
       icon: icons.MailOutlined
     },
     {
@@ -168,6 +168,7 @@ const applications = {
           url: '/apps/adminperson-customer/customlocaletext'
         },
         {
+          // 부서관리 추가(2023-05-03 김희수)
           id: 'departloaletext',
           title: <FormattedMessage id="부서관리" />,
           type: 'item',
@@ -186,20 +187,20 @@ const applications = {
           type: 'item',
           url: '/apps/adminperson-customer/hierarchylocaletext'
         },
-        {
-          // 인사평가 추가(2023-05-04 김희수)
-          id: 'Personnelevaluation',
-          title: <FormattedMessage id="인사평가" />,
-          type: 'item',
-          url: '/apps/adminperson-customer/Personnelevaluation'
-        },
-        {
-          // 근태 관리
-          id: 'AttendanceList',
-          title: <FormattedMessage id="근태 관리" />,
-          type: 'item',
-          url: '/apps/adminperson-customer/AttendanceList'
-        }
+        // {
+        //   // 인사평가 추가(2023-05-04 김희수)
+        //   id: 'Personnelevaluation',
+        //   title: <FormattedMessage id="인사평가" />,
+        //   type: 'item',
+        //   url: '/apps/adminperson-customer/Personnelevaluation'
+        // },
+        // {
+        //   // 근태 관리
+        //   id: 'AttendanceList',
+        //   title: <FormattedMessage id="근태 관리" />,
+        //   type: 'item',
+        //   url: '/apps/adminperson-customer/AttendanceList'
+        // }
       ]
     }
   ]

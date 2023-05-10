@@ -6,6 +6,8 @@ import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 
+import EmploymentInsuranceTable from './tables/EmploymentInsuranceTable';
+
 const Accordion = styled((props) => <MuiAccordion disableGutters elevation={0} square {...props} />)(({ theme }) => ({
   border: `1px solid ${theme.palette.divider}`,
   '&:not(:last-child)': {
@@ -48,8 +50,10 @@ export default function CustomizedAccordions() {
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            총액 = 기준소득월액 X 9%(연금보험율) 사업장가입자 : 근로자와 사용자(회사)가 각각 1/2씩 부담합니다. 기여금과 부담금으로 1/2씩
-            분담 시 발생한 10원 미만의 단수는 절사 지역가입자, 임의(계속) 가입자는 본인이 전액 부담합니다.
+            총액 = 기준소득월액 X 9%(연금보험율) <br />
+            사업장가입자 : 근로자와 사용자(회사)가 각각 1/2씩 부담합니다. <br />
+            기여금과 부담금으로 1/2씩 분담 시 발생한 10원 미만의 단수는 절사. <br />
+            지역가입자, 임의(계속) 가입자는 본인이 전액 부담합니다.
           </Typography>
         </AccordionDetails>
       </Accordion>
@@ -58,10 +62,7 @@ export default function CustomizedAccordions() {
           <Typography>고용보험료 계산</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget.
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
+          <EmploymentInsuranceTable />
         </AccordionDetails>
       </Accordion>
       <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
@@ -75,8 +76,8 @@ export default function CustomizedAccordions() {
           </Typography>
         </AccordionDetails>
       </Accordion>
-      <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
-        <AccordionSummary aria-controls="panel3d-content" id="panel3d-header">
+      <Accordion expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
+        <AccordionSummary aria-controls="panel4d-content" id="panel4d-header">
           <Typography>산재보험료 계산</Typography>
         </AccordionSummary>
         <AccordionDetails>

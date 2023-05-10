@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+//import axios from 'axios';
 import { Grid, Typography, Stack } from '@mui/material';
 import MainCard from 'components/MainCard';
-
+import { request } from '../../../../utils/axios';
 export default function Vacation() {
   const [vacation, setVacation] = useState(null);
 
@@ -10,14 +10,15 @@ export default function Vacation() {
   const id = localStorage.getItem('id');
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:8081/members/getVacation?id=${id}`)
-      .then((response) => {
-        setVacation(response.data.vacation);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+
+    request(
+      'GET',
+      `members/getVacation?id=${id}`
+    ).then(response => {
+      setVacation(response.data.vacation);
+    }).catch((error) => {
+      console.log(error);
+    });
   }, []);
 
   // const items = [{ text: '휴가', number: vacation }];
