@@ -101,6 +101,8 @@ public class AttendanceServiceImpl implements AttendanceService {
 		int earlyLeave = dao.earlyLeave(id);
 		int unchecked = dao.unchecked(id);
 		
+		System.out.println("지각 " + tardy );
+		
 		data.put("tardy", tardy);
 		data.put("absence", absence);
 		data.put("earlyLeave", earlyLeave);
