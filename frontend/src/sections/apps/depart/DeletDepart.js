@@ -12,10 +12,10 @@ import { PopupTransition } from 'components/@extended/Transitions';
 import { DeleteFilled } from '@ant-design/icons';
 
 // ==============================|| CUSTOMER - DELETE ||============================== //
-const deleteCustomer = ( id ) => {
+const deleteCustomer = ( deptid ) => {
   try {
-    const response = axios.delete(`http://localhost:8081/members/deleteEmployee/${id}`, id);
-    //이거 필요해? 내일 삭제해
+    const response = axios.delete(`http://localhost:8081/department/deleteDepartment/${deptid}`, deptid);
+    
     if (response.status === 200) {
       console.log('Customer deleted successfully');
       
@@ -26,7 +26,7 @@ const deleteCustomer = ( id ) => {
   }
 };
 
-export default function AlertCustomerDelete({ title, open, handleClose }) {
+export default function DeletDepart({ title, open, handleClose }) {
   return (
     <Dialog
       open={open}
@@ -76,7 +76,7 @@ export default function AlertCustomerDelete({ title, open, handleClose }) {
   );
 }
 
-AlertCustomerDelete.propTypes = {
+DeletDepart.propTypes = {
   title: PropTypes.string,
   open: PropTypes.bool,
   handleClose: PropTypes.func,

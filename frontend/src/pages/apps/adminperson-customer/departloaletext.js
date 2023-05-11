@@ -44,7 +44,8 @@ import {
 // import AddCustomer from 'sections/apps/customer/AddCustomer';
 import AddDepart from 'sections/apps/depart/AddDepart';
 import CustomerView from 'sections/apps/customer/CustomerView';
-import AlertCustomerDelete from 'sections/apps/customer/AlertCustomerDelete';
+// import AlertCustomerDelete from 'sections/apps/customer/AlertCustomerDelete';
+// import DeletDepart from 'sections/apps/depart/DeletDepart';
 
 // import makeData from 'data/react-table';
 import { renderFilterTypes, GlobalFilter } from 'utils/react-table';
@@ -71,7 +72,22 @@ import {  PlusOutlined } from '@ant-design/icons';
 //     });
 // }
 
-//5월 9일 김희수 부서이름 수정 -> 2023-05-10 김희수 부서장 수정으로 변경
+const handleDelet = (deptid) => {
+  //미승인 상태 사원 -> 승인상태로 변경 및 승인버튼 삭제
+
+    request(
+      'DELETE',
+      `department/deleteDepartment/${deptid}`, deptid
+    ).then((response) => {
+      console.log(response.data); // logs the updated user data
+      window.location.reload(); // 자동 새로고침
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
+
+// 2023-05-09 김희수 부서 수정 버튼기능 추가
 function SelectCell({ positionName, onChange }) {
   return (
     <select value={positionName} onChange={e => onChange(e.target.value)}>
@@ -332,7 +348,7 @@ const CustomerListPage = () => {
 
   const [userData, setUserData] = useState([]);
 
-  // 서버에서 회원 정보를 패치해옴
+  // 서버에서 부서 정보를 패치해옴
   const fetchUserData = useCallback(async () => {
     try {
       request(
@@ -357,7 +373,7 @@ const CustomerListPage = () => {
   const [open, setOpen] = useState(false);
   const [customer, setCustomerEditId] = useState();
   // 2023-05-09 김희수 setCustomerDeleteId 삭제
-  const [customerDeleteId] = useState();
+  const [customerDeleteId, DeletDepart] = useState();
 
   const handleAdd = () => {
     setAdd(!add);
@@ -416,15 +432,15 @@ const CustomerListPage = () => {
             <div>
               <SelectCell positionName={selectedPosition} onChange={handlePositionChange} />
               <button onClick={() => handleEdit({ ...row.original, positionName: selectedPosition })}>수정</button>
+              
               {/* 2023-05-10 김희수 삭제버튼 추가 */}
               <button 
               color='error'
               style={{ marginLeft: '10px' }} 
-
               onClick={(e) =>{
                 e.stopPropagation();
-                handleClose();
-                setCustomerDeleteId(row.values.deptid);
+                handleDelet(row.values.deptid);
+                // DeletDepart(row.values.deptid);
               }}
               // onClick={() => handleDelet({ ...row.original, positionName: selectedPosition })}
               >삭제</button>
@@ -451,7 +467,8 @@ const CustomerListPage = () => {
           renderRowSubComponent={renderRowSubComponent}
         />
       </ScrollX>
-      <AlertCustomerDelete title={customerDeleteId} open={open} handleClose={handleClose} />
+      {/* <AlertCustomerDelete title={customerDeleteId} open={open} handleClose={handleClose} /> */}
+      <DeletDepart title={customerDeleteId} open={open} handleClose={handleClose} />
       {/* add user dialog */}
       <Dialog
         maxWidth="sm"

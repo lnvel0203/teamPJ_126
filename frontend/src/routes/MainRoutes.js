@@ -22,6 +22,8 @@ const WidgetChart = Loadable(lazy(() => import('pages/widget/chart')));
 const AppCalendar = Loadable(lazy(() => import('pages/calendar/Calender1')));
 const AppCustomerList = Loadable(lazy(() => import('pages/addressBook/list')));
 const AppCustomerCard = Loadable(lazy(() => import('pages/apps/customer/card')));
+
+// 인사관리 
 const CustomLocaleText = Loadable(lazy(() => import('pages/apps/adminperson-customer/customlocaletext')));
 const CustomerListPage = Loadable(lazy(() => import('pages/apps/adminperson-customer/departloaletext')));
 const HierarchyLocaleText = Loadable(lazy(() => import('pages/apps/adminperson-customer/hierarchylocaletext')));
