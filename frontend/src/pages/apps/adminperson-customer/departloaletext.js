@@ -433,7 +433,7 @@ const CustomerListPage = () => {
               <SelectCell positionName={selectedPosition} onChange={handlePositionChange} />
               <button onClick={() => handleEdit({ ...row.original, positionName: selectedPosition })}>수정</button>
               
-              {/* 2023-05-10 김희수 삭제버튼 추가 */}
+              {/* 2023-05-10 김희수 삭제버튼 추가 */} 
               <button 
               color='error'
               style={{ marginLeft: '10px' }} 
