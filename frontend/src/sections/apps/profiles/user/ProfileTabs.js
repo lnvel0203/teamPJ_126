@@ -41,7 +41,7 @@ const ProfileTabs = ({ focusInput }) => {
   useEffect(() => {
     if (selectedImage) {
       // 이미지 업로드 처리 등 필요한 작업 수행
-      // ...
+      // ... 이미지 파일에 추가해놧지만 가입하고 추가확인해봐야합니다;ㅎ 
   
       // 로그인한 사용자의 ID를 서버에 전달하여 사용자 정보를 가져옴
       axios.get(`http://localhost:8081/members/${loggedInUserId}`)
