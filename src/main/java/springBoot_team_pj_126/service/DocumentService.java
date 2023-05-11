@@ -14,14 +14,34 @@ import springBoot_team_pj_126.dto.UserDTO;
 
 public interface DocumentService {
 
-	public List<DocumentDTO> documentList(String id,HttpServletRequest req, Model model) 
-			throws ServletException, IOException;
-	
+		
 	public List<UserDTO> approverList(HttpServletRequest req, Model model) 
 			throws ServletException, IOException;
 	
 	public void addDocument(DocumentDTO dto) throws ServletException, IOException;
 	
+	public DocumentDTO documentDetail(int documentNo)
+			throws ServletException, IOException;
+	
+	public List<UserDTO> findApproverByNo(List<Long> approverNo)
+			throws ServletException, IOException;
+	
+	public void updateDocument(DocumentDTO dto) throws ServletException, IOException;
+	
+	public List<DocumentDTO> getApprovalPendingList(String id) 
+			throws ServletException, IOException;
+	
+	public List<DocumentDTO> getApprovalScheduledList(String id) 
+			throws ServletException, IOException;
+	
+	public List<DocumentDTO> getApprovalCompletedList(String id) 
+			throws ServletException, IOException;
+	
+	public List<DocumentDTO> getDraftDocumentList(String id) 
+			throws ServletException, IOException;
+	
+	public List<DocumentDTO> getRejectionDocumentList(String id) 
+			throws ServletException, IOException;
 		
 //	public void insertMember(MemberDTO dto) throws ServletException, IOException;
 //	

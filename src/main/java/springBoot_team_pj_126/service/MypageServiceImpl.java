@@ -3,16 +3,20 @@ package springBoot_team_pj_126.service;
 import java.io.IOException;
 
 
+
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+
 
 import springBoot_team_pj_126.dao.MypageMapper;
 import springBoot_team_pj_126.dto.UserDTO;
@@ -45,6 +49,21 @@ public class MypageServiceImpl implements MypageService{
 		return dto;
 		
 	}
+
+	@Override
+	public void userInfoUpdate(UserDTO dto) {
+	    System.out.println("서비스 - userInfoUpdate");
+	    System.out.println("NewLists  :" + dto);
+
+	     
+	    		
+	    mapper.infoupdate(dto);
+	    
+	    
+	   
+	}
+	
+	
 	
 //	@Override
 //	public void insertMember(MemberDTO dto) throws ServletException, IOException {

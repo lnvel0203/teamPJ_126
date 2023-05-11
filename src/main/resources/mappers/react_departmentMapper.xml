@@ -24,4 +24,9 @@
 	WHERE deptid = #{deptid}
 </update>
 
+ <!-- 5월 11일 김희수 부서삭제  -->
+<delete id="deleteDepartment" parameterType="int">
+	delete from department_tbl where deptid=#{deptid} 
+</delete>
+
 </mapper>

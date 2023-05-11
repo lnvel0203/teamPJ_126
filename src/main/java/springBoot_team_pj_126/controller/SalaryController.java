@@ -1,6 +1,7 @@
 package springBoot_team_pj_126.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -8,11 +9,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import springBoot_team_pj_126.dto.EmployeeSalaryDTO;
 import springBoot_team_pj_126.dto.SalaryInfoDTO;
 import springBoot_team_pj_126.dto.SalaryRecordsDTO;
 import springBoot_team_pj_126.service.SalaryService;
@@ -23,9 +26,6 @@ import springBoot_team_pj_126.service.SalaryService;
 @RestController
 public class SalaryController {
 
-
-	
-	
 	@Autowired
 	private SalaryService service;
 	
@@ -50,7 +50,20 @@ public class SalaryController {
 	public SalaryRecordsDTO salaryeditDetail(@RequestParam String id){
 		logger.info("SalaryController - salaryeditDetail()");
 		
-		SalaryRecordsDTO dto = service.salaryeditDetail(id);
+//		SalaryRecordsDTO dto = service.salaryeditDetail(id);
+//		System.out.println("dto: " + dto);
+		
+		SalaryRecordsDTO dto = new SalaryRecordsDTO();
+		dto.setEmpId("집갈래");
+		return dto;
+	}
+	
+	// 급여 상세 가져오기
+	@GetMapping("/invoiceDetail")
+	public EmployeeSalaryDTO invoiceDetail(@RequestParam int id){
+		logger.info("SalaryController - invoiceDetail()");
+		
+		EmployeeSalaryDTO dto = service.invoiceDetail(id);
 		System.out.println("dto: " + dto);
 		
 		return dto;
@@ -72,10 +85,10 @@ public class SalaryController {
 	
 	// 주말 제외 총 근무 시간
 	@GetMapping("/salaryCreateInfo")
-	public Map<String, Object> salaryCreateInfo(@RequestParam String id){
+	public Map<String, Object> salaryCreateInfo(@RequestParam Map<String, Object> map){
 		logger.info("SalaryController - salaryCreateInfo()");
 		
-		Map<String, Object> data = service.salaryCreateInfo(id);
+		Map<String, Object> data = service.salaryCreateInfo(map);
 		System.out.println("data: " + data);
 		
 		return data;
@@ -93,7 +106,22 @@ public class SalaryController {
 		
 		return insertCnt;
 	}
+	
+	// 지급 상태 업데이트
+	@PutMapping("/updateSalaryStatus")
+	public int updateSalaryStatus(@RequestBody Map<String, Object> map) {
+		logger.info("SalaryController - updateSalaryStatus()");
+		
+		int salaryRecordId = (int) map.get("SALARYRECORDID");
+		System.out.println(salaryRecordId);
+		
+		int updateCnt = service.updateSalaryStatus(salaryRecordId);
+		System.out.println("업데이트 확인: " + updateCnt);
+		return updateCnt;
+	}
 
+
+	
 	// ========================================================
 	
 }
