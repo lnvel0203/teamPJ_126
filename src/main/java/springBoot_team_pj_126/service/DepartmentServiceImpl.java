@@ -49,5 +49,14 @@ public class DepartmentServiceImpl implements DepartmentService {
 		
 	}
 
+	//2023-05-11 김희수 추가
+	@Override
+	public void deleteDepartment(int deptid) 
+			throws ServletException, IOException {
+		System.out.println("<<< 서비스 - 부서삭제 >>>");
+		
+		mapper.deleteDepartment(deptid);
+	}
+
 	
 }

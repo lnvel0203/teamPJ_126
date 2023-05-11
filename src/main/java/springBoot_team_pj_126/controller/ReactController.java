@@ -59,6 +59,7 @@ public class ReactController {
 		//리스트 데이터를 넘긴다. -- 리액트에 넘긴다, 주소는 jsp나 타입리프에 넘기는것이다. 지금은 리액트 화면에 넘기기위해 데이터만 넘긴다.
 		System.out.println("컨트롤러 - memberUpdate");
 		System.out.println(dto);
+		
 		service.editEmployee(dto);
 	
 		System.out.println("update [성공]");

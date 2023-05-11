@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -53,6 +55,17 @@ public class DepartmentController {
 		service.editDepartment(dto);
 
 		System.out.println("update [성공]");
+	}
+	
+	// < 5월 11일 김희수 부서 삭제  - 추가 >
+	@DeleteMapping("/deleteDepartment/{deptid}")
+	public void deleteDepartment(@PathVariable int deptid)
+			throws ServletException, IOException {
+		System.out.println("부서번호 : " + deptid);
+		System.out.println("<<< 컨트롤러 - 부서삭제 >>>");
+		
+		service.deleteDepartment(deptid);
+		System.out.println("부서삭제 [성공]");
 	}
 
 }
