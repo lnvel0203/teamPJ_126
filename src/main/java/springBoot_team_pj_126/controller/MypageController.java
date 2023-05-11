@@ -1,5 +1,6 @@
 package springBoot_team_pj_126.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import springBoot_team_pj_126.dto.UserDTO;
 import springBoot_team_pj_126.service.AttendanceService;
@@ -59,6 +61,19 @@ public class MypageController {
 		
 		
 		return dto;
+	}
+	
+	//프로필 사진 업로드
+	@PostMapping("/mypage/{id}/photo")
+	public void photo(@PathVariable String id, MultipartFile file) throws Exception {
+		File uploadFile = new File("C:\\images\\", file.getOriginalFilename());
+		if (!uploadFile.exists()) {
+			uploadFile.mkdirs();
+		}
+		
+		file.transferTo(uploadFile);
+		
+		mypage.photo(id, "http://localhost:8081/images/" + file.getOriginalFilename());
 	}
 	
 	

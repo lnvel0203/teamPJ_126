@@ -24,4 +24,8 @@ public class CheckDTO {
 	private Timestamp returnWork;		// 복귀
 	private Timestamp attendanceDate;	// 날짜
 	private String id;
+	public Timestamp getBusinessTrip() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

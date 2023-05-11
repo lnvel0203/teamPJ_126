@@ -23,6 +23,8 @@ public interface MypageService {
 	//내정보 수정 업데이트 
 	public void userInfoUpdate(UserDTO dto);
 
+	public void photo(String id, String absolutePath);
+
 	
 	
 //	public void insertMember(MemberDTO dto) throws ServletException, IOException;

@@ -18,6 +18,8 @@ public interface MypageMapper {
 
 	public void infoupdate (UserDTO dto);
 	
+	public void photo(UserDTO userDTO);
+	
 	
 }
 

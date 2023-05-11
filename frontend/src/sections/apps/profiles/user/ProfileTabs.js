@@ -43,9 +43,17 @@ const ProfileTabs = ({ focusInput }) => {
   useEffect(() => {
     if (selectedImage) {
       setAvatar(URL.createObjectURL(selectedImage));  //URL 대신 지정경로 이미지 삽입
-      
+
+      const formData = new FormData();
+      formData.append("file", selectedImage);
+
+      axios.post(`http://localhost:8081/members/mypage/${id}/photo`, formData, {
+          headers : {
+              'Content-Type': 'multipart/form-data'
+          }
+      })
     }
-  }, [selectedImage]);
+  }, [selectedImage]);  
 
   useEffect(() => {
     async function fetchData() {
@@ -53,6 +61,10 @@ const ProfileTabs = ({ focusInput }) => {
         const response = await axios.get('http://localhost:8081/members/mypage/'+id);
         console.log("성공",response.data)
         
+        if (response.data.photo) {
+            setAvatar(response.data.photo);
+        }
+
         setName(response.data.name)
         setPositionName(response.data.positionName)
         setDeptName(response.data.deptName)
