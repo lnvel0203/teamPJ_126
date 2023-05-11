@@ -28,7 +28,6 @@ const HierarchyLocaleText = Loadable(lazy(() => import('pages/apps/adminperson-c
 const Personnelevaluation = Loadable(lazy(() => import('pages/apps/adminperson-customer/Personnelevaluation')));
 const DepartDepartments = Loadable(lazy(() => import('pages/apps/adminperson-customer/departdepartments')));
 
-
 const AppKanban = Loadable(lazy(() => import('pages/apps/kanban')));
 const AppKanbanBacklogs = Loadable(lazy(() => import('sections/apps/kanban/Backlogs')));
 const AppKanbanBoard = Loadable(lazy(() => import('sections/apps/kanban/Board')));
@@ -45,8 +44,6 @@ const UserTabPayment = Loadable(lazy(() => import('sections/apps/profiles/user/T
 const UserTabPassword = Loadable(lazy(() => import('sections/apps/profiles/user/TabPassword')));
 
 const UserTabSettings = Loadable(lazy(() => import('sections/apps/profiles/user/TabSettings')));
-
-
 
 // render - forms & tables
 const FormsValidation = Loadable(lazy(() => import('pages/forms/validation')));
