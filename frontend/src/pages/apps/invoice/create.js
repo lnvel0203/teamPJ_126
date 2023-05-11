@@ -45,7 +45,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import CreateDetail from './CreateDetail';
 
 // localStorage의 id
-const loginId = localStorage.getItem('id');
+// const loginId = localStorage.getItem('id');
 
 // 돈 포맷
 const formatter = new Intl.NumberFormat('ko-KR');
@@ -53,6 +53,23 @@ const formatter = new Intl.NumberFormat('ko-KR');
 // ==============================|| INVOICE - EDIT ||============================== //
 
 const Create = () => {
+  const [date, setDate] = useState(0);
+
+  let formattedDate = '';
+
+  if (date instanceof Date) {
+    formattedDate = date
+      .toLocaleDateString('ko-KR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      })
+      .replace(/. /g, '/')
+      .replace('.', '');
+  } else {
+    console.error('Invalid date:', date);
+  }
+
   const [addId, setAddId] = useState(0);
 
   const [totalAdditionalPay, setTotalAdditionalPay] = useState(0);
@@ -203,7 +220,12 @@ const Create = () => {
                     healthInsurance +
                     ', 산재 보험료: ' +
                     compensationInsurance +
-                    addId
+                    ', 소득세: ' +
+                    incomeTax +
+                    ', 아이디: ' +
+                    addId +
+                    ', 날짜: ' +
+                    formattedDate
                 )
               }
               <Grid container spacing={2}>
@@ -261,7 +283,10 @@ const Create = () => {
                         <DatePicker
                           inputFormat="yyyy/MM/dd"
                           value={values.date}
-                          onChange={(newValue) => setFieldValue('date', newValue)}
+                          onChange={(newValue) => {
+                            setFieldValue('date', newValue);
+                            setDate(newValue);
+                          }}
                           renderInput={(params) => <TextField {...params} />}
                         />
                       </LocalizationProvider>
@@ -299,12 +324,7 @@ const Create = () => {
                         <Stack spacing={2}>
                           <Typography variant="h5">From:</Typography>
                           <Stack sx={{ width: '100%' }}>
-                            {/* #TODO - 이 부분 아이디에서 이름으로 바꾸기 */}
-                            <Typography variant="subtitle1">{loginId}</Typography>
-
-                            <Typography color="secondary">{values?.cashierInfo?.address}</Typography>
-                            <Typography color="secondary">{values?.cashierInfo?.phone}</Typography>
-                            <Typography color="secondary">{values?.cashierInfo?.email}</Typography>
+                            <Typography variant="subtitle1">(주)한국소프트웨어아이엔씨</Typography>
                           </Stack>
                         </Stack>
                       </Grid>
@@ -389,7 +409,12 @@ const Create = () => {
                 {/** 새 컴포넌트 */}
                 {/* Form Layout 시작 */}
                 <Grid item xs={12}>
-                  <CreateDetail addId={values?.customerInfo?.id} onValuesChanged={handleValuesChanged} />
+                  <CreateDetail
+                    key={values?.customerInfo?.id}
+                    addId={values?.customerInfo?.id}
+                    date={formattedDate}
+                    onValuesChanged={handleValuesChanged}
+                  />
                 </Grid>
 
                 {/* Form Layout 시작 끝 */}

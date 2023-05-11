@@ -35,17 +35,51 @@ import IconButton from 'components/@extended/IconButton';
 import { CSVExport, HeaderSort, IndeterminateCheckbox, TablePagination, TableRowSelection } from 'components/third-party/ReactTable';
 import AlertColumnDelete from 'sections/apps/kanban/Board/AlertColumnDelete';
 
-// import { dispatch, useSelector } from 'store';
 import { dispatch } from 'store';
+import { openSnackbar } from '../../../store/reducers/snackbar';
 
-// import { openSnackbar } from 'store/reducers/snackbar';
-// import { alertPopupToggle, getInvoiceDelete, getInvoiceList } from 'store/reducers/invoice';
 import { alertPopupToggle } from 'store/reducers/invoice';
 import { renderFilterTypes, GlobalFilter, DateColumnFilter } from 'utils/react-table';
 
 const avatarImage = require.context('assets/images/users', true);
 
 // ==============================|| REACT TABLE ||============================== //
+
+const handleClick = async (SALARYRECORDID) => {
+  //미승인 상태 사원 -> 승인상태로 변경 및 승인버튼 삭제
+
+  try {
+    const response = await axios.put('http://localhost:8081/members/updateSalaryStatus', { SALARYRECORDID });
+    if (response.data == 1) {
+      window.location.reload(); // 자동 새로고침
+      dispatch(
+        openSnackbar({
+          open: true,
+          message: '성공적으로 업데이트 되었습니다.',
+          variant: 'alert',
+          alert: {
+            color: 'success'
+          }
+        })
+      );
+
+      return;
+    } else if (response.data == 0) {
+      dispatch(
+        openSnackbar({
+          open: true,
+          message: '업데이트에 실패했습니다.',
+          variant: 'alert',
+          alert: {
+            color: 'error'
+          }
+        })
+      );
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 function ReactTable({ columns, data }) {
   const theme = useTheme();
@@ -125,13 +159,13 @@ function ReactTable({ columns, data }) {
                   label={
                     status === 'All'
                       ? data.length
-                      : status === 'Paid'
+                      : status === 'paid'
                       ? counts.Paid
                       : status === 'Unpaid'
                       ? counts.Unpaid
                       : counts.Cancelled
                   }
-                  color={status === 'All' ? 'primary' : status === 'Paid' ? 'success' : status === 'Unpaid' ? 'warning' : 'error'}
+                  color={status === 'All' ? 'primary' : status === 'paid' ? 'success' : status === 'unpaid' ? 'warning' : 'error'}
                   variant="light"
                   size="small"
                 />
@@ -240,11 +274,11 @@ CustomerCell.propTypes = {
 // Status
 const StatusCell = ({ value }) => {
   switch (value) {
-    case 'Cancelled':
+    case 'cancelled':
       return <Chip color="error" label="Cancelled" size="small" variant="light" />;
-    case 'Paid':
+    case 'paid':
       return <Chip color="success" label="Paid" size="small" variant="light" />;
-    case 'Unpaid':
+    case 'unpaid':
     default:
       return <Chip color="info" label="Unpaid" size="small" variant="light" />;
   }
@@ -259,7 +293,7 @@ const ActionCell = (row, setGetInvoiceId, setInvoiceId, navigation, theme) => {
   return (
     <Stack direction="row" alignItems="center" justifyContent="center" spacing={0}>
       {/* 상세 버튼 */}
-      <Tooltip title="View">
+      <Tooltip title="상세">
         <IconButton
           color="secondary"
           onClick={(e) => {
@@ -272,12 +306,12 @@ const ActionCell = (row, setGetInvoiceId, setInvoiceId, navigation, theme) => {
       </Tooltip>
 
       {/* 수정 버튼 */}
-      <Tooltip title="Edit">
+      <Tooltip title="지급">
         <IconButton
           color="primary"
           onClick={(e) => {
             e.stopPropagation();
-            navigation(`/apps/invoice/edit/${row.values.SALARYRECORDID}`);
+            handleClick(row.values.SALARYRECORDID);
           }}
         >
           <EditTwoTone twoToneColor={theme.palette.primary.main} />
@@ -285,7 +319,7 @@ const ActionCell = (row, setGetInvoiceId, setInvoiceId, navigation, theme) => {
       </Tooltip>
 
       {/* 삭제 버튼 */}
-      <Tooltip title="Delete">
+      <Tooltip title="삭제">
         <IconButton
           color="error"
           onClick={(e) => {
@@ -409,7 +443,8 @@ const List = () => {
       {
         Header: '지급날짜',
         accessor: 'PAYDATE',
-        disableFilters: true
+        disableFilters: true,
+        Cell: ({ value }) => new Date(value).toLocaleDateString()
       },
       {
         Header: '지급상태',

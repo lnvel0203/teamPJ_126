@@ -15,11 +15,9 @@ import {
   FormHelperText,
   Grid,
   InputLabel,
-
   Stack,
   TextField
 } from '@mui/material';
-
 
 // third party
 import * as Yup from 'yup';
@@ -38,9 +36,9 @@ import MainCard from 'components/MainCard';
 //const ITEM_HEIGHT = 48;
 //const ITEM_PADDING_TOP = 8;
 //const MenuProps = {
- // PaperProps: {
-  //  style: {
- //     maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
+// PaperProps: {
+//  style: {
+//     maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
 //    }
 //  }
 //};
@@ -54,17 +52,14 @@ function useInputRef() {
 // ==============================|| TAB - PERSONAL ||============================== //
 
 const TabPersonal = () => {
-
-
-  const id = localStorage.getItem("id");
-  console.log('id',id)
+  const id = localStorage.getItem('id');
+  console.log('id', id);
   const maxDate = new Date();
   maxDate.setFullYear(maxDate.getFullYear() - 18);
   const [hireDate, setHireDate] = useState('');
   const [hp, setHp] = useState('');
 
   const dispatch = useDispatch();
-  
 
   // # 추가 axios 요청 ==============================================================
   const [fetchedData, setFetchedData] = useState(null);
@@ -73,13 +68,13 @@ const TabPersonal = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get('http://localhost:8081/members/mypage/'+id);
+        const response = await axios.get('http://localhost:8081/members/mypage/' + id);
         setFetchedData(response.data);
-        console.log("성공",response.data)
-        console.log("입사일",response.data.hireDate)
-        setHireDate(response.data.hireDate)
-        setHp(response.data.hp)
-        format(new Date(hireDate), 'yyyy-MM-dd')
+        console.log('성공', response.data);
+        console.log('입사일', response.data.hireDate);
+        setHireDate(response.data.hireDate);
+        setHp(response.data.hp);
+        format(new Date(hireDate), 'yyyy-MM-dd');
 
         setIsLoading(false); // 추가 폼 렌더링 관련
         // console.log(response.data.name);
@@ -124,7 +119,7 @@ const TabPersonal = () => {
               name: fetchedData?.name || '',
               lastname: fetchedData?.lastname || '',
               email: fetchedData?.email || '',
-             // dob: fetchedData?.dob ? new Date(fetchedData.dob) : new Date(),
+              // dob: fetchedData?.dob ? new Date(fetchedData.dob) : new Date(),
               countryCode: fetchedData?.countryCode || '',
               contact: fetchedData?.contact || '',
               designation: fetchedData?.designation || '',
@@ -175,7 +170,7 @@ const TabPersonal = () => {
               }
             }}
           >
-            {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting,  touched, values }) => (
+            {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
               <form noValidate onSubmit={handleSubmit}>
                 <Box sx={{ p: 2.5 }}>
                   {/* Personal Information 시작 */}
@@ -322,8 +317,8 @@ const TabPersonal = () => {
                     </Grid>
                     생년월일 끝 */}
 
-                      {/* 입사일 시작 */}
-                      <Grid item xs={12} sm={6}>
+                    {/* 입사일 시작 */}
+                    <Grid item xs={12} sm={6}>
                       <Stack spacing={1.25}>
                         <InputLabel htmlFor="personal-hireDate">입사일</InputLabel>
                         {/* {console.log('values:', values)} */}
@@ -337,7 +332,6 @@ const TabPersonal = () => {
                           onChange={handleChange}
                           placeholder="hireDate"
                           autoFocus
-                          
                         />
                         {touched.hireDate && errors.hireDate && (
                           <FormHelperText error id="personal-hireDate-helper">
@@ -363,7 +357,6 @@ const TabPersonal = () => {
                           onChange={handleChange}
                           placeholder="phone"
                           autoFocus
-                          
                         />
                         {touched.firstname && errors.firstname && (
                           <FormHelperText error id="personal-first-name-helper">

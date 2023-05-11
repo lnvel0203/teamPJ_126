@@ -1,30 +1,32 @@
-import React, { useCallback } from 'react';
+// import React, { useCallback } from 'react';
+import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
 // import { Box, Grid, IconButton, Chip, FormControl, Button, Stack, Typography, Divider } from '@mui/material';
-import { Box, Grid, IconButton, FormControl, Button, Stack, Typography, Divider } from '@mui/material';
+import { Box, Grid, IconButton, FormControl, Stack, Typography, Divider } from '@mui/material';
 
 // third-party
 import ReactToPrint from 'react-to-print';
-import { PDFDownloadLink } from '@react-pdf/renderer';
+// import { PDFDownloadLink } from '@react-pdf/renderer';
 
 // project import
 import Loader from 'components/Loader';
 import MainCard from 'components/MainCard';
 // 로고
 // import LogoSection from 'components/logo';
-import ExportPDFView from 'sections/apps/invoice/export-pdf';
+// import ExportPDFView from 'sections/apps/invoice/export-pdf';
 
-import { dispatch, useSelector } from 'store';
+import { dispatch } from 'store';
 import { getInvoiceSingleList } from 'store/reducers/invoice';
 
 // assets
-import { DownloadOutlined, EditOutlined, PrinterFilled } from '@ant-design/icons';
+// import { DownloadOutlined, EditOutlined, PrinterFilled } from '@ant-design/icons';
+import { EditOutlined, PrinterFilled } from '@ant-design/icons';
 
-import CreateDetail from './CreateDetail';
+import InvoiceDetail from './InvoiceDetail';
 
 // 돈 포맷
 const formatter = new Intl.NumberFormat('ko-KR');
@@ -32,78 +34,39 @@ const formatter = new Intl.NumberFormat('ko-KR');
 // ==============================|| INVOICE - DETAILS ||============================== //
 
 const Details = () => {
-  // const [addId, setAddId] = useState(0);
-
-  const [totalAdditionalPay, setTotalAdditionalPay] = useState(0);
-  const [totalInsurancePay, setTotalInsurancePay] = useState(0);
-  const [incomeTax, setIncomeTax] = useState(0);
-  const [netSalary, setNetSalary] = useState(0);
-  // -------------------------------------------------------------
-  const [overtimePay, setOvertimePay] = useState(0);
-  const [weekendWorkPay, setWeekendWorkPay] = useState(0);
-  const [calculateRestDayPay, setCalculateRestDayPay] = useState(0);
-  const [bonusForm, setBonusForm] = useState(0);
-  const [pensionInsurance, setPensionInsurance] = useState(0);
-  const [employeeInsurance, setEmployeeInsurance] = useState(0);
-  const [healthInsurance, setHealthInsurance] = useState(0);
-  const [compensationInsurance, setCompensationInsurance] = useState(0);
-
-  // CreateDetail에서 totalAdditionalPay, totalInsurancePay, incomeTax 받아옴
-  const handleValuesChanged = useCallback((values) => {
-    const {
-      overtimePay,
-      weekendWorkPay,
-      calculateRestDayPay,
-      bonusForm,
-      totalAdditionalPay,
-      pensionInsurance,
-      employeeInsurance,
-      healthInsurance,
-      compensationInsurance,
-      totalInsurancePay,
-      incomeTax,
-      netSalary
-    } = values;
-
-    setTotalAdditionalPay(totalAdditionalPay);
-    setTotalInsurancePay(totalInsurancePay);
-    setIncomeTax(incomeTax);
-    setNetSalary(netSalary);
-    setOvertimePay(overtimePay);
-    setWeekendWorkPay(weekendWorkPay);
-    setCalculateRestDayPay(calculateRestDayPay);
-    setBonusForm(bonusForm);
-    setPensionInsurance(pensionInsurance);
-    setEmployeeInsurance(employeeInsurance);
-    setHealthInsurance(healthInsurance);
-    setCompensationInsurance(compensationInsurance);
-  }, []);
-
   // ===============================================
 
   const theme = useTheme();
   const { id } = useParams();
   const navigation = useNavigate();
 
-  const { list } = useSelector((state) => state.invoice);
+  const [list, setList] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     dispatch(getInvoiceSingleList(Number(id))).then(() => setLoading(true));
     // eslint-disable-next-line react-hooks/exhaustive-deps
+    axios
+      .get(`http://localhost:8081/members/invoiceDetail?id=${id}`)
+      .then((response) => {
+        setList(response.data); // 데이터를 상태에 설정
+      })
+      .catch((error) => {
+        console.error('error: ', error);
+      });
   }, [id]);
 
-  const today = new Date(`${list?.date}`).toLocaleDateString('en-GB', {
-    month: 'numeric',
-    day: 'numeric',
-    year: 'numeric'
-  });
+  // const today = new Date(`${list?.date}`).toLocaleDateString('en-GB', {
+  //   month: 'numeric',
+  //   day: 'numeric',
+  //   year: 'numeric'
+  // });
 
-  const due_dates = new Date(`${list?.due_date}`).toLocaleDateString('en-GB', {
-    month: 'numeric',
-    day: 'numeric',
-    year: 'numeric'
-  });
+  // const due_dates = new Date(`${list?.due_date}`).toLocaleDateString('en-GB', {
+  //   month: 'numeric',
+  //   day: 'numeric',
+  //   year: 'numeric'
+  // });
 
   const componentRef = useRef(null);
 
@@ -111,41 +74,21 @@ const Details = () => {
 
   return (
     <MainCard content={false}>
-      {
-        // #TODO - 삭제
-        console.log(
-          '연장 근로 수당: ' +
-            overtimePay +
-            '주말 근로 수당, : ' +
-            weekendWorkPay +
-            ', 주휴 수당: ' +
-            calculateRestDayPay +
-            ', 상여급: ' +
-            bonusForm +
-            ', 연금 보험료: ' +
-            pensionInsurance +
-            ', 고용 보험료: ' +
-            employeeInsurance +
-            ', 건강 보험료: ' +
-            healthInsurance +
-            ', 산재 보험료: ' +
-            compensationInsurance
-        )
-      }
       <Stack spacing={2.5}>
         {/* # 1 ======================================= */}
         <Box sx={{ p: 2.5, pb: 0 }}>
+          {console.log('id: ' + id)}
           <MainCard content={false} sx={{ p: 1.25, bgcolor: 'primary.lighter', borderColor: theme.palette.primary[100] }}>
             <Stack direction="row" justifyContent="flex-end" spacing={1}>
               <IconButton onClick={() => navigation(`/apps/invoice/edit/${id}`)}>
                 <EditOutlined style={{ color: theme.palette.grey[900] }} />
               </IconButton>
               {/* PDF */}
-              <PDFDownloadLink document={<ExportPDFView list={list} />} fileName={`${list?.invoice_id}-${list?.customer_name}.pdf`}>
+              {/* <PDFDownloadLink document={<ExportPDFView list={list} />} fileName={`${list?.user?.name}-${list?.user?.name}.pdf`}>
                 <IconButton>
                   <DownloadOutlined style={{ color: theme.palette.grey[900] }} />
                 </IconButton>
-              </PDFDownloadLink>
+              </PDFDownloadLink> */}
 
               {/* 프린트 */}
               <ReactToPrint
@@ -175,13 +118,15 @@ const Details = () => {
                 <Box>
                   <Stack direction="row" spacing={1} justifyContent="flex-end">
                     <Typography variant="subtitle1">Date</Typography>
-                    <Typography color="secondary">{today}</Typography>
+                    <Typography color="secondary">{0}</Typography>
+                    {/* 위에는 원래 today 자리 */}
                   </Stack>
                   <Stack direction="row" spacing={1} justifyContent="flex-end">
                     <Typography sx={{ overflow: 'hidden' }} variant="subtitle1">
                       Due Date
                     </Typography>
-                    <Typography color="secondary">{due_dates}</Typography>
+                    <Typography color="secondary">{0}</Typography>
+                    {/* 위에는 원래 due_dates 자리 */}
                   </Stack>
                 </Box>
               </Stack>
@@ -193,10 +138,9 @@ const Details = () => {
                 <Stack spacing={1}>
                   <Typography variant="h5">From:</Typography>
                   <FormControl sx={{ width: '100%' }}>
-                    <Typography color="secondary">{list?.cashierInfo.name}</Typography>
-                    <Typography color="secondary">{list?.cashierInfo.address}</Typography>
-                    <Typography color="secondary">{list?.cashierInfo.phone}</Typography>
-                    <Typography color="secondary">{list?.cashierInfo.email}</Typography>
+                    <Typography color="subtitle1">(주)한국소프트웨어아이엔씨</Typography>
+                    <br />
+                    <br />
                   </FormControl>
                 </Stack>
               </MainCard>
@@ -206,10 +150,10 @@ const Details = () => {
                 <Stack spacing={1}>
                   <Typography variant="h5">To:</Typography>
                   <FormControl sx={{ width: '100%' }}>
-                    <Typography color="secondary">{list?.customerInfo.name}</Typography>
-                    <Typography color="secondary">{list?.customerInfo.address}</Typography>
-                    <Typography color="secondary">{list?.customerInfo.phone}</Typography>
-                    <Typography color="secondary">{list?.customerInfo.email}</Typography>
+                    <Typography color="subtitle1">{list?.user?.name}</Typography>
+                    <Typography color="secondary">{list?.user?.address}</Typography>
+                    <Typography color="secondary">{list?.user?.hp}</Typography>
+                    <Typography color="secondary">{list?.user?.email}</Typography>
                   </FormControl>
                 </Stack>
               </MainCard>
@@ -219,7 +163,7 @@ const Details = () => {
             {/** 새 컴포넌트 */}
             {/* Form Layout 시작 */}
             <Grid item xs={12}>
-              <CreateDetail onValuesChanged={handleValuesChanged} />
+              <InvoiceDetail list={list} />
             </Grid>
 
             {/* Form Layout 시작 끝 */}
@@ -237,21 +181,21 @@ const Details = () => {
                   {/* Sub Total 시작 */}
                   <Stack direction="row" justifyContent="space-between">
                     <Typography color={theme.palette.grey[500]}>추가 급여 :</Typography>
-                    <Typography>{formatter.format(totalAdditionalPay)}원</Typography>
+                    <Typography>{formatter.format(list?.additionalPayment?.totalAdditional)}원</Typography>
                   </Stack>
                   {/* Sub Total 끝 */}
 
                   {/* Discount 시작 */}
                   <Stack direction="row" justifyContent="space-between">
                     <Typography color={theme.palette.grey[500]}>보험료 :</Typography>
-                    <Typography variant="h6">{formatter.format(Math.round(totalInsurancePay))}원</Typography>
+                    <Typography variant="h6">{formatter.format(Math.round(list?.deduction?.totalDeductions))}원</Typography>
                   </Stack>
                   {/* Discount 끝 */}
 
                   {/* Tax 시작 */}
                   <Stack direction="row" justifyContent="space-between">
                     <Typography color={theme.palette.grey[500]}>소득세 :</Typography>
-                    <Typography>{formatter.format(Math.round(incomeTax))}원</Typography>
+                    <Typography>{formatter.format(Math.round(list?.deduction?.incomeTax))}원</Typography>
                   </Stack>
                   {/* Tax 끝 */}
 
@@ -260,7 +204,7 @@ const Details = () => {
                     <Typography variant="subtitle1">실 수령액 :</Typography>
                     <Typography variant="subtitle1" color={theme.palette.success.main}>
                       {' '}
-                      {formatter.format(Math.round(netSalary))}원
+                      {formatter.format(Math.round(list?.salaryRecord?.netSalary))}원
                     </Typography>
                   </Stack>
                   {/* Grand Total 끝 */}
@@ -280,11 +224,11 @@ const Details = () => {
           </Grid>
         </Box>
         <Stack direction="row" justifyContent="flex-end" spacing={2} sx={{ p: 2.5, a: { textDecoration: 'none', color: 'inherit' } }}>
-          <PDFDownloadLink document={<ExportPDFView list={list} />} fileName={`${list?.invoice_id}-${list?.customer_name}.pdf`}>
+          {/* <PDFDownloadLink document={<ExportPDFView list={list} />} fileName={`${list?.user?.name}-${list?.user?.name}.pdf`}>
             <Button variant="contained" color="primary">
               Download
             </Button>
-          </PDFDownloadLink>
+          </PDFDownloadLink> */}
         </Stack>
       </Stack>
     </MainCard>
