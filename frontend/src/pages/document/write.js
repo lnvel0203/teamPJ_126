@@ -2,7 +2,7 @@ import React, { useState,useEffect } from 'react';
 import './DocumentComponent.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import axios from 'axios';
+import { request } from '../../utils/axios';
 import { useNavigate } from 'react-router-dom';
 const DocumentWritePage = () => {
   
@@ -151,10 +151,18 @@ const DocumentWritePage = () => {
     console.log("전송시작")
   
     try {
-      const response = await axios.post('http://localhost:8081/members/addDocument', formData);
-      console.log('Insert success:', response.data);
-      console.log("성공한듯 ? ")
-      navigate('/apps/document/documentList', { state: { id: id } });
+      request(
+        'POST',
+        '/members/addDocument', formData
+      ).then(response => {
+        console.log('Insert success:', response.data);
+        console.log("성공한듯 ? ")
+        navigate('/apps/document/documentList', { state: { id: id } });
+      })
+      // const response = await axios.post('http://localhost:8081/members/addDocument', formData);
+      // console.log('Insert success:', response.data);
+      // console.log("성공한듯 ? ")
+      // navigate('/apps/document/documentList', { state: { id: id } });
       
       // 이후 처리 (예: 페이지 이동 등)
     } catch (error) {

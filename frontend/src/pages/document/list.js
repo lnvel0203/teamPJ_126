@@ -1,5 +1,5 @@
 // Import Axios Services
-import axios from 'axios';
+import { request } from '../../utils/axios';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useMemo, useState, Fragment } from 'react';
 import { format } from 'date-fns';
@@ -377,8 +377,14 @@ const CustomerListPage = () => {
   // Fetch user data from the server
   const fetchUserData = useCallback(async () => {
     try {
-      const response = await axios.get('http://localhost:8081/members/document/'+id);
-      setUserData(response.data);
+      request(
+        'GET',
+        '/members/document/'+id
+      ).then(response => {
+        setUserData(response.data);
+      })
+      // const response = await axios.get('http://localhost:8081/members/document/'+id);
+      // setUserData(response.data);
     } catch (error) {
       console.error(error);
     }

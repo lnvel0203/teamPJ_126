@@ -18,7 +18,7 @@ const items = [
 
 const handleClick = () => {
   const features = 'width=900,height=900,top=100,left=100';
-  window.open('/document', '_blank', features);
+  window.open('/apps/document/Documentwrite', '_blank', features);
 };
 
 const Application = () => {

@@ -171,10 +171,26 @@ const MainRoutes = {
               path: 'main-page',
               element: <MainPage />
             },
+
+
             {
               path: 'mail',
-              element: <Mail />
+              element: <Mail />,
+              children: [
+                {
+                  path: 'backlogs',
+                  element: <AppKanbanBacklogs />
+                },
+                {
+                  path: 'board',
+                  element: <AppKanbanBoard />
+                }
+              ]
+
             },
+
+
+            
             // {
             //   path: 'chat',
             //   element: <AppChat />
