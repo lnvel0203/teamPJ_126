@@ -118,6 +118,9 @@ const AddApprover = Loadable(lazy(() => import('pages/document/AddApprover')));
 const EditorComponent = Loadable(lazy(() => import('pages/document/EditorComponent')));
 const DocumentForm = Loadable(lazy(() => import('pages/document/Form')));
 const DocumentList = Loadable(lazy(() => import('pages/document/list')));
+const DocumentDetail = Loadable(lazy(() => import('pages/document/DocumentDetail')));
+const DraftDocumentList = Loadable(lazy(() => import('pages/document/DraftDocumentList')));
+
 const Documentwrite = Loadable(lazy(() => import('pages/document/write')));
 const AttendanceList = Loadable(lazy(() => import('pages/attendance/AttendanceList')));
 const Mail = Loadable(lazy(() => import('pages/apps/mail/Mail')));
@@ -216,6 +219,14 @@ const MainRoutes = {
                 {
                   path: 'DocumentList',
                   element: <DocumentList />
+                },
+                {
+                  path: 'DocumentDetail',
+                  element: <DocumentDetail />
+                },
+                {
+                  path: 'DraftDocumentList',
+                  element: <DraftDocumentList />
                 },
                 {
                   path: 'Documentwrite',
