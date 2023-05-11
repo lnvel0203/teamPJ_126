@@ -37,7 +37,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 		System.out.println("AttendanceServiceImpl - isStartWork()");
 		
 		int selectCnt = dao.isStartWork(id);
-		System.out.println("selectCnt: " + selectCnt);
+		System.out.println("AttendanceServiceImpl - isStartWork - selectCnt: " + selectCnt);
 		
 		return selectCnt;
 	}

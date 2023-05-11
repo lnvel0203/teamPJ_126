@@ -1,5 +1,8 @@
 package springBoot_team_pj_126.service;
 
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 import springBoot_team_pj_126.dao.SalaryMapper;
 import springBoot_team_pj_126.dto.AdditionalPaymentDTO;
 import springBoot_team_pj_126.dto.DeductionDTO;
+import springBoot_team_pj_126.dto.EmployeeSalaryDTO;
 import springBoot_team_pj_126.dto.SalaryInfoDTO;
 import springBoot_team_pj_126.dto.SalaryRecordsDTO;
 
@@ -43,6 +47,16 @@ public class SalaryServiceImpl implements SalaryService{
 		return dto;
 	}
 	
+	// 급여 상세 가져오기
+	@Override
+	public EmployeeSalaryDTO invoiceDetail(int id) {
+		System.out.println("SalaryServiceImpl - invoiceDetail()");
+		
+		EmployeeSalaryDTO dto = mapper.invoiceDetail(id);
+		
+		return dto;
+	}
+	
 	// ========================================================
 	// [급여 지급에 필요한 메서드]
 
@@ -58,13 +72,22 @@ public class SalaryServiceImpl implements SalaryService{
 
 	// 주말 제외 총 근무 시간
 	@Override
-	public Map<String, Object> salaryCreateInfo(String id) {
+	public Map<String, Object> salaryCreateInfo(Map<String, Object> map) {
 		System.out.println("SalaryServiceImpl - weeklyWorkingHours()");
 		
-		Map<String, Object> data = new HashMap<>();
+		String date = (String) map.get("dateString");
 		
-		int weeklyWorkingHours = mapper.weeklyWorkingHours(id);
-		int weekendWorkingHours = mapper.weekendWorkingHours(id);
+		String[] parts = date.split("/");
+		int year = Integer.parseInt(parts[0]);
+		int month = Integer.parseInt(parts[1]);
+		
+		map.put("year", year);
+		map.put("month", month);
+		
+		int weeklyWorkingHours = mapper.weeklyWorkingHours(map);
+		int weekendWorkingHours = mapper.weekendWorkingHours(map);
+		
+		Map<String, Object> data = new HashMap<>();
 		
 		data.put("weeklyWorkingHours", weeklyWorkingHours);
 		data.put("weekendWorkingHours", weekendWorkingHours);
@@ -77,7 +100,11 @@ public class SalaryServiceImpl implements SalaryService{
 	public int invoiceCreate(Map<String, Object> data) {
 		System.out.println("SalaryServiceImpl - invoiceCreate()");
 		
+		// TODO - date 날짜 insert추가 하기
+		String date = (String) data.get("date");
+		
 		String addId = (String) data.get("addId");
+		
 		double netSalary = (double) data.get("netSalary");
 		
 		int overtimePay = (int) data.get("overtimePay");
@@ -90,7 +117,9 @@ public class SalaryServiceImpl implements SalaryService{
 		double employeeInsurance = (double) data.get("employeeInsurance");
 		double healthInsurance = (double) data.get("healthInsurance");
 		double compensationInsurance = (double) data.get("compensationInsurance");
+		double incomeTax = (double) data.get("incomeTax");
 		double totalInsurancePay = (double) data.get("totalInsurancePay");
+
 		
 		SalaryRecordsDTO recordsDTO = new SalaryRecordsDTO();
 		recordsDTO.setEmpId(addId);
@@ -110,6 +139,7 @@ public class SalaryServiceImpl implements SalaryService{
 		deducationDTO.setEmploymentInsurance(employeeInsurance);
 		deducationDTO.setHealthInsurance(healthInsurance);
 		deducationDTO.setCompensationInsurance(compensationInsurance);
+		deducationDTO.setIncomeTax(incomeTax);
 		deducationDTO.setTotalDeductions(totalInsurancePay);
 		
 
@@ -129,6 +159,15 @@ public class SalaryServiceImpl implements SalaryService{
 		}
 		
 		return 0;
+	}
+
+	// 지급 상태 업데이트
+	@Override
+	public int updateSalaryStatus(int salaryRecordId) {
+		System.out.println("SalaryServiceImpl - updateSalaryStatus()");
+		
+		int updateCnt = mapper.updateSalaryStatus(salaryRecordId);
+		return updateCnt;
 	}
 
 	// ========================================================
