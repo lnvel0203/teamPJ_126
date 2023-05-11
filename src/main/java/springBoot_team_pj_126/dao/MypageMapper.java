@@ -15,6 +15,7 @@ public interface MypageMapper {
 	//김재인
 	public List<UserDTO> mypageList();
 	public UserDTO userinfo(String id);
+	public void infoupdate (UserDTO dto);
 	
 	
 }

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,16 +62,25 @@ public class MypageController {
 	}
 	
 	
-	// 내 정보 상세 업데이트
-	@PostMapping("/userInfoUpdate")
-	public int userInfoUpdate(@RequestBody UserDTO NewLists)
-			throws ServletException, IOException {
-		logger.info("MypageController - userInfoUpdate()");
-		
-		System.out.println(" MypageController - userInfoUpdate");
-		System.out.println("DTO : " + NewLists);
-		
-		return 1;
-	  }
+	@PostMapping("/userInfoUpdate/{id}")
+	public void userInfoUpdate( @PathVariable String id,@RequestBody UserDTO NewLists) {
+	    logger.info("MypageController - userInfoUpdate()");
+	   
+	    
+	    String email = NewLists.getEmail();
+	    String address = NewLists.getAddress();
+	    String hp = NewLists.getHp();
+
+	    UserDTO dto = new UserDTO();
+	    dto.setId(id);
+	    dto.setEmail(email);
+	    dto.setAddress(address);
+	    dto.setHp(hp);
+	    
+
+	    System.out.println("확인해봐" + dto);
+
+	    mypage.userInfoUpdate(dto);
+	}
 		
 }

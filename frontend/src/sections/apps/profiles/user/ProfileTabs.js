@@ -36,16 +36,42 @@ const ProfileTabs = ({ focusInput }) => {
  
   const theme = useTheme();
   const [selectedImage, setSelectedImage] = useState(undefined);
-  const [avatar, setAvatar] = useState('./default.png');
-  
-  const [avatar, setAvatar] = useState('./default.png');
+  const [avatar, setAvatar] = useState(null);
   
   useEffect(() => {
     if (selectedImage) {
-      setAvatar(URL.createObjectURL(selectedImage));  //URL 대신 지정경로 이미지 삽입
-      setAvatar(URL.createObjectURL(selectedImage));  //URL 대신 지정경로 이미지 삽입
+      // 이미지 업로드 처리 등 필요한 작업 수행
+      // ...
+  
+      // 로그인한 사용자의 ID를 서버에 전달하여 사용자 정보를 가져옴
+      axios.get(`http://localhost:8081/members/${loggedInUserId}`)
+        .then(response => {
+          const name = response.data;
+  
+          // 가져온 사용자 정보에서 프로필 이미지 파일명 추출
+          const profileImageFilename = name.profileImageFilename;
+  
+          // 프로필 이미지 파일명을 사용하여 URL 생성
+          const profileImageUrl = `assets/images/profile/${profileImageFilename}`;
+  
+          // 프로필 이미지 URL을 사용하여 이미지를 가져옴
+          // 예시: 이미지 가져오는 함수 loadImage(url)
+          loadImage(profileImageUrl)
+            .then(loadedImage => {
+              // 이미지 가져오기 성공
+              setAvatar(loadedImage);
+              setPhoto(response.data.phoho)
+            })
+            .catch(error => {
+              // 이미지 가져오기 실패
+              console.error('Error loading image:', error);
+            });
+        })
+        .catch(error => {
+          console.error('Error fetching user data:', error);
+        });
     }
-  }, [selectedImage]);
+  }, [selectedImage, loggedInUserId]);
 
   useEffect(() => {
     async function fetchData() {

@@ -3,6 +3,7 @@ package springBoot_team_pj_126.service;
 import java.io.IOException;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +19,10 @@ public interface MypageService {
 		
 	public UserDTO userinfo(String id) throws ServletException, IOException;
 	
+	
+	//내정보 수정 업데이트 
+	public void userInfoUpdate(UserDTO dto);
+
 	
 	
 //	public void insertMember(MemberDTO dto) throws ServletException, IOException;
