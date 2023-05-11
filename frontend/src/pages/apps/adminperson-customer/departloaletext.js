@@ -71,12 +71,12 @@ import {  PlusOutlined } from '@ant-design/icons';
 //     });
 // }
 
-//5월 9일 김희수 부서이름 수정
+//5월 9일 김희수 부서이름 수정 -> 2023-05-10 김희수 부서장 수정으로 변경
 function SelectCell({ positionName, onChange }) {
   return (
     <select value={positionName} onChange={e => onChange(e.target.value)}>
 
-      <option value="선택">부서이름을 선택하세요.</option>
+      <option value="선택">-</option>
 
       <option value="인사팀">인사팀</option>
       <option value="경영지원팀">경영지원팀</option>
@@ -259,7 +259,7 @@ const StatusCell = ({ value }) => {
   }
 };
 
-// const ActionCell = (row, setCustomerEditId, setCustomerDeleteId, handleClose, theme) => {
+// const ActionCell = (row, setCustomerDeleteId, handleClose, theme) => {
 //   const collapseIcon = row.isExpanded ? (
 //     <CloseOutlined style={{ color: theme.palette.error.main }} />
 //   ) : (
@@ -393,12 +393,13 @@ const CustomerListPage = () => {
         className: 'cell-center'
       },
       {
-        Header: '설립일', // 날짜로 나오게 바꿔
+        Header: '설립일', 
         accessor: 'deptdate',
-        className: 'cell-center'
+        className: 'cell-center',
+        Cell: ({ value }) => new Date(value).toLocaleDateString()
       },
       {
-        Header: '부서이름 변경',
+        Header: '부서장 변경',
         className: 'cell-center',
         disableSortBy: true,
         // Cell: ({ row }) => ActionCell(row, setCustomerEditId, setCustomerDeleteId, handleClose, theme)
@@ -411,10 +412,24 @@ const CustomerListPage = () => {
           };
         
           return (
+            // const ActionCell = (row, setCustomerDeleteId, handleClose, theme) => {
             <div>
               <SelectCell positionName={selectedPosition} onChange={handlePositionChange} />
               <button onClick={() => handleEdit({ ...row.original, positionName: selectedPosition })}>수정</button>
+              {/* 2023-05-10 김희수 삭제버튼 추가 */}
+              <button 
+              color='error'
+              style={{ marginLeft: '10px' }} 
+
+              onClick={(e) =>{
+                e.stopPropagation();
+                handleClose();
+                setCustomerDeleteId(row.values.deptid);
+              }}
+              // onClick={() => handleDelet({ ...row.original, positionName: selectedPosition })}
+              >삭제</button>
             </div>
+            // }
           );
         }
       }
