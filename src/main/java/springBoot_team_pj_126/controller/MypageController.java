@@ -59,6 +59,7 @@ public class MypageController {
 		
 		
 		return dto;
+<<<<<<< HEAD
 	}
 	
 	
@@ -82,5 +83,20 @@ public class MypageController {
 
 	    mypage.userInfoUpdate(dto);
 	}
+=======
+  }
+	
+	// 내 정보 상세 업데이트
+	@PostMapping("/userInfoUpdate")
+	public int userInfoUpdate(@RequestBody UserDTO NewLists)
+			throws ServletException, IOException {
+		logger.info("MypageController - userInfoUpdate()");
+		
+		System.out.println(" MypageController - userInfoUpdate");
+		System.out.println("DTO : " + NewLists);
+		
+		return 1;
+	  }
+>>>>>>> 521ef18d61083751e47c1e7f574ac495e47f049d
 		
 }
