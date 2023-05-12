@@ -22,12 +22,13 @@ const WidgetChart = Loadable(lazy(() => import('pages/widget/chart')));
 const AppCalendar = Loadable(lazy(() => import('pages/calendar/Calender1')));
 const AppCustomerList = Loadable(lazy(() => import('pages/addressBook/list')));
 const AppCustomerCard = Loadable(lazy(() => import('pages/apps/customer/card')));
+
+// 인사관리 
 const CustomLocaleText = Loadable(lazy(() => import('pages/apps/adminperson-customer/customlocaletext')));
 const CustomerListPage = Loadable(lazy(() => import('pages/apps/adminperson-customer/departloaletext')));
 const HierarchyLocaleText = Loadable(lazy(() => import('pages/apps/adminperson-customer/hierarchylocaletext')));
 const Personnelevaluation = Loadable(lazy(() => import('pages/apps/adminperson-customer/Personnelevaluation')));
 const DepartDepartments = Loadable(lazy(() => import('pages/apps/adminperson-customer/departdepartments')));
-
 
 const AppKanban = Loadable(lazy(() => import('pages/apps/kanban')));
 const AppKanbanBacklogs = Loadable(lazy(() => import('sections/apps/kanban/Backlogs')));
@@ -45,8 +46,6 @@ const UserTabPayment = Loadable(lazy(() => import('sections/apps/profiles/user/T
 const UserTabPassword = Loadable(lazy(() => import('sections/apps/profiles/user/TabPassword')));
 
 const UserTabSettings = Loadable(lazy(() => import('sections/apps/profiles/user/TabSettings')));
-
-
 
 // render - forms & tables
 const FormsValidation = Loadable(lazy(() => import('pages/forms/validation')));
@@ -174,10 +173,26 @@ const MainRoutes = {
               path: 'main-page',
               element: <MainPage />
             },
+
+
             {
               path: 'mail',
-              element: <Mail />
+              element: <Mail />,
+              children: [
+                {
+                  path: 'backlogs',
+                  element: <AppKanbanBacklogs />
+                },
+                {
+                  path: 'board',
+                  element: <AppKanbanBoard />
+                }
+              ]
+
             },
+
+
+            
             // {
             //   path: 'chat',
             //   element: <AppChat />

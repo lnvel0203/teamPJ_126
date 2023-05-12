@@ -36,6 +36,13 @@ const icons = {
 };
 // ==============================|| MENU ITEMS - APPLICATIONS ||============================== //
 
+
+let ids = localStorage.getItem('id');
+
+if(ids === null){
+  ids = ' '
+}
+
 const applications = {
   id: 'group-applications',
   title: <FormattedMessage id="applications" />,
@@ -55,7 +62,21 @@ const applications = {
       title: <FormattedMessage id="mail" />,
       type: 'item',
       url: '/apps/mail',
-      icon: icons.MailOutlined
+      icon: icons.MailOutlined,
+      children: [
+        {
+          id: 'responseMail',
+          title: <FormattedMessage id="보내는" />,
+          type: 'item',
+          url: '/apps/document/documentWrite'
+        },
+        {
+          id: 'responseMail',
+          title: <FormattedMessage id="받는" />,
+          type: 'item',
+          url: '/apps/document/documentWrite'
+        },
+      ]
     },
     {
       id: 'chat',
@@ -112,7 +133,28 @@ const applications = {
       icon: icons.PartitionOutlined
     },
 
-    // 재인님
+
+
+
+    {
+      id: 'profile',
+      title: <FormattedMessage id="profile" />,
+      type: 'collapse',
+      icon: icons.UserOutlined,
+      children: [
+        {
+          id: 'user-profile',
+          title: <FormattedMessage id="내정보 수정" />,
+          type: 'item',
+          url: '/apps/profiles/user/personal',
+          breadcrumbs: false
+
+        },
+      ]
+    }, // 여기까지 변겅
+
+   // 재인님
+   ids.match('inV') ?
     {
       id: 'invoice',
       title: <FormattedMessage id="급여관리" />,
@@ -135,24 +177,11 @@ const applications = {
           url: '/apps/invoice/edit/1'
         }
       ]
-    },
-
-    {
-      id: 'profile',
-      title: <FormattedMessage id="profile" />,
-      type: 'collapse',
-      icon: icons.UserOutlined,
-      children: [
-        {
-          id: 'user-profile',
-          title: <FormattedMessage id="내정보 수정" />,
-          type: 'item',
-          url: '/apps/profiles/user/personal',
-          breadcrumbs: false
-
-        },
-      ]
-    }, // 여기까지 변겅
+    } : 
+    {        
+    }
+,
+    ids.match('perC') ?
 
     {
       //인사-사원관리 추가 (2023-04-27 김희수)
@@ -203,6 +232,11 @@ const applications = {
         // }
       ]
     }
+    : 
+    {
+    }
+
+
   ]
 };
 

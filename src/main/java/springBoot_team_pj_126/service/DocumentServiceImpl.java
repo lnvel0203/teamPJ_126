@@ -201,6 +201,60 @@ public class DocumentServiceImpl implements DocumentService{
 	}
 	
 	
+	@Override
+	public List<DocumentDTO> getApprovalPendingList(String id) 
+			throws ServletException, IOException {
+		System.out.println("서비스 - getApprovalPendingList");
+		
+		List<DocumentDTO> list = mapper.approvalPendingList(id);
+		System.out.println("servicelist"+list);
+		
+		return list;
+	}
+	
+	@Override
+	public List<DocumentDTO> getApprovalScheduledList(String id) 
+			throws ServletException, IOException {
+		System.out.println("서비스 - getApprovalScheduledList");
+		
+		List<DocumentDTO> list = mapper.approvalScheduledList(id);
+		System.out.println("servicelist"+list);
+		
+		return list;
+	}
+	
+	@Override
+	public List<DocumentDTO> getApprovalCompletedList(String id) 
+			throws ServletException, IOException {
+		System.out.println("서비스 - getApprovalCompletedList");
+		
+		List<DocumentDTO> list = mapper.approvalCompletedList(id);
+		System.out.println("servicelist"+list);
+		
+		return list;
+	}
+	
+	@Override
+	public List<DocumentDTO> getDraftDocumentList(String id) 
+			throws ServletException, IOException {
+		System.out.println("서비스 - getDraftDocumentList");
+		
+		List<DocumentDTO> list = mapper.draftDocumentList(id);
+		System.out.println("servicelist"+list);
+		
+		return list;
+	}
+	
+	@Override
+	public List<DocumentDTO> getRejectionDocumentList(String id) 
+			throws ServletException, IOException {
+		System.out.println("서비스 - getRejectionDocumentList");
+		
+		List<DocumentDTO> list = mapper.rejectionDocumentList(id);
+		System.out.println("servicelist"+list);
+		
+		return list;
+	}
 	
 	
 //	@Override

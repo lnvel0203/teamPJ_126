@@ -1,7 +1,5 @@
 package springBoot_team_pj_126.dto;
 
-import java.util.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -15,7 +13,7 @@ public class DeptDTO {
    @Id
    private int deptid;
    private String deptname;
-   private Date deptdate;
+   private String deptdate;
    private String deptreadername;
 
 }

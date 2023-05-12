@@ -6,10 +6,12 @@ import { Grid, InputLabel, FormHelperText, Stack, TextField } from '@mui/materia
 import MainCard from 'components/MainCard';
 import Info from './Info';
 
-const CreateDetail = ({ addId, onValuesChanged }) => {
+const CreateDetail = ({ addId, date, onValuesChanged }) => {
   // props 검증
   CreateDetail.propTypes = {
-    addId: PropTypes.string
+    addId: PropTypes.string,
+    date: PropTypes.instanceOf(Date).isRequired,
+    onValuesChanged: PropTypes.func.isRequired
   };
 
   // 돈 포맷
@@ -141,7 +143,7 @@ const CreateDetail = ({ addId, onValuesChanged }) => {
           // id 값이 없으면 함수를 실행하지 않음
           return;
         }
-        const response = await axios.get(`http://localhost:8081/members/salaryCreateInfo?id=${addId}`);
+        const response = await axios.get(`http://localhost:8081/members/salaryCreateInfo?id=${addId}&dateString=${date}`);
         // 총 분에서 주 당 시간으로 변경
         setWeeklyWorkingHours(response.data.weeklyWorkingHours / 60 / 4);
         setWeekendWorkingHours(response.data.weekendWorkingHours / 60);
@@ -150,7 +152,7 @@ const CreateDetail = ({ addId, onValuesChanged }) => {
       }
     }
     fetchData();
-  }, [addId]);
+  }, [addId, date]);
 
   // ============================================================================
   // creat.js로 totalAdditionalPay, totalInsurancePay, incomeTax 보내는 함수

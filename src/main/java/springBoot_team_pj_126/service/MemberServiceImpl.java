@@ -48,7 +48,8 @@ public class MemberServiceImpl implements MemberService{
 	
 // < 4월 28일 김희수 미승인 상태 변경 - 상태업데이트문 >	
 	@Override
-	public void editEmployee(UserDTO dto) throws ServletException, IOException {
+	public void editEmployee(UserDTO dto) 
+			throws ServletException, IOException {
 		System.out.println("서비스 - update");
 		mapper.editEmployee(dto);
 	}

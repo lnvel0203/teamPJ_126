@@ -34,8 +34,10 @@ public class AuthController {
       
       System.out.println("token : " + userAuthProvider.createToken(user.getId()));
       user.setToken(userAuthProvider.createToken(user.getId()));
-      
+     
       return ResponseEntity.ok(user);  // 새로운 JWT를 반환
+      
+     
    }
    
    @PostMapping("/register")

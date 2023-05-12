@@ -1,5 +1,6 @@
 // Import Axios Services
-import axios from 'axios';
+// import axios from 'axios';
+import { request } from '../../../utils/axios';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useMemo, useState, Fragment } from 'react';
 
@@ -92,10 +93,27 @@ const Cell = ({ value, row, setValue }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get('http://localhost:8081/department');
-        const deptData = response.data;
-        const deptNames = deptData.map((dept) => dept.deptname);
-        setDeptList(deptNames);
+
+        request(
+          'GET',
+          '/department'
+        ).then(response => {
+          const deptData = response.data;
+          const deptNames = deptData.map((dept) => dept.deptname);
+          setDeptList(deptNames);
+        })
+
+
+
+        // const response = await axios.get('http://localhost:8081/department');
+        // const deptData = response.data;
+        // const deptNames = deptData.map((dept) => dept.deptname);
+        // setDeptList(deptNames);
+
+
+
+
+
       } catch (error) {
         console.error(error);
       }
@@ -115,15 +133,29 @@ function handleEdit(rowData) {
   const { id, DeptName } = rowData;
   console.log(id, DeptName);
 
-  axios
-    .put(`http://localhost:8081/members/editDeptname/${id}/${DeptName}`)
-    .then(() => {
-      console.log('수정 성공');
-       window.location.reload(); 
-    })
-    .catch((error) => {
-      console.error('수정 실패', error);
-    });
+
+  request(
+    'PUT',
+    `/members/editDeptname/${id}/${DeptName}`
+  ).then(() => {
+    console.log('수정 성공');
+     window.location.reload(); 
+  })
+  .catch((error) => {
+    console.error('수정 실패', error);
+  });
+
+
+
+  // axios
+  //   .put(`http://localhost:8081/members/editDeptname/${id}/${DeptName}`)
+  //   .then(() => {
+  //     console.log('수정 성공');
+  //      window.location.reload(); 
+  //   })
+  //   .catch((error) => {
+  //     console.error('수정 실패', error);
+  //   });
 }
 
 
@@ -376,8 +408,25 @@ const CustomerListPage = () => {
   // 서버에서 회원 정보를 패치해옴
   const fetchUserData = useCallback(async () => {
     try {
-      const response = await axios.get('http://localhost:8081/members/position'); //컨트롤러 주소
-      setUserData(response.data);
+
+
+
+
+
+
+
+      request(
+        'GET',
+        '/members/position'
+      ).then(response => {
+        setUserData(response.data);
+      })
+
+
+
+
+      // const response = await axios.get('http://localhost:8081/members/position'); //컨트롤러 주소
+      // setUserData(response.data);
     } catch (error) {
       console.error(error);
     }
