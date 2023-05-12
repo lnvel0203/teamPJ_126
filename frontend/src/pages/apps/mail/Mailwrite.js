@@ -4,9 +4,9 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 const DocumentWritePage = () => {
   
-  const [title,setDocumentType] = useState('');
+  const [documentType,setDocumentType] = useState('');
   const [responser,setSecurityLevel] = useState('');
-
+  const [title, setTitle] = useState('');
   //const [approver, setApprover] = useState([]);
   const id = localStorage.getItem('id');
  
@@ -21,6 +21,10 @@ const DocumentWritePage = () => {
   const handleReAuthorChange = (event) => {
     setSecurityLevel(event.target.value);
     console.log('write로컬',localStorage.getItem("approver"))
+  };
+
+  const handleTitleChange = (event) => {
+    setTitle(event.target.value);
   };
 
   // useEffect(() => {
@@ -86,6 +90,7 @@ const DocumentWritePage = () => {
     // formData.append('file', selectedFile);
   
     const mailData = {
+      documentType:documentType,
       title:title,
       id:id,
       responser:responser,
@@ -149,7 +154,15 @@ const DocumentWritePage = () => {
         <br />
         <br />
         <br />
+
+        <div className="title-input-container">
+        <label htmlFor="document-title">제목: </label>
+  <input type="text" id="document-title" className="title-input" value={title} onChange={handleTitleChange} />
+  </div>
       </div>
+
+
+
       <div style={{ height: '450px', width: '700px' }}>
         <ReactQuill
           style={{ height: '350px' }}

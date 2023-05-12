@@ -33,7 +33,7 @@ import ScrollX from 'components/ScrollX';
 // import IconButton from 'components/@extended/IconButton';
 import { PopupTransition } from 'components/@extended/Transitions';
 import {
-  CSVExport,
+  //CSVExport,
   HeaderSort,
   IndeterminateCheckbox,
   //5월4일 김성훈 수정 삭제 요청 
@@ -87,7 +87,7 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,handl
     setGlobalFilter,
     //5월 4일 김성훈 수정
     //setSortBy,
-    selectedFlatRows
+    //selectedFlatRows
   } = useTable(
     {
       columns,
@@ -137,7 +137,7 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,handl
             <Button variant="contained" startIcon={<PlusOutlined />} onClick={handleAdd} size="small">
               메일 쓰기
             </Button>
-            <CSVExport data={selectedFlatRows.length > 0 ? selectedFlatRows.map((d) => d.original) : data} filename={'customer-list.csv'} />
+            {/* <CSVExport data={selectedFlatRows.length > 0 ? selectedFlatRows.map((d) => d.original) : data} filename={'customer-list.csv'} /> */}
           </Stack>
         </Stack>
 

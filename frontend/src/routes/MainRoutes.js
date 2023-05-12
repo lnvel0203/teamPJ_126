@@ -123,6 +123,9 @@ const DraftDocumentList = Loadable(lazy(() => import('pages/document/DraftDocume
 const Documentwrite = Loadable(lazy(() => import('pages/document/write')));
 const AttendanceList = Loadable(lazy(() => import('pages/attendance/AttendanceList')));
 const Mail = Loadable(lazy(() => import('pages/apps/mail/Mail')));
+const ReqMail = Loadable(lazy(() => import('pages/apps/mail/ReqMail')));
+const ResMail = Loadable(lazy(() => import('pages/apps/mail/ResMail')));
+
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -178,19 +181,15 @@ const MainRoutes = {
             {
               path: 'mail',
               element: <Mail />,
-              children: [
-                {
-                  path: 'backlogs',
-                  element: <AppKanbanBacklogs />
-                },
-                {
-                  path: 'board',
-                  element: <AppKanbanBoard />
-                }
-              ]
-
             },
-
+            {
+              path: 'reqMail',
+              element: <ReqMail />,
+            },
+            {
+              path: 'resMail',
+              element: <ResMail />,
+            },
 
             
             // {

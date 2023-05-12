@@ -1,5 +1,6 @@
 // Import Axios Services
-import axios from 'axios';
+//import axios from 'axios';
+import { request } from '../../utils/axios';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useMemo, useState, Fragment } from 'react';
 import { format } from 'date-fns';
@@ -338,8 +339,16 @@ const DfraftDocumentList = () => {
     const fetchUserData = useCallback(async () => {
       try {
         console.log(id)
-        const response = await axios.get('http://localhost:8081/members/DraftDocumentList/'+id);
-        setUserData(response.data);
+
+        request(
+          'GET',
+          '/members/DraftDocumentList/'+id
+        ).then((response) => {
+          setUserData(response.data);
+        })
+
+        // const response = await axios.get('http://localhost:8081/members/DraftDocumentList/'+id);
+
       } catch (error) {
         console.error(error);
       }

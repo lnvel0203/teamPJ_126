@@ -60,22 +60,27 @@ const applications = {
     {
       id: 'mail',
       title: <FormattedMessage id="mail" />,
-      type: 'item',
-      url: '/apps/mail',
+      type: 'collapse',
       icon: icons.MailOutlined,
       children: [
         {
-          id: 'responseMail',
-          title: <FormattedMessage id="보내는" />,
+          id: 'allMail',
+          title: <FormattedMessage id="전체 메일함" />,
           type: 'item',
-          url: '/apps/document/documentWrite'
+          url: '/apps/mail',
+        },
+        {
+          id: 'requesteMail',
+          title: <FormattedMessage id="보낸 메일함" />,
+          type: 'item',
+          url: '/apps/ReqMail'
         },
         {
           id: 'responseMail',
-          title: <FormattedMessage id="받는" />,
+          title: <FormattedMessage id="받은 메일함" />,
           type: 'item',
-          url: '/apps/document/documentWrite'
-        },
+          url: '/apps/ResMail'
+        }
       ]
     },
     {

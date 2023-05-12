@@ -13,6 +13,7 @@ public class MailDTO {
 
 	@Id
 	private int mailNo;
+	private String documentType;
 	private String id;
 	private String responser;
 	private String title;
