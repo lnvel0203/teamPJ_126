@@ -54,6 +54,16 @@ import { CloseOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-desi
 const handleClick = (no) => {
   //미승인 상태 사원 -> 승인상태로 변경 및 승인버튼 삭제
 
+    request(
+      'PUT',
+      `members/editEmployee/${no}`, no
+    ).then((response) => {
+      console.log(response.data); // logs the updated user data
+      window.location.reload(); // 자동 새로고침
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 
   request(
     'PUT',
@@ -66,17 +76,6 @@ const handleClick = (no) => {
     console.error(error);
   });
 
-
-
-  // axios
-  //   .put(`http://localhost:8081/members/editEmployee/${no}`, no)
-  //   .then((response) => {
-  //     console.log(response.data); // logs the updated user data
-  //     window.location.reload(); // 자동 새로고침
-  //   })
-  //   .catch((error) => {
-  //     console.error(error);
-  //   });
 };
 
 function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent }) {
@@ -336,8 +335,6 @@ const CustomerListPage = () => {
       ).then((response) => {
         setUserData(response.data);
       })
-      // const response = await axios.get('http://localhost:8081/members'); //컨트롤러 url로 변경
-      // setUserData(response.data);
     } catch (error) {
       console.error(error);
     }

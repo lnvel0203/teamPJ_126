@@ -10,6 +10,7 @@
 
 
 <select id="userinfo" resultType="springBoot_team_pj_126.dto.UserDTO">
+
 SELECT * FROM EMPLOYEES_TBL 
   WHERE id = #{id}
 </select>
@@ -22,6 +23,32 @@ SELECT * FROM EMPLOYEES_TBL
    WHERE ID=#{id, jdbcType=VARCHAR}
 </update>
 
+
+<!--SELECT e.* ,d.deptName, p.positionName
+   FROM employees_tbl e
+   LEFT join department_tbl d on e.deptid = d.deptid
+   LEFT join position_tbl p on e.positionid = p.positionid
+WHERE e.id = #{id}
+</select>
+
+<update id="photo">
+	UPDATE
+		EMPLOYEES_TBL
+	SET
+		PHOTO = #{photo}
+	WHERE
+		id = #{id}
+</update>
+
+<update id="infoupdate" parameterType="springBoot_team_pj_126.dto.UserDTO">
+  UPDATE EMPLOYEES_TBL
+   SET EMAIL=#{email},
+   ADDRESS=#{address},
+   HP=#{hp, jdbcType=VARCHAR}
+   WHERE ID=#{id, jdbcType=VARCHAR}
+</update>
+
+>>>>>>> 9ad79f736f97d3bb5120ef199e46192e37d8cd15
 <!-- 
 <select id="userinfo" resultType="springBoot_team_pj_126.dto.UserDTO">
 SELECT * FROM EMPLOYEES_TBL 

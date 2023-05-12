@@ -1,5 +1,6 @@
 package springBoot_team_pj_126.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import springBoot_team_pj_126.dto.UserDTO;
 import springBoot_team_pj_126.service.AttendanceService;
@@ -60,6 +62,7 @@ public class MypageController {
 		
 		return dto;
 
+
 	}
 	
 	
@@ -85,18 +88,47 @@ public class MypageController {
 	}
 
 
+
 	
-	// 내 정보 상세 업데이트
-	@PostMapping("/userInfoUpdate")
-	public int userInfoUpdate(@RequestBody UserDTO NewLists)
-			throws ServletException, IOException {
-		logger.info("MypageController - userInfoUpdate()");
+	//프로필 사진 업로드
+	@PostMapping("/mypage/{id}/photo")
+	public void photo(@PathVariable String id, MultipartFile file) throws Exception {
+		File uploadFile = new File("C:\\images\\", file.getOriginalFilename());
+		if (!uploadFile.exists()) {
+			uploadFile.mkdirs();
+		}
 		
-		System.out.println(" MypageController - userInfoUpdate");
-		System.out.println("DTO : " + NewLists);
+		file.transferTo(uploadFile);
 		
+
 		return 1;
 	  }
+
+
+		mypage.photo(id, "http://localhost:8081/images/" + file.getOriginalFilename());
+	}
+	
+	
+	@PostMapping("/userInfoUpdate/{id}")
+	public void userInfoUpdate( @PathVariable String id,@RequestBody UserDTO NewLists) {
+	    logger.info("MypageController - userInfoUpdate()");
+	   
+	    
+	    String email = NewLists.getEmail();
+	    String address = NewLists.getAddress();
+	    String hp = NewLists.getHp();
+
+	    UserDTO dto = new UserDTO();
+	    dto.setId(id);
+	    dto.setEmail(email);
+	    dto.setAddress(address);
+	    dto.setHp(hp);
+	    
+
+	    System.out.println("확인해봐" + dto);
+
+	    mypage.userInfoUpdate(dto);
+	}
 
 		
 }

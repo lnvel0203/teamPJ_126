@@ -136,6 +136,28 @@
     ]]>
 </update>
 
+<select id="getEmployeeNo" resultType="Integer">
+    select NO from Employees_tbl where id =#{id}
+</select>
+
+<select id="getDocument" resultType="springBoot_team_pj_126.dto.DocumentDTO">
+    select * from document_tbl where documentNO =#{documentNO}
+</select>
+
+<update id="documentApprove" parameterType="springBoot_team_pj_126.dto.DocumentDTO">
+    UPDATE Document_tbl
+    SET 
+        firstApproverState = #{firstApproverState}, 
+        secondApproverState = #{secondApproverState},
+        thirdApproverState = #{thirdApproverState},
+        fourthApproverState = #{fourthApproverState},
+        documentState = #{documentState}
+    WHERE documentNo = #{documentNo}
+</update>
+
+
+
+
 
 <!-- <insert id="insertMember" parameterType="com.example.react.dto.MemberDTO">
 	INSERT INTO mvc_member_tbl values((select nvl(max(id)+1,1)from mvc_member_tbl), #{password}, #{username},#{age},#{email},#{address},#{salary})

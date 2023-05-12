@@ -101,17 +101,6 @@ const ApexRedialBarChart = () => {
   const error = theme.palette.error.main;
 
   const fetchData = async () => {
-    
-
-
-
-    // try {
-    //   const response = await axios.get(`http://localhost:8081/members/attendanceList?id=${id}`);
-    //   const { earlyLeave, absence, unchecked, tardy } = response.data;
-    //   setSeries([tardy, earlyLeave, absence, unchecked]);
-    // } catch (error) {
-    //   console.error('Error fetching data:', error);
-    // }
 
 try {
       request(

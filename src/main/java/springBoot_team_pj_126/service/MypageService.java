@@ -20,12 +20,14 @@ public interface MypageService {
 	public UserDTO userinfo(String id) throws ServletException, IOException;
 
 	
+	
 	//내정보 수정 업데이트 
 	public void userInfoUpdate(UserDTO dto);
 
-	
-	
+	public void photo(String id, String absolutePath);
 
+	
+	
 //	public void insertMember(MemberDTO dto) throws ServletException, IOException;
 //	
 //	public void updateMember(MemberDTO dto) throws ServletException, IOException;
