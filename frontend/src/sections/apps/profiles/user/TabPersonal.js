@@ -15,9 +15,11 @@ import {
   FormHelperText,
   Grid,
   InputLabel,
+
   Stack,
   TextField
 } from '@mui/material';
+
 
 // third party
 import * as Yup from 'yup';
@@ -29,19 +31,6 @@ import { openSnackbar } from 'store/reducers/snackbar';
 
 import MainCard from 'components/MainCard';
 
-// assets
-// import { CloseOutlined } from '@ant-design/icons';
-
-// styles & constant
-//const ITEM_HEIGHT = 48;
-//const ITEM_PADDING_TOP = 8;
-//const MenuProps = {
- // PaperProps: {
-  //  style: {
- //     maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
-//    }
-//  }
-//};
 
 
 function useInputRef() {
@@ -51,8 +40,10 @@ function useInputRef() {
 // ==============================|| TAB - PERSONAL ||============================== //
 
 const TabPersonal = () => {
-  const id = localStorage.getItem('id');
-  console.log('id', id);
+
+
+  const id = localStorage.getItem("id");
+  console.log('id',id)
   const maxDate = new Date();
   maxDate.setFullYear(maxDate.getFullYear() - 18);
   const [hireDate, setHireDate] = useState('');
@@ -61,6 +52,7 @@ const TabPersonal = () => {
  
 
   const dispatch = useDispatch();
+  
 
   // # 추가 axios 요청 ==============================================================
   const [fetchedData, setFetchedData] = useState(null);
@@ -69,12 +61,12 @@ const TabPersonal = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get('http://localhost:8081/members/mypage/' + id);
+        const response = await axios.get('http://localhost:8081/members/mypage/'+id);
         setFetchedData(response.data);
         console.log("성공",response.data)
         console.log("입사일",response.data.hireDate)
         setHireDate(response.data.hireDate)
-        setHp(response.data.hp)
+        setName(response.data.name)
         format(new Date(hireDate), 'yyyy-MM-dd')
 
         setIsLoading(false); // 추가 폼 렌더링 관련
@@ -121,9 +113,7 @@ const TabPersonal = () => {
               name: fetchedData?.name || '',
               email: fetchedData?.email || '',
              // dob: fetchedData?.dob ? new Date(fetchedData.dob) : new Date(),
-              countryCode: fetchedData?.countryCode || '',
-              contact: fetchedData?.contact || '',
-              designation: fetchedData?.designation || '',
+               hp: fetchedData?.hp || '',
               address: fetchedData?.address || '',
               submit: null
             }}
@@ -157,7 +147,7 @@ const TabPersonal = () => {
               }
             }}
           >
-            {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+            {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting,  touched, values }) => (
               <form noValidate onSubmit={handleSubmit}>
                 <Box sx={{ p: 2.5 }}>
                   {/* Personal Information 시작 */}
@@ -216,8 +206,8 @@ const TabPersonal = () => {
 
                    
 
-                    {/* 입사일 시작 */}
-                    <Grid item xs={12} sm={6}>
+                      {/* 입사일 시작 */}
+                      <Grid item xs={12} sm={6}>
                       <Stack spacing={1.25}>
                         <InputLabel htmlFor="personal-hireDate">입사일</InputLabel>
                         {/* {console.log('values:', values)} */}
@@ -231,6 +221,7 @@ const TabPersonal = () => {
                           onChange={handleChange}
                           placeholder="hireDate"
                           autoFocus
+                          
                         />
                         {touched.hireDate && errors.hireDate && (
                           <FormHelperText error id="personal-hireDate-helper">
@@ -256,6 +247,7 @@ const TabPersonal = () => {
                           onChange={handleChange}
                           placeholder="phone"
                           autoFocus
+                          
                           
                         />
                         {touched.hp && errors.hp && (
