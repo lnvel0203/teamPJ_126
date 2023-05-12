@@ -4,12 +4,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Component;
@@ -132,6 +130,7 @@ public class DocumentServiceImpl implements DocumentService{
 		return list;
 	}
 	
+
 	@Override
 	public int getEmployeeNo(String id)
 			throws ServletException, IOException {
@@ -200,5 +199,7 @@ public class DocumentServiceImpl implements DocumentService{
 		mapper.documentApprove(dto);
 	}
 	
+
+
 
 }

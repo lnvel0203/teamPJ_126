@@ -54,16 +54,6 @@ import { CloseOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-desi
 const handleClick = (no) => {
   //미승인 상태 사원 -> 승인상태로 변경 및 승인버튼 삭제
 
-    request(
-      'PUT',
-      `members/editEmployee/${no}`, no
-    ).then((response) => {
-      console.log(response.data); // logs the updated user data
-      window.location.reload(); // 자동 새로고침
-    })
-    .catch((error) => {
-      console.error(error);
-    });
 
   request(
     'PUT',
