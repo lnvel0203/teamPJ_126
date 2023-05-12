@@ -94,41 +94,41 @@ public class MypageServiceImpl implements MypageService{
 	}
 	
 	
-	
-//	@Override
-//	public void insertMember(MemberDTO dto) throws ServletException, IOException {
-//		System.out.println("서비스 - insert");
-//		
-//		mapper.insertMember(dto);
-//	}
-//
-//	@Override
-//	public void updateMember(MemberDTO dto) throws ServletException, IOException {
-//		System.out.println("서비스 - update");
-//		mapper.updateMember(dto);
-//	}
-//
-//	@Override
-//	public void deleteMember(int id) throws ServletException, IOException {
-//		System.out.println("서비스 - delete");
-//		mapper.deleteById(id);
-//	}
-//
-//	@Override
-//	public MemberDTO selectMember(MemberDTO dto) throws ServletException, IOException {
-//		System.out.println("서비스 - select");
-//		
-//		
-//		Map<String, Object> map = new HashMap<String, Object>();
-//
-//		map.put("id", dto.getId());
-//		map.put("password", dto.getPassword());
-//		
-//		MemberDTO dot = mapper.findById(map);
-//		if(dot !=null) {
-//			System.out.println("성공");
-//		}
-//		return dot;
-//	}
+//	
+////	@Override
+////	public void insertMember(MemberDTO dto) throws ServletException, IOException {
+////		System.out.println("서비스 - insert");
+////		
+////		mapper.insertMember(dto);
+////	}
+////
+////	@Override
+////	public void updateMember(MemberDTO dto) throws ServletException, IOException {
+////		System.out.println("서비스 - update");
+////		mapper.updateMember(dto);
+////	}
+////
+////	@Override
+////	public void deleteMember(int id) throws ServletException, IOException {
+////		System.out.println("서비스 - delete");
+////		mapper.deleteById(id);
+////	}
+////
+////	@Override
+////	public MemberDTO selectMember(MemberDTO dto) throws ServletException, IOException {
+////		System.out.println("서비스 - select");
+////		
+////		
+////		Map<String, Object> map = new HashMap<String, Object>();
+////
+////		map.put("id", dto.getId());
+////		map.put("password", dto.getPassword());
+////		
+////		MemberDTO dot = mapper.findById(map);
+////		if(dot !=null) {
+////			System.out.println("성공");
+////		}
+////		return dot;
+////	}
 
 }

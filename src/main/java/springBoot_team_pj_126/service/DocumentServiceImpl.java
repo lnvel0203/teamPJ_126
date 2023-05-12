@@ -130,74 +130,74 @@ public class DocumentServiceImpl implements DocumentService{
 		return list;
 	}
 	
-
-	@Override
-	public int getEmployeeNo(String id)
-			throws ServletException, IOException {
-		
-		return mapper.getEmployeeNo(id);
-		
-	}
-	
-	@Override
-    public DocumentDTO getDocument(int documentNo)
-    		throws ServletException, IOException {
-		
-        DocumentDTO document = mapper.getDocument(documentNo);
-        
-        return document;
-    }
-    
-	
-
-
-	@Override
-	public int getApproverCount(DocumentDTO dto) 
-			throws ServletException, IOException {
-		
-		int count = 0;
-	    if (dto.getFirstApproverNo() != null) {
-	        count++;
-	    }
-	    if (dto.getSecondApproverNo() != null) {
-	        count++;
-	    }
-	    if (dto.getThirdApproverNo() != null) {
-	        count++;
-	    }
-	    if (dto.getFourthApproverNo() != null) {
-	        count++;
-	    }
-	    return count;
-        
-    }
-		
-	@SuppressWarnings("unlikely-arg-type")
-	@Override
-	public int getApproverOrder(DocumentDTO dto, int no) 
-			throws ServletException, IOException {
-		
-	    if (no == dto.getFirstApproverNo()) {
-            return 1;
-        } else if (no == dto.getSecondApproverNo()) {
-            return 2;
-        } else if (no == dto.getThirdApproverNo()) {
-            return 3;
-        } else if (no == dto.getFourthApproverNo()) {
-            return 4;
-        } else {
-            return -1; // 현재 사용자가 결재자 목록에 없는 경우
-        }
-	    
-	}
-
-
-	@Override
-	public void documentApprove(DocumentDTO dto) 
-			throws ServletException, IOException {
-
-		mapper.documentApprove(dto);
-	}
+//
+//	@Override
+//	public int getEmployeeNo(String id)
+//			throws ServletException, IOException {
+//		
+//		return mapper.getEmployeeNo(id);
+//		
+//	}
+//	
+//	@Override
+//    public DocumentDTO getDocument(int documentNo)
+//    		throws ServletException, IOException {
+//		
+//        DocumentDTO document = mapper.getDocument(documentNo);
+//        
+//        return document;
+//    }
+//    
+//	
+//
+//
+//	@Override
+//	public int getApproverCount(DocumentDTO dto) 
+//			throws ServletException, IOException {
+//		
+//		int count = 0;
+//	    if (dto.getFirstApproverNo() != null) {
+//	        count++;
+//	    }
+//	    if (dto.getSecondApproverNo() != null) {
+//	        count++;
+//	    }
+//	    if (dto.getThirdApproverNo() != null) {
+//	        count++;
+//	    }
+//	    if (dto.getFourthApproverNo() != null) {
+//	        count++;
+//	    }
+//	    return count;
+//        
+//    }
+//		
+//	@SuppressWarnings("unlikely-arg-type")
+//	@Override
+//	public int getApproverOrder(DocumentDTO dto, int no) 
+//			throws ServletException, IOException {
+//		
+//	    if (no == dto.getFirstApproverNo()) {
+//            return 1;
+//        } else if (no == dto.getSecondApproverNo()) {
+//            return 2;
+//        } else if (no == dto.getThirdApproverNo()) {
+//            return 3;
+//        } else if (no == dto.getFourthApproverNo()) {
+//            return 4;
+//        } else {
+//            return -1; // 현재 사용자가 결재자 목록에 없는 경우
+//        }
+//	    
+//	}
+//
+//
+//	@Override
+//	public void documentApprove(DocumentDTO dto) 
+//			throws ServletException, IOException {
+//
+//		mapper.documentApprove(dto);
+//	}
 	
 
 
