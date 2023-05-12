@@ -17,7 +17,7 @@ public interface DocumentMapper {
 	
 	public DocumentDTO documentDetail(int documentNo);
 	
-	public List<UserDTO> findApproverByNo(List<Long> approverNo);
+	public List<UserDTO> findApproverByNo(List<Long> approverNo, int documentNo);
 	
 	public void updateDocument(DocumentDTO dto);
 	
@@ -40,6 +40,8 @@ public interface DocumentMapper {
 	public int getApproverOrder(DocumentDTO dto, int no);
 	
 	public void documentApprove(DocumentDTO dto);
+	
+	public void documentRejection(DocumentDTO dto);
 	
 }
 

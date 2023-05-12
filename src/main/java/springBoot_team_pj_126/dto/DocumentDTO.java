@@ -28,13 +28,11 @@ public class DocumentDTO {
     private String retentionPeriod;
     private String securityLevel;
     private String content;
+    private String rejectionReason;
     
     private Integer firstApproverNo;
-    
     private Integer secondApproverNo;
-    
     private Integer thirdApproverNo;
-    
     private Integer fourthApproverNo;
     
     private String firstApproverState; 

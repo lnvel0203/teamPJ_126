@@ -14,27 +14,31 @@ const DocumentDetail = () => {
   const [approver, setApprover] = useState([]);
   const [content, setContent] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
-  //const [filePath,setFilePath] = useState(null);
   const id = localStorage.getItem('id');
   const [title, setTitle] = useState('');
   const [firstApproverNo, setFirstApproverNo] = useState(null);
   const [secondApproverNo, setSecondApproverNo] = useState(null);
   const [thirdApproverNo, setThirdApproverNo] = useState(null);
   const [fourthApproverNo, setFourthApproverNo] = useState(null);
+
+  const [firstApproverState, setFirstApproverState] = useState(null);
+  const [secondApproverState, setSecondApproverState] = useState(null);
+  const [thirdApproverState, setThirdApproverState] = useState(null);
+  const [fourthApproverState, setFourthApproverState] = useState(null);
+  const [rejectionReason, setRejectionReason] = useState(null);
+
+
   const [firstApproverId, setFirstApproverId] = useState(null);
   const [secondApproverId, setSecondApproverId] = useState(null);
   const [thirdApproverId, setThirdApproverId] = useState(null);
   const [fourthApproverId, setFourthApproverId] = useState(null);
+  const [documentState, setDocumentState] = useState(null);
   const [showEditCancelButtons, setShowEditCancelButtons] = useState(false);
   const [showFilePath, setShowFilePath] = useState(false);
   const [filePath , setFilePath] = useState("");
   
-
   
 
-
-  
-  
   function useQuery() {
     return new URLSearchParams(useLocation().search);
   }
@@ -60,34 +64,41 @@ const DocumentDetail = () => {
       setTitle(data.title);
       setContent(data.content);
       setFilePath(data.filePath);
+      setDocumentState(data.documentState);
+      if (data.rejectionReason) {
+        setRejectionReason(data.rejectionReason);
+      }
     } catch (error) {
       console.error(error);
     }
   };
 
-  
+  console.log(rejectionReason)
 
   const fetchApproversInfo = async (approverNos) => {
     try {
       const response = await axios.get("http://localhost:8081/members/approverInfo", {
         params: {
           approverNos: approverNos.join(","),
+          documentNo: documentNo,
         },
       });
-        if (response.data[0]) {
-            setFirstApproverId(response.data[0].id)
-        }
-        if (response.data[1]) {
-            setSecondApproverId(response.data[1].id)
-        }
-        if (response.data[2]) {
-            setThirdApproverId(response.data[2].id);
-        }
-        if (response.data[3]) {
-            setFourthApproverId(response.data[3].id);
-        }
-      console.log('axios.get(http://localhost:8081/members/approverInfo',response.data)
-      console.log(response.data[0].id)
+      if (response.data[0]) {
+        setFirstApproverId(response.data[0].id);
+        setFirstApproverState(response.data[0].firstApproverState); // Set firstApproverState
+      }
+      if (response.data[1]) {
+        setSecondApproverId(response.data[1].id);
+        setSecondApproverState(response.data[1].secondApproverState); // Set secondApproverState
+      }
+      if (response.data[2]) {
+        setThirdApproverId(response.data[2].id);
+        setThirdApproverState(response.data[2].thirdApproverState); // Set thirdApproverState
+      }
+      if (response.data[3]) {
+        setFourthApproverId(response.data[3].id);
+        setFourthApproverState(response.data[3].fourthApproverState); // Set fourthApproverState
+      }
       return response.data;
       
     } catch (error) {
@@ -105,19 +116,16 @@ const DocumentDetail = () => {
     ].filter((no) => no !== null);
 
     if (approverIds.includes(id)) {
-        console.log("아이디 포함됨")
-        console.log("approverIDs배열",approverIds)
       setShowEditCancelButtons(true);
       setShowFilePath(true);
     } else {
-        console.log("아이디 포함 안됨")
-        console.log("approverIDs배열",approverIds)
       setShowEditCancelButtons(false);
       setShowFilePath(false);
     }
   }, [firstApproverId, secondApproverId, thirdApproverId, fourthApproverId, id]);
   
   useEffect(() => {
+
     const fetchAllApproversInfo = async () => {
       const approverNos = [
         firstApproverNo,
@@ -125,10 +133,9 @@ const DocumentDetail = () => {
         thirdApproverNo,
         fourthApproverNo,
       ].filter((no) => no !== null);
-  
+
       if (approverNos.length > 0) {
         const approversInfo = await fetchApproversInfo(approverNos);
-        console.log('approversInfo',approversInfo)
         setApprover(approversInfo);
       }
     };
@@ -136,44 +143,21 @@ const DocumentDetail = () => {
     if (firstApproverNo || secondApproverNo || thirdApproverNo || fourthApproverNo) {
       fetchAllApproversInfo();
     }
-  }, [firstApproverNo, secondApproverNo, thirdApproverNo, fourthApproverNo]);
+    
+  }, [firstApproverNo, secondApproverNo, thirdApproverNo, fourthApproverNo,]);
   
-
 
 
   useEffect(() => {
     fetchData();
-    console.log('useEffect실행')
-    console.log('다큐타입',documentType)
   }, [documentType,author,retentionPeriod,securityLevel]);
 
   const handleDocumentTypeChange = (event) => {
     setDocumentType(event.target.value);
   };
   
-  useEffect(() => {
-    console.log('setFirstApproverId:', firstApproverId);
-  }, [firstApproverId]);
-
-  useEffect(() => {
-    console.log('setSecondApproverId:', secondApproverId);
-  }, [secondApproverId]);
-
-  useEffect(() => {
-    if (thirdApproverId !== null) {
-      console.log('setThirdApproverId:', thirdApproverId);
-    }
-  }, [thirdApproverId]);
-  
-  useEffect(() => {
-    if (fourthApproverId !== null) {
-      console.log('setFourthApproverId:', fourthApproverId);
-    }
-  }, [fourthApproverId]);
-
   const handleAuthorChange = (event) => {
     setAuthor(event.target.value);
-    console.log("id",{id})
   };
 
   const handleRetentionPeriodChange = (event) => {
@@ -182,7 +166,6 @@ const DocumentDetail = () => {
 
   const handleSecurityLevelChange = (event) => {
     setSecurityLevel(event.target.value);
-    console.log('write로컬',localStorage.getItem("approver"))
   };
 
   const handleAddButtonClick = () => {
@@ -193,14 +176,13 @@ const DocumentDetail = () => {
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     setSelectedFile(file);
-    console.log('Selected file:', file);
     // Add logic to upload file to server or do something with it
   };  
 
   useEffect(() => {
     const storedApprover = JSON.parse(localStorage.getItem('approver')) || [];
+    console.log('stroedApprover',storedApprover)
     setApprover(storedApprover);
-    console.log(storedApprover)
   }, [localStorage.getItem('approver')]);
 
   useEffect(() => {
@@ -257,53 +239,59 @@ const DocumentDetail = () => {
     'background'
   ];
 
+  //수정하기 
   const handleUpdateDocument = async (event) => { 
-    console.log('수정버튼클릭')
-    event.preventDefault();
-    
-    const storedApprover = JSON.parse(localStorage.getItem('approver')) || [];
-    setApprover(storedApprover);
-    const formData = new FormData();
-    storedApprover.forEach((apv, index) => {
-    formData.append(`storedApprover${index}`, JSON.stringify(apv));
-    // Add approver number to formData
-    formData.append(`approverNo${index}`, apv.no);
-  });
-    
-    formData.append('documentNo',documentNo);
-    formData.append('id',id);
-    formData.append('documentType', documentType);
-    formData.append('author', author);
-    formData.append('retentionPeriod', retentionPeriod);
-    formData.append('securityLevel', securityLevel);
-    formData.append('title', title);
-    formData.append('content', content); 
 
-    storedApprover.forEach((apv, index) => {
-      formData.append(`storedApprover${index}`, JSON.stringify(apv));
-    });
-  
-    if (selectedFile) {
-      formData.append('fileData', selectedFile, selectedFile.name);
-    }
+    const result = window.confirm('수정 하시겠습니까 ?');
+    if(result) {
+      if(documentState=='반려' || documentState=='임시저장') {
+                event.preventDefault();
+              const storedApprover = JSON.parse(localStorage.getItem('approver')) || [];
+              setApprover(storedApprover);
+              const formData = new FormData();
+              storedApprover.forEach((apv, index) => {
+              formData.append(`storedApprover${index}`, JSON.stringify(apv));
+              // Add approver number to formData
+              formData.append(`approverNo${index}`, apv.no);
+            });
+              
+              formData.append('documentNo',documentNo);
+              formData.append('id',id);
+              formData.append('documentType', documentType);
+              formData.append('author', author);
+              formData.append('retentionPeriod', retentionPeriod);
+              formData.append('securityLevel', securityLevel);
+              formData.append('title', title);
+              formData.append('content', content); 
 
-    for (const [key, value] of formData.entries()) {
-      console.log('aasdlf;kajdsjlk;',`${key}: ${value}`);
-    }
-    console.log('selectedFile',selectedFile)
-    console.log("전송시작")
-  
-    try {
-      const response = await axios.post('http://localhost:8081/members/updateDocument', formData);
-      console.log('Update success:', response.data);
-      console.log("성공한듯 ? ")
-      navigate('/apps/document/documentList', { state: { id: id } });
-      
-      // 이후 처리 (예: 페이지 이동 등)
-    } catch (error) {
-      console.log("되겠냐고 ㅋ ");
-      console.error('Insert error:', error);
-      // 이후 처리 (예: 에러 메시지 표시 등)
+              storedApprover.forEach((apv, index) => {
+                formData.append(`storedApprover${index}`, JSON.stringify(apv));
+              });
+            
+              if (selectedFile) {
+                formData.append('fileData', selectedFile, selectedFile.name);
+              }
+
+              for (const [key, value] of formData.entries()) {
+                console.log('전송할파일formData',`${key}: ${value}`);
+              }
+              console.log("전송시작")
+            
+              try {
+                const response = await axios.post('http://localhost:8081/members/updateDocument', formData);
+                console.log('Update success:', response.data);
+                navigate('/apps/document/documentList', { state: { id: id } });
+                
+                // 이후 처리 (예: 페이지 이동 등)
+              } catch (error) {
+                console.log("되겠냐고 ㅋ ");
+                console.error('Insert error:', error);
+                // 이후 처리 (예: 에러 메시지 표시 등)
+              }
+            }
+            else {
+              window.alert("진행중이거나,완료된 문서는 수정할 수 없습니다.")
+            }
     }
   };
 
@@ -315,6 +303,7 @@ const DocumentDetail = () => {
             console.log(id)
             await axios.post('http://localhost:8081/members/approve/'+id+'/'+documentNo);
             window.alert('결재승인 되었습니다')
+            window.location.reload();
             // 
         } catch(error) {
             console.error('Error:',error)
@@ -334,7 +323,7 @@ const DocumentDetail = () => {
         const rejectionReason = window.prompt('반려 사유를 입력해주세요');
         if (rejectionReason) {
           try {
-            await axios.post('http://localhost:8081/members/addRejectionReason', { reason: rejectionReason,id:id});
+            await axios.post('http://localhost:8081/members/addRejectionReason/'+rejectionReason+'/'+id+'/'+documentNo);
             window.alert('반려처리 되었습니다')
           } catch (error) {
             console.error('Error:', error);
@@ -432,10 +421,10 @@ const DocumentDetail = () => {
             <td className="col-5">{approver[3] ? approver[3].positionName : ""}</td>
           </tr>
           <tr className="tr-2">
-            <td className="col-2"></td>
-            <td className="col-3"></td>
-            <td className="col-4"></td>
-            <td className="col-5"></td>
+            <td className="col-2">{firstApproverState === "결재완료" ? firstApproverState : ""}</td>
+            <td className="col-3">{secondApproverState === "결재완료" ? secondApproverState : ""}</td>
+            <td className="col-4">{thirdApproverState === "결재완료" ? thirdApproverState : ""}</td>
+            <td className="col-5">{fourthApproverState === "결재완료" ? fourthApproverState : ""}</td>
           </tr>
 
 
