@@ -105,15 +105,17 @@
     select * from document_tbl where documentNo =#{documentNo}
 </select>
 
-<select id="findApproverByNo" parameterType="java.util.List" resultType="springBoot_team_pj_126.dto.UserDTO">
-    SELECT e.*, d.deptname, p.positionname
+<select id="findApproverByNo" parameterType="map" resultType="springBoot_team_pj_126.dto.UserDTO">
+    SELECT e.*, d.deptname, p.positionname, doc.firstApproverState, doc.secondApproverState, doc.thirdApproverState, doc.fourthApproverState
     FROM EMPLOYEES_TBL e
     JOIN DEPARTMENT_TBl d ON e.DEPTID = d.DEPTID
     JOIN POSITION_TBL p ON e.POSITIONID = p.POSITIONID
+    JOIN DOCUMENT_TBL doc ON e.NO = doc.firstApproverNo OR e.NO = doc.secondApproverNo OR e.NO = doc.thirdApproverNo OR e.NO = doc.fourthApproverNo
     WHERE e.NO IN
-    <foreach item="approverNo" collection="list" open="(" separator="," close=")">
-        #{approverNo}
+    <foreach item="item" collection="approverNo" open="(" separator="," close=")">
+        #{item}
     </foreach>
+    AND doc.documentNo = #{documentNo}
 </select>
 
 <update id="updateDocument" parameterType="springBoot_team_pj_126.dto.DocumentDTO">
@@ -135,6 +137,41 @@
             documentNo = #{documentNo}
     ]]>
 </update>
+
+<select id="getEmployeeNo" resultType="Integer">
+    select NO from Employees_tbl where id =#{id}
+</select>
+
+<select id="getDocument" resultType="springBoot_team_pj_126.dto.DocumentDTO">
+    select * from document_tbl where documentNO =#{documentNO}
+</select>
+
+<update id="documentApprove" parameterType="springBoot_team_pj_126.dto.DocumentDTO">
+    UPDATE Document_tbl
+    SET 
+        firstApproverState = #{firstApproverState}, 
+        secondApproverState = #{secondApproverState},
+        thirdApproverState = #{thirdApproverState},
+        fourthApproverState = #{fourthApproverState},
+        documentState = #{documentState},
+        rejectionReason = #{rejectionReason}
+    WHERE documentNo = #{documentNo}
+</update>
+
+<update id="documentRejection" parameterType="springBoot_team_pj_126.dto.DocumentDTO">
+    UPDATE Document_tbl
+    SET 
+        firstApproverState = #{firstApproverState}, 
+        secondApproverState = #{secondApproverState},
+        thirdApproverState = #{thirdApproverState},
+        fourthApproverState = #{fourthApproverState},
+        documentState = #{documentState},
+        rejectionReason = #{rejectionReason}
+    WHERE documentNo = #{documentNo}
+</update>
+
+
+
 
 
 <!-- <insert id="insertMember" parameterType="com.example.react.dto.MemberDTO">

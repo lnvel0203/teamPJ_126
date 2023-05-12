@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Component;
@@ -17,7 +19,6 @@ import org.springframework.ui.Model;
 import springBoot_team_pj_126.dao.DocumentMapper;
 import springBoot_team_pj_126.dao.MemberMapper;
 import springBoot_team_pj_126.dto.DocumentDTO;
-import springBoot_team_pj_126.dto.UserDTO;
 import springBoot_team_pj_126.dto.UserDTO;
 
 
@@ -59,10 +60,10 @@ public class DocumentServiceImpl implements DocumentService{
 	}
 
 	@Override
-	public List<UserDTO> findApproverByNo(List<Long> approverNo) 
+	public List<UserDTO> findApproverByNo(List<Long> approverNo, int documentNo) 
 			throws ServletException, IOException {
 		
-		List<UserDTO> list = mapper.findApproverByNo(approverNo);
+		List<UserDTO> list = mapper.findApproverByNo(approverNo, documentNo);
 		return list;
 	}
 
@@ -137,7 +138,7 @@ public class DocumentServiceImpl implements DocumentService{
 		
 		return mapper.getEmployeeNo(id);
 		
-	}
+  }
 	
 	@Override
     public DocumentDTO getDocument(int documentNo)
@@ -197,6 +198,14 @@ public class DocumentServiceImpl implements DocumentService{
 			throws ServletException, IOException {
 
 		mapper.documentApprove(dto);
+	}
+
+
+	@Override
+	public void documentRejection(DocumentDTO dto) 
+			throws ServletException, IOException {
+		
+		mapper.documentRejection(dto);
 	}
 	
 

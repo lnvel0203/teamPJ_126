@@ -46,6 +46,10 @@ public class UserDTO {
 	
 	// 지각
 	private int tardy;
+	private String firstApproverState; 
+    private String secondApproverState;
+    private String thirdApproverState; 
+    private String fourthApproverState;
 
 
 }
