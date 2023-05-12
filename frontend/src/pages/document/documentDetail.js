@@ -74,18 +74,18 @@ const DocumentDetail = () => {
           approverNos: approverNos.join(","),
         },
       });
-        console.log('resdata0',response.data[0].id)
-        console.log('resdata1',response.data[1].id)
-        console.log('resdata2',response.data[2].id)
-        setFirstApproverId(response.data[0].id)
-        console.log('setfirst',firstApproverId)
-        setSecondApproverId(response.data[1].id)
+        if (response.data[0]) {
+            setFirstApproverId(response.data[0].id)
+        }
+        if (response.data[1]) {
+            setSecondApproverId(response.data[1].id)
+        }
         if (response.data[2]) {
             setThirdApproverId(response.data[2].id);
-          }
-          if (response.data[3]) {
+        }
+        if (response.data[3]) {
             setFourthApproverId(response.data[3].id);
-          }
+        }
       console.log('axios.get(http://localhost:8081/members/approverInfo',response.data)
       console.log(response.data[0].id)
       return response.data;
@@ -128,6 +128,7 @@ const DocumentDetail = () => {
   
       if (approverNos.length > 0) {
         const approversInfo = await fetchApproversInfo(approverNos);
+        console.log('approversInfo',approversInfo)
         setApprover(approversInfo);
       }
     };
@@ -306,11 +307,44 @@ const DocumentDetail = () => {
     }
   };
 
-  const handleApprovalButtonClick = () => {
+  const handleApprovalButtonClick = async () => {
+    const result = window.confirm('결재승인 하시겠습니까 ?');
+    if(result) {
+        console.log('승인')
+        try {
+            console.log(id)
+            await axios.post('http://localhost:8081/members/approve/'+id+'/'+documentNo);
+            window.alert('결재승인 되었습니다')
+            // 
+        } catch(error) {
+            console.error('Error:',error)
+        }
+    } else {
+        console.log('취소')
+    }
     // 결재 처리 로직
   };
 
-  const handleRejectionButtonClick = () => {
+  
+
+  const handleRejectionButtonClick = async  () => {
+    const result = window.confirm('반려하시겠습니까 ?');
+
+    if(result) {
+        const rejectionReason = window.prompt('반려 사유를 입력해주세요');
+        if (rejectionReason) {
+          try {
+            await axios.post('http://localhost:8081/members/addRejectionReason', { reason: rejectionReason,id:id});
+            window.alert('반려처리 되었습니다')
+          } catch (error) {
+            console.error('Error:', error);
+          }
+        } else {
+          window.alert('반려 사유를 입력해야합니다.');
+        }
+      } else {
+        console.log('취소');
+      }
     // 반려 처리 로직
   };
 
@@ -398,10 +432,10 @@ const DocumentDetail = () => {
             <td className="col-5">{approver[3] ? approver[3].positionName : ""}</td>
           </tr>
           <tr className="tr-2">
-            <td className="col-2">{approver[0] ? "(결재란)" : ""}</td>
-            <td className="col-3">{approver[1] ? "(결재란)" : ""}</td>
-            <td className="col-4">{approver[2] ? "(결재란)" : ""}</td>
-            <td className="col-5">{approver[3] ? "(결재란)" : ""}</td>
+            <td className="col-2"></td>
+            <td className="col-3"></td>
+            <td className="col-4"></td>
+            <td className="col-5"></td>
           </tr>
 
 
@@ -417,15 +451,15 @@ const DocumentDetail = () => {
 
             {showFilePath ? (
             <>
-            <td colSpan="4" className="file">
-              <input type="file" onChange={handleFileUpload} />
-            </td>
+                <td colSpan="4" className="file">
+                    <span><a>{filePath}</a></span>
+                </td>
             </>
             ) : (
                 <>
-                    <td colSpan="4" className="file">
-                    <span>{filePath}</span>
-                    </td>
+                <td colSpan="4" className="file">
+                    <input type="file" onChange={handleFileUpload} />
+                </td>
                 </>
             )}
             
