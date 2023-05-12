@@ -9,6 +9,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.ui.Model;
+
+import springBoot_team_pj_126.dto.EmployeeSalaryDTO;
 import springBoot_team_pj_126.dto.UserDTO;
 
 
@@ -18,14 +20,17 @@ public interface MypageService {
 			throws ServletException, IOException;
 		
 	public UserDTO userinfo(String id) throws ServletException, IOException;
-
 	
 	
 	//내정보 수정 업데이트 
 	public void userInfoUpdate(UserDTO dto);
 
 	public void photo(String id, String absolutePath);
+	
+	// 급여 상세 가져오기
+	
 
+	public EmployeeSalaryDTO mySalary(String empId);
 	
 	
 //	public void insertMember(MemberDTO dto) throws ServletException, IOException;

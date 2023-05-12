@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 
 import springBoot_team_pj_126.dao.AttendanceMapper;
 import springBoot_team_pj_126.dao.MypageMapper;
+import springBoot_team_pj_126.dto.EmployeeSalaryDTO;
 import springBoot_team_pj_126.dto.UserDTO;
 
 
@@ -60,21 +61,6 @@ public class MypageServiceImpl implements MypageService{
 		return dto;
 		
 	}
-
-	@Override
-	public void userInfoUpdate(UserDTO dto) {
-	    System.out.println("서비스 - userInfoUpdate");
-	    System.out.println("NewLists  :" + dto);
-
-	     
-	    		
-	    mapper.infoupdate(dto);
-	    
-	    
-	   
-	}
-	
-	
 	
 	
 	//프로필 사진 저장
@@ -93,12 +79,18 @@ public class MypageServiceImpl implements MypageService{
 	    System.out.println("서비스 - userInfoUpdate");
 	    System.out.println("NewLists  :" + dto);
 
-	     
-	    		
 	    mapper.infoupdate(dto);
-	    
-	    
 	   
+	}
+	
+	// 급여 상세 가져오기
+	@Override
+	public EmployeeSalaryDTO mySalary(String empId) {
+		System.out.println("SalaryServiceImpl - invoiceDetail()");
+		
+		EmployeeSalaryDTO dto = mapper.mySalary(empId);
+		
+		return dto;
 	}
 	
 	
