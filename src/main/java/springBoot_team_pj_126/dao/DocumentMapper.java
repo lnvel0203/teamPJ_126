@@ -31,6 +31,16 @@ public interface DocumentMapper {
 	
 	public List<DocumentDTO> rejectionDocumentList(String id);
 	
+	public int getEmployeeNo(String id);
+	
+	public DocumentDTO getDocument(int documentNO);
+	
+	public int getApproverCount(DocumentDTO dto);
+	
+	public int getApproverOrder(DocumentDTO dto, int no);
+	
+	public void documentApprove(DocumentDTO dto);
+	
 }
 
 

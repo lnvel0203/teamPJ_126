@@ -322,14 +322,6 @@ const ApprovalPendingList = () => {
   // Fetch user data from the server
   const fetchUserData = useCallback(async () => {
     try {
-      // request(
-      //   'GET',
-      //   '/members/document/'+id
-      // ).then(response => {
-      //   setUserData(response.data);
-      // })
-      // const response = await axios.get('http://localhost:8081/members/document/'+id);
-      // setUserData(response.data);
       const response = await axios.get('http://localhost:8081/members/ApprovalPendingList/'+id);
       setUserData(response.data);
     } catch (error) {

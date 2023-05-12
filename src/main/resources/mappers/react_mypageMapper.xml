@@ -10,9 +10,21 @@
 
 
 <select id="userinfo" resultType="springBoot_team_pj_126.dto.UserDTO">
-SELECT * FROM EMPLOYEES_TBL 
-  WHERE id = #{id}
+SELECT e.* ,d.deptName, p.positionName
+   FROM employees_tbl e
+   LEFT join department_tbl d on e.deptid = d.deptid
+   LEFT join position_tbl p on e.positionid = p.positionid
+WHERE e.id = #{id}
 </select>
+
+<update id="photo">
+	UPDATE
+		EMPLOYEES_TBL
+	SET
+		PHOTO = #{photo}
+	WHERE
+		id = #{id}
+</update>
 
 <update id="infoupdate" parameterType="springBoot_team_pj_126.dto.UserDTO">
   UPDATE EMPLOYEES_TBL
