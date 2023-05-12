@@ -215,7 +215,7 @@ public class DocumentController {
 							@RequestParam("content") String content,
 							@RequestParam("id") String id,
 							DocumentDTO dto) throws ServletException, IOException {
-
+		System.out.println("수정전dto"+storedApprover0+storedApprover1+storedApprover2+storedApprover3);
 		File directory = new File("C:/Users/KOSMO/Desktop/파일저장");
 	    if (!directory.exists()) {
 	        directory.mkdirs(); // 폴더가 존재하지 않는 경우, 폴더를 생성합니다.
@@ -264,21 +264,114 @@ public class DocumentController {
 	    dto.setTitle(title);
 	    dto.setContent(content);
 	    dto.setId(id);
-
-	    System.out.println("storedApprover0: " + storedApprover0);
-	    System.out.println(dto);
+	    
+	    System.out.println("수정후ㅠto"+dto);
 	    service.updateDocument(dto);
 
 	    System.out.println("수정성공");
 	}
 	
 	 @GetMapping("/approverInfo")
-     public List<UserDTO> getApproverInfo(@RequestParam("approverNos") List<Long> approverNo)
+     public List<UserDTO> getApproverInfo(@RequestParam("approverNos") List<Long> approverNo, @RequestParam("documentNo") int documentNo)
             throws ServletException, IOException {
         System.out.println("controller - getApproverInfo");
         System.out.println("approverNo" + approverNo);
-        List<UserDTO> approversInfo = service.findApproverByNo(approverNo);
+        List<UserDTO> approversInfo = service.findApproverByNo(approverNo,documentNo);
         return approversInfo;
      }
+	 
+	 @PostMapping("/approve/{id}/{documentNo}")
+	 public void approve(@PathVariable String id, @PathVariable int documentNo) 
+			 throws ServletException, IOException {
+		 System.out.println(id);
+		 System.out.println(documentNo);
+		 
+		 int no = service.getEmployeeNo(id);
+		 
+		 DocumentDTO dto = service.getDocument(documentNo);
+		 
+		 int approverOrder = service.getApproverOrder(dto,no);
+		 
+		 int approverCount = service.getApproverCount(dto);
+		 
+		 System.out.println("결재자수"+approverCount+"명");
+		 System.out.println("결재차례"+approverOrder+"번");
+		 System.out.println(dto);
+		 if (approverOrder == 1) {
+			 System.out.println("한명이니까 이거 탄다");
+			 dto.setFirstApproverState("결재완료");
+		        if (approverCount > 1) {
+		        	dto.setSecondApproverState("결재중");
+		        } else {
+		        	dto.setDocumentState("결재완료");
+		        }
+		    } else if (approverOrder == 2) {
+		    	System.out.println("두명이니까 이거 탄다");
+		    	dto.setSecondApproverState("결재완료");
+		        if (approverCount > 2) {
+		        	dto.setThirdApproverState("결재중");
+		        } else {
+		        	dto.setDocumentState("결재완료");
+		        }
+		    } else if (approverOrder == 3) {
+		    	System.out.println("세명이니까 이거 탄다");
+		    	dto.setThirdApproverState("결재완료");
+		        if (approverCount > 3) {
+		        	dto.setFourthApproverState("결재중");
+		        } else {
+		        	dto.setDocumentState("결재완료");
+		        }
+		    } else if (approverOrder == 4) {
+		    	System.out.println("네명이니까 이거 탄다");
+		    	dto.setFourthApproverState("결재완료");
+		    	dto.setDocumentState("결재완료");
+		    }
+		 System.out.println("아무것도 안탄다 ㅅㄱ");
+		 System.out.println(dto);
+		 
+		 service.documentApprove(dto);
+		 System.out.println("승인완료");
+		 
+	 }
+	 
+	 @PostMapping("/addRejectionReason/{rejectionReason}/{id}/{documentNo}")
+	 public void addRejectionReason(@PathVariable String id, 
+			 						@PathVariable String rejectionReason, 
+			 						@PathVariable int documentNo) 
+			 throws ServletException, IOException {
+		 
+		 
+		 
+		 int no = service.getEmployeeNo(id);
+		 DocumentDTO dto = service.getDocument(documentNo);
+		 int approverOrder = service.getApproverOrder(dto,no);
+		 
+		 System.out.println(approverOrder);
+		 System.out.println(dto);
+		 dto.setRejectionReason(rejectionReason);
+		 if (approverOrder == 1) {
+			    dto.setFirstApproverState("반려");
+			    dto.setDocumentState("반려됨");
+			} else if (approverOrder == 2) {
+			    dto.setSecondApproverState("반려");
+			    dto.setDocumentState("반려됨");
+			} else if (approverOrder == 3) {
+			    dto.setThirdApproverState("반려");
+			    dto.setDocumentState("반려됨");
+			} else if (approverOrder == 4) {
+			    dto.setFourthApproverState("반려");
+			    dto.setDocumentState("반려됨");
+			}
+		 
+		 service.documentRejection(dto);
+		 System.out.println(dto);
+		 System.out.println("반려완료");
+		 
+	 }
+	 
+	 
+	 
+	 
+	 
 	 
 }

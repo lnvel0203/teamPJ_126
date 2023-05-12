@@ -1,13 +1,11 @@
 // import React, { useCallback } from 'react';
 import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
-import { useNavigate} from 'react-router';
-
 // material-ui
 import { useTheme } from '@mui/material/styles';
 // import { Box, Grid, IconButton, Chip, FormControl, Button, Stack, Typography, Divider } from '@mui/material';
 import { Box, Grid, IconButton, FormControl, Stack, Typography, Divider } from '@mui/material';
-
+import { useNavigate, useParams } from 'react-router';
 // third-party
 import ReactToPrint from 'react-to-print';
 // import { PDFDownloadLink } from '@react-pdf/renderer';

@@ -23,7 +23,7 @@ public interface DocumentService {
 	public DocumentDTO documentDetail(int documentNo)
 			throws ServletException, IOException;
 	
-	public List<UserDTO> findApproverByNo(List<Long> approverNo)
+	public List<UserDTO> findApproverByNo(List<Long> approverNo, int documentNo)
 			throws ServletException, IOException;
 	
 	public void updateDocument(DocumentDTO dto) throws ServletException, IOException;
@@ -42,6 +42,29 @@ public interface DocumentService {
 	
 	public List<DocumentDTO> getRejectionDocumentList(String id) 
 			throws ServletException, IOException;
+	
+
+	
+	public int getEmployeeNo(String id)
+			throws ServletException, IOException;
+
+	public DocumentDTO getDocument(int documentNo)
+			throws ServletException, IOException;
+	
+	public int getApproverOrder(DocumentDTO dto, int no)
+			throws ServletException, IOException;
+	
+	public int getApproverCount(DocumentDTO dto)
+			throws ServletException, IOException;
+	
+	public void documentApprove(DocumentDTO dto)
+			throws ServletException, IOException;
+	
+	public void documentRejection(DocumentDTO dto)
+			throws ServletException, IOException;
+	
+	
+
 		
 //	public void insertMember(MemberDTO dto) throws ServletException, IOException;
 //	
