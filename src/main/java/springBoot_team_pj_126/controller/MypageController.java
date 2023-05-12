@@ -2,34 +2,25 @@ package springBoot_team_pj_126.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import springBoot_team_pj_126.dto.EmployeeSalaryDTO;
 import springBoot_team_pj_126.dto.UserDTO;
 import springBoot_team_pj_126.service.AttendanceService;
 import springBoot_team_pj_126.service.MemberService;
-import springBoot_team_pj_126.service.MypageService;
 import springBoot_team_pj_126.service.MypageService;
 
 @RequestMapping(value="/members")
@@ -44,6 +35,9 @@ public class MypageController {
 	
 	@Autowired(required=true)
 	private AttendanceService attendance;
+	
+	
+	
 	
 	
 	
@@ -97,5 +91,20 @@ public class MypageController {
 
 	    mypage.userInfoUpdate(dto);
 	}
+	
+	// 급여 상세 가져오기
+	@GetMapping("/mySalary/{empId}")
+	public EmployeeSalaryDTO mySalary(@PathVariable String empId){
+		logger.info("SalaryController - invoiceDetail()");
+		
+		System.out.println("id:" + empId);
+		
+		EmployeeSalaryDTO dto = mypage.mySalary(empId);
+		System.out.println("dto: " + dto);
+		
+		return dto;
+	}
+	
+	
 		
 }
