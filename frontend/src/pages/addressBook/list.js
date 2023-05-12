@@ -1,5 +1,5 @@
 // Import Axios Services
-import axios from 'axios';
+import { request } from '../../utils/axios';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useMemo, useState, Fragment } from 'react';
 
@@ -294,8 +294,14 @@ const CustomerListPage = () => {
   // 서버에서 회원 정보를 패치해옴
   const fetchUserData = useCallback(async () => {
     try {
-      const response = await axios.get('http://localhost:8081/members'); //컨트롤러 url로 변경
-      setUserData(response.data);
+      request(
+        'GET',
+        '/members'
+      ).then(response => {
+        setUserData(response.data);
+      })
+      // const response = await axios.get('http://localhost:8081/members'); //컨트롤러 url로 변경
+      // setUserData(response.data);
     } catch (error) {
       console.error(error);
     }

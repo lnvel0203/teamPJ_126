@@ -482,20 +482,6 @@ const CustomerListPage = () => {
       >
         <AddDepart customer={customer} onCancel={handleAdd} />
       </Dialog>
-
-      {/* <Dialog
-        maxWidth="sm"
-        TransitionComponent={PopupTransition}
-        keepMounted
-        fullWidth
-        onClose={setCustomerEditId}
-        open={add}
-        sx={{ '& .MuiDialog-paper': { p: 0 }, transition: 'transform 225ms' }}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <EditDepart customer={customer} onCancel={handleAdd} />
-      </Dialog> */}
-
     </MainCard>
   );
 };

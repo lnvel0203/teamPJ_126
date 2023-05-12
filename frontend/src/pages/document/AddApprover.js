@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { request } from '../../utils/axios';
 import React, { useState, useEffect } from 'react';
 
 const AddApprover = () => {
@@ -7,8 +7,15 @@ const AddApprover = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:8081/members/approver');
-      setApprovers(response.data.map(approver => ({ ...approver, checked: false })));
+      request(
+        'GET',
+        '/members/approver'
+      ).then(response => {
+   
+        setApprovers(response.data.map(approver => ({ ...approver, checked: false })));
+      })
+      // const response = await axios.get('http://localhost:8081/members/approver');
+      // setApprovers(response.data.map(approver => ({ ...approver, checked: false })));
     } catch (error) {
       console.error(error);
     }

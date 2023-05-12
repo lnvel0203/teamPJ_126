@@ -30,26 +30,48 @@ const ProfileTabs = ({ focusInput }) => {
   const [name, setName] = useState('');
   const [positionName, setPositionName] = useState('');
   const [deptName, setDeptName] = useState('');
+  const [annualCount, setAnnualCount] = useState('');
+  const [tardy, setTardy] = useState('');
  
  
   const theme = useTheme();
   const [selectedImage, setSelectedImage] = useState(undefined);
   const [avatar, setAvatar] = useState('./default.png');
   
+
+  
   useEffect(() => {
     if (selectedImage) {
       setAvatar(URL.createObjectURL(selectedImage));  //URL 대신 지정경로 이미지 삽입
+
+      const formData = new FormData();
+      formData.append("file", selectedImage);
+
+      axios.post(`http://localhost:8081/members/mypage/${id}/photo`, formData, {
+          headers : {
+              'Content-Type': 'multipart/form-data'
+          }
+      })
     }
-  }, [selectedImage]);
+  }, [selectedImage]);  
 
   useEffect(() => {
     async function fetchData() {
       try {
         const response = await axios.get('http://localhost:8081/members/mypage/'+id);
         console.log("성공",response.data)
+        
+        if (response.data.photo) {
+            setAvatar(response.data.photo);
+        }
+
         setName(response.data.name)
         setPositionName(response.data.positionName)
         setDeptName(response.data.deptName)
+        setAnnualCount(response.data.annualCount)
+        setTardy(response.data.tardy)
+        console.log("지각",response.data.tardy)
+        
         
         console.log('이름',response.data.name);
         
@@ -188,12 +210,12 @@ const ProfileTabs = ({ focusInput }) => {
         <Grid item xs={12} sm={6} md={12}>
           <Stack direction="row" justifyContent="space-around" alignItems="center">
             <Stack spacing={0.5} alignItems="center">
-              <Typography variant="h5">3</Typography>
+              <Typography variant="h5">{tardy}</Typography>
               <Typography color="secondary">지각</Typography>
             </Stack>
             <Divider orientation="vertical" flexItem />
             <Stack spacing={0.5} alignItems="center">
-              <Typography variant="h5">27</Typography>
+              <Typography variant="h5">{annualCount}</Typography>
               <Typography color="secondary">연차</Typography>
             </Stack>
             <Divider orientation="vertical" flexItem />

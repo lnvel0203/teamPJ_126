@@ -37,7 +37,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 		System.out.println("AttendanceServiceImpl - isStartWork()");
 		
 		int selectCnt = dao.isStartWork(id);
-		System.out.println("selectCnt: " + selectCnt);
+		System.out.println("AttendanceServiceImpl - isStartWork - selectCnt: " + selectCnt);
 		
 		return selectCnt;
 	}
@@ -100,6 +100,8 @@ public class AttendanceServiceImpl implements AttendanceService {
 		int absence = dao.absence(id);
 		int earlyLeave = dao.earlyLeave(id);
 		int unchecked = dao.unchecked(id);
+		
+		System.out.println("지각 " + tardy );
 		
 		data.put("tardy", tardy);
 		data.put("absence", absence);

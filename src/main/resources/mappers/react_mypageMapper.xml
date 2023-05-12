@@ -6,21 +6,41 @@
      
 <mapper namespace="springBoot_team_pj_126.dao.MypageMapper">
 
+
+
+
 <select id="userinfo" resultType="springBoot_team_pj_126.dto.UserDTO">
-   select * from EMPLOYEES_TBL where id=#{id}
+SELECT e.* ,d.deptName, p.positionName
+   FROM employees_tbl e
+   LEFT join department_tbl d on e.deptid = d.deptid
+   LEFT join position_tbl p on e.positionid = p.positionid
+WHERE e.id = #{id}
 </select>
 
-<update id="userInfoUpdate" parameterType="springBoot_team_pj_126.dto.UserDTO">
-	update EMPLOYEES_TBL
-	set name = #{name},
-		email = #{email},
-		hireDate = #{hireDate},
-		address = #{address},
-		hp = #{hp}
-	where id=#{id}
+<update id="photo">
+	UPDATE
+		EMPLOYEES_TBL
+	SET
+		PHOTO = #{photo}
+	WHERE
+		id = #{id}
 </update>
 
-<!-- <2insert id="insertMember" parameterType="com.example.react.dto.MemberDTO">
+<update id="infoupdate" parameterType="springBoot_team_pj_126.dto.UserDTO">
+  UPDATE EMPLOYEES_TBL
+   SET EMAIL=#{email},
+   ADDRESS=#{address},
+   HP=#{hp, jdbcType=VARCHAR}
+   WHERE ID=#{id, jdbcType=VARCHAR}
+</update>
+
+<!-- 
+<select id="userinfo" resultType="springBoot_team_pj_126.dto.UserDTO">
+SELECT * FROM EMPLOYEES_TBL 
+  WHERE id = #{id}
+</select>
+
+<2insert id="insertMember" parameterType="com.example.react.dto.MemberDTO">
 	INSERT INTO mvc_member_tbl values((select nvl(max(id)+1,1)from mvc_member_tbl), #{password}, #{username},#{age},#{email},#{address},#{salary})
 </insert>	
 

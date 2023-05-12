@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+     
+<mapper namespace="springBoot_team_pj_126.dao.MailMapper">
+
+<insert id="addMailMapper" parameterType="springBoot_team_pj_126.dto.MailDTO">
+ 	INSERT INTO MAIL_TBL values((select nvl(max(mailNo)+1,1)from MAIL_TBL),#{id}, #{responser}, #{title}, #{content}, default)
+
+</insert>
+ 
+ <select id="mailList" parameterType="String" resultType="springBoot_team_pj_126.dto.MailDTO">
+ 	select * from  MAIL_TBL where id = #{id}
+ </select>
+
+</mapper>

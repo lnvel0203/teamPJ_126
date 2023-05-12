@@ -30,7 +30,6 @@ const HierarchyLocaleText = Loadable(lazy(() => import('pages/apps/adminperson-c
 const Personnelevaluation = Loadable(lazy(() => import('pages/apps/adminperson-customer/Personnelevaluation')));
 const DepartDepartments = Loadable(lazy(() => import('pages/apps/adminperson-customer/departdepartments')));
 
-
 const AppKanban = Loadable(lazy(() => import('pages/apps/kanban')));
 const AppKanbanBacklogs = Loadable(lazy(() => import('sections/apps/kanban/Backlogs')));
 const AppKanbanBoard = Loadable(lazy(() => import('sections/apps/kanban/Board')));
@@ -47,8 +46,6 @@ const UserTabPayment = Loadable(lazy(() => import('sections/apps/profiles/user/T
 const UserTabPassword = Loadable(lazy(() => import('sections/apps/profiles/user/TabPassword')));
 
 const UserTabSettings = Loadable(lazy(() => import('sections/apps/profiles/user/TabSettings')));
-
-
 
 // render - forms & tables
 const FormsValidation = Loadable(lazy(() => import('pages/forms/validation')));
@@ -120,6 +117,9 @@ const AddApprover = Loadable(lazy(() => import('pages/document/AddApprover')));
 const EditorComponent = Loadable(lazy(() => import('pages/document/EditorComponent')));
 const DocumentForm = Loadable(lazy(() => import('pages/document/Form')));
 const DocumentList = Loadable(lazy(() => import('pages/document/list')));
+const DocumentDetail = Loadable(lazy(() => import('pages/document/DocumentDetail')));
+const DraftDocumentList = Loadable(lazy(() => import('pages/document/DraftDocumentList')));
+
 const Documentwrite = Loadable(lazy(() => import('pages/document/write')));
 const AttendanceList = Loadable(lazy(() => import('pages/attendance/AttendanceList')));
 const Mail = Loadable(lazy(() => import('pages/apps/mail/Mail')));
@@ -173,10 +173,26 @@ const MainRoutes = {
               path: 'main-page',
               element: <MainPage />
             },
+
+
             {
               path: 'mail',
-              element: <Mail />
+              element: <Mail />,
+              children: [
+                {
+                  path: 'backlogs',
+                  element: <AppKanbanBacklogs />
+                },
+                {
+                  path: 'board',
+                  element: <AppKanbanBoard />
+                }
+              ]
+
             },
+
+
+            
             // {
             //   path: 'chat',
             //   element: <AppChat />
@@ -218,6 +234,14 @@ const MainRoutes = {
                 {
                   path: 'DocumentList',
                   element: <DocumentList />
+                },
+                {
+                  path: 'DocumentDetail',
+                  element: <DocumentDetail />
+                },
+                {
+                  path: 'DraftDocumentList',
+                  element: <DraftDocumentList />
                 },
                 {
                   path: 'Documentwrite',
