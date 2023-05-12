@@ -131,13 +131,14 @@ public class DocumentServiceImpl implements DocumentService{
 		return list;
 	}
 	
+
 	@Override
 	public int getEmployeeNo(String id)
 			throws ServletException, IOException {
 		
 		return mapper.getEmployeeNo(id);
 		
-	}
+  }
 	
 	@Override
     public DocumentDTO getDocument(int documentNo)
@@ -207,5 +208,6 @@ public class DocumentServiceImpl implements DocumentService{
 		mapper.documentRejection(dto);
 	}
 	
+
 
 }

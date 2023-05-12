@@ -83,6 +83,7 @@ const DocumentDetail = () => {
           documentNo: documentNo,
         },
       });
+
       if (response.data[0]) {
         setFirstApproverId(response.data[0].id);
         setFirstApproverState(response.data[0].firstApproverState); // Set firstApproverState
@@ -136,6 +137,7 @@ const DocumentDetail = () => {
 
       if (approverNos.length > 0) {
         const approversInfo = await fetchApproversInfo(approverNos);
+        console.log('approversInfo',approversInfo)
         setApprover(approversInfo);
       }
     };
@@ -303,7 +305,9 @@ const DocumentDetail = () => {
             console.log(id)
             await axios.post('http://localhost:8081/members/approve/'+id+'/'+documentNo);
             window.alert('결재승인 되었습니다')
+
             window.location.reload();
+
             // 
         } catch(error) {
             console.error('Error:',error)
@@ -323,7 +327,9 @@ const DocumentDetail = () => {
         const rejectionReason = window.prompt('반려 사유를 입력해주세요');
         if (rejectionReason) {
           try {
+
             await axios.post('http://localhost:8081/members/addRejectionReason/'+rejectionReason+'/'+id+'/'+documentNo);
+
             window.alert('반려처리 되었습니다')
           } catch (error) {
             console.error('Error:', error);
@@ -421,10 +427,12 @@ const DocumentDetail = () => {
             <td className="col-5">{approver[3] ? approver[3].positionName : ""}</td>
           </tr>
           <tr className="tr-2">
+
             <td className="col-2">{firstApproverState === "결재완료" ? firstApproverState : ""}</td>
             <td className="col-3">{secondApproverState === "결재완료" ? secondApproverState : ""}</td>
             <td className="col-4">{thirdApproverState === "결재완료" ? thirdApproverState : ""}</td>
             <td className="col-5">{fourthApproverState === "결재완료" ? fourthApproverState : ""}</td>
+
           </tr>
 
 

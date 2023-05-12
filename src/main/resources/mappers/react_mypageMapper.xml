@@ -6,13 +6,64 @@
      
 <mapper namespace="springBoot_team_pj_126.dao.MypageMapper">
 
-
+	<!-- resultMap -->
+	<resultMap id="EmployeeSalaryResultMap" type="springBoot_team_pj_126.dto.EmployeeSalaryDTO">
+		<association property="salaryInfo" javaType="springBoot_team_pj_126.dto.SalaryInfoDTO">
+	        <result column="infoId" property="infoId" />
+	        <result column="empId" property="empId" />
+	        <result column="baseSalary" property="baseSalary" />
+	        <result column="regularWeeklyHours" property="regularWeeklyHours" />
+	    </association>
+	
+	    <association property="user" javaType="springBoot_team_pj_126.dto.UserDTO">
+	        <result column="id" property="id" />
+	        <result column="name" property="name" />
+	        <result column="address" property="address" />
+	        <result column="email" property="email" />
+	    </association>
+	    
+	    <association property="salaryRecord" javaType="springBoot_team_pj_126.dto.SalaryRecordsDTO">
+	        <result column="salaryRecordId" property="salaryRecordId" />
+	        <result column="netSalary" property="netSalary" />
+	        <result column="payDate" property="payDate" />
+	        <result column="paymentStatus" property="paymentStatus" />
+	    </association>
+	    
+	    <association property="additionalPayment" javaType="springBoot_team_pj_126.dto.AdditionalPaymentDTO">
+	        <result column="overtimePay" property="overtimePay" />
+	        <result column="holidayPay" property="holidayPay" />
+	        <result column="restDayPay" property="restDayPay" />
+	        <result column="bonus" property="bonus" />
+	        <result column="totalAdditional" property="totalAdditional" />
+	    </association>
+	    
+	    <association property="deduction" javaType="springBoot_team_pj_126.dto.DeductionDTO">
+	        <result column="pensionInsurance" property="pensionInsurance" />
+	        <result column="healthInsurance" property="healthInsurance" />
+	        <result column="employmentInsurance" property="employmentInsurance" />
+	        <result column="compensationInsurance" property="compensationInsurance" />
+	        <result column="incomeTax" property="incomeTax" />
+	        <result column="totalDeductions" property="totalDeductions" />
+	    </association>
+	</resultMap>
 
 
 <select id="userinfo" resultType="springBoot_team_pj_126.dto.UserDTO">
-SELECT * FROM EMPLOYEES_TBL 
-  WHERE id = #{id}
+SELECT e.* ,d.deptName, p.positionName
+   FROM employees_tbl e
+   LEFT join department_tbl d on e.deptid = d.deptid
+   LEFT join position_tbl p on e.positionid = p.positionid
+WHERE e.id = #{id}
 </select>
+
+<update id="photo">
+	UPDATE
+		EMPLOYEES_TBL
+	SET
+		PHOTO = #{photo}
+	WHERE
+		id = #{id}
+</update>
 
 <update id="infoupdate" parameterType="springBoot_team_pj_126.dto.UserDTO">
   UPDATE EMPLOYEES_TBL
@@ -21,6 +72,28 @@ SELECT * FROM EMPLOYEES_TBL
    HP=#{hp, jdbcType=VARCHAR}
    WHERE ID=#{id, jdbcType=VARCHAR}
 </update>
+
+	<select id="mySalary" parameterType="String" resultMap="EmployeeSalaryResultMap">
+		SELECT e.id, e.name, e.address, e.email,
+		si.baseSalary, 
+		sr.salaryRecordId, sr.netSalary, sr.payDate, sr.paymentStatus,
+		ap.overtimePay, ap.holidayPay, ap.restDayPay, ap.bonus, ap.totalAdditional,
+		dt.pensionInsurance, dt.healthInsurance, dt.employmentInsurance, 
+		dt.compensationInsurance, dt.incomeTax, dt.totalDeductions 
+		FROM SALARY_RECORDS_TBL sr
+		JOIN EMPLOYEES_TBL e 
+		ON sr.id = e.id
+		JOIN SALARY_INFO_TBL si
+		ON sr.id = si.id
+		JOIN ADDITIONAL_PAYMENT_TBL ap
+		ON sr.salaryRecordId = ap.salaryRecordId 
+		JOIN DEDUCTION_TBL dt 
+		ON sr.salaryRecordId = dt.salaryRecordId
+		WHERE e.id = #{empId}
+	</select>
+
+
+
 
 <!-- 
 <select id="userinfo" resultType="springBoot_team_pj_126.dto.UserDTO">
