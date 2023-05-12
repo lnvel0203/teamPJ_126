@@ -130,41 +130,75 @@ public class DocumentServiceImpl implements DocumentService{
 		return list;
 	}
 	
+
+	@Override
+	public int getEmployeeNo(String id)
+			throws ServletException, IOException {
+		
+		return mapper.getEmployeeNo(id);
+		
+	}
 	
-//	@Override
-//	public void insertMember(MemberDTO dto) throws ServletException, IOException {
-//		System.out.println("서비스 - insert");
-//		
-//		mapper.insertMember(dto);
-//	}
-//
-//	@Override
-//	public void updateMember(MemberDTO dto) throws ServletException, IOException {
-//		System.out.println("서비스 - update");
-//		mapper.updateMember(dto);
-//	}
-//
-//	@Override
-//	public void deleteMember(int id) throws ServletException, IOException {
-//		System.out.println("서비스 - delete");
-//		mapper.deleteById(id);
-//	}
-//
-//	@Override
-//	public MemberDTO selectMember(MemberDTO dto) throws ServletException, IOException {
-//		System.out.println("서비스 - select");
-//		
-//		
-//		Map<String, Object> map = new HashMap<String, Object>();
-//
-//		map.put("id", dto.getId());
-//		map.put("password", dto.getPassword());
-//		
-//		MemberDTO dot = mapper.findById(map);
-//		if(dot !=null) {
-//			System.out.println("성공");
-//		}
-//		return dot;
-//	}
+	@Override
+    public DocumentDTO getDocument(int documentNo)
+    		throws ServletException, IOException {
+		
+        DocumentDTO document = mapper.getDocument(documentNo);
+        
+        return document;
+    }
+    
+	
+
+
+	@Override
+	public int getApproverCount(DocumentDTO dto) 
+			throws ServletException, IOException {
+		
+		int count = 0;
+	    if (dto.getFirstApproverNo() != null) {
+	        count++;
+	    }
+	    if (dto.getSecondApproverNo() != null) {
+	        count++;
+	    }
+	    if (dto.getThirdApproverNo() != null) {
+	        count++;
+	    }
+	    if (dto.getFourthApproverNo() != null) {
+	        count++;
+	    }
+	    return count;
+        
+    }
+		
+	@SuppressWarnings("unlikely-arg-type")
+	@Override
+	public int getApproverOrder(DocumentDTO dto, int no) 
+			throws ServletException, IOException {
+		
+	    if (no == dto.getFirstApproverNo()) {
+            return 1;
+        } else if (no == dto.getSecondApproverNo()) {
+            return 2;
+        } else if (no == dto.getThirdApproverNo()) {
+            return 3;
+        } else if (no == dto.getFourthApproverNo()) {
+            return 4;
+        } else {
+            return -1; // 현재 사용자가 결재자 목록에 없는 경우
+        }
+	    
+	}
+
+
+	@Override
+	public void documentApprove(DocumentDTO dto) 
+			throws ServletException, IOException {
+
+		mapper.documentApprove(dto);
+	}
+	
+
 
 }
