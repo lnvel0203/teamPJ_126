@@ -7,12 +7,20 @@
 <mapper namespace="springBoot_team_pj_126.dao.MailMapper">
 
 <insert id="addMailMapper" parameterType="springBoot_team_pj_126.dto.MailDTO">
- 	INSERT INTO MAIL_TBL values((select nvl(max(mailNo)+1,1)from MAIL_TBL),#{id}, #{documentType}, #{responser}, #{title}, #{content}, default)
+ 	INSERT INTO MAIL_TBL values((select nvl(max(mailNo)+1,1)from MAIL_TBL),#{id}, #{documentType},#{writer}, #{responser}, #{title}, #{content}, default)
 
 </insert>
  
  <select id="mailList" parameterType="String" resultType="springBoot_team_pj_126.dto.MailDTO">
  	select * from  MAIL_TBL where id = #{id}
+ </select>
+
+ <select id="reMailList" parameterType="String" resultType="springBoot_team_pj_126.dto.MailDTO">
+ 	select * from  MAIL_TBL where RESPONSER = #{RESPONSER}
+ </select>
+
+ <select id="reqMailList" parameterType="String" resultType="springBoot_team_pj_126.dto.MailDTO">
+ 	select * from  MAIL_TBL where writer = #{writer}
  </select>
 
 </mapper>

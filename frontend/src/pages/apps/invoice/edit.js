@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-
+import { getAuthToken } from '../../../utils/axios';
 // import { useNavigate, useParams } from 'react-router';
 import React, { useCallback } from 'react';
 
@@ -133,7 +133,13 @@ const Edit = () => {
     // 상세 내역 요청
     try {
       axios
-        .get(`http://localhost:8081/members/salaryeditDetail?id=${id}`)
+        .get(`http://localhost:8081/members/salaryeditDetail?id=${id}`,
+        {
+          headers : {
+            Authorization: 'Bearer ' + getAuthToken(),
+              'Content-Type': 'multipart/form-data'
+          }
+        })
         .then((response) => {
           console.log(response.data);
           setAttendanceList(response.data);
@@ -147,7 +153,13 @@ const Edit = () => {
 
     // 수정요청
     try {
-      const response = await axios.put('http://localhost:8081/members/invoiceCreate', { sendData });
+      const response = await axios.put('http://localhost:8081/members/invoiceCreate', { sendData },
+      {
+        headers : {
+          Authorization: 'Bearer ' + getAuthToken(),
+            'Content-Type': 'multipart/form-data'
+        }
+      });
       if (response.data == 1) {
         dispatch(
           openSnackbar({

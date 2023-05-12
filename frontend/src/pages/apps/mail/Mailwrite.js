@@ -92,6 +92,7 @@ const DocumentWritePage = () => {
     const mailData = {
       documentType:documentType,
       title:title,
+      writer:id,
       id:id,
       responser:responser,
       content:content
@@ -124,7 +125,7 @@ const DocumentWritePage = () => {
             <tr className="tr-1">
               <td>분류</td>
               <td className='write-td'>
-                <select value={title} onChange={handleDocumentTypeChange}>
+                <select value={documentType} onChange={handleDocumentTypeChange}>
                   <option value="">-- 선택하세요 --</option>
                   <option value="보고서">보고서</option>
                   <option value="공지">공지</option>
@@ -151,18 +152,15 @@ const DocumentWritePage = () => {
       <form onSubmit={handleSubmit}>
       <div>
         <button type="submit">메일 보내기</button>
+        </div>
         <br />
         <br />
         <br />
-
         <div className="title-input-container">
         <label htmlFor="document-title">제목: </label>
-  <input type="text" id="document-title" className="title-input" value={title} onChange={handleTitleChange} />
-  </div>
-      </div>
-
-
-
+        <input type="text" id="document-title" className="title-input" value={title} onChange={handleTitleChange} />
+        </div>
+      
       <div style={{ height: '450px', width: '700px' }}>
         <ReactQuill
           style={{ height: '350px' }}

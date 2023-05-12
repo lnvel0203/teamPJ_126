@@ -6,200 +6,200 @@
      
 <mapper namespace="springBoot_team_pj_126.dao.SalaryMapper">
 
-	<!-- resultMap -->
-	<resultMap id="EmployeeSalaryResultMap" type="springBoot_team_pj_126.dto.EmployeeSalaryDTO">
-		<association property="salaryInfo" javaType="springBoot_team_pj_126.dto.SalaryInfoDTO">
-	        <result column="infoId" property="infoId" />
-	        <result column="empId" property="empId" />
-	        <result column="baseSalary" property="baseSalary" />
-	        <result column="regularWeeklyHours" property="regularWeeklyHours" />
-	    </association>
-	
-	    <association property="user" javaType="springBoot_team_pj_126.dto.UserDTO">
-	        <result column="id" property="id" />
-	        <result column="name" property="name" />
-	        <result column="address" property="address" />
-	        <result column="email" property="email" />
-	    </association>
-	    
-	    <association property="salaryRecord" javaType="springBoot_team_pj_126.dto.SalaryRecordsDTO">
-	        <result column="salaryRecordId" property="salaryRecordId" />
-	        <result column="netSalary" property="netSalary" />
-	        <result column="payDate" property="payDate" />
-	        <result column="paymentStatus" property="paymentStatus" />
-	    </association>
-	    
-	    <association property="additionalPayment" javaType="springBoot_team_pj_126.dto.AdditionalPaymentDTO">
-	        <result column="overtimePay" property="overtimePay" />
-	        <result column="holidayPay" property="holidayPay" />
-	        <result column="restDayPay" property="restDayPay" />
-	        <result column="bonus" property="bonus" />
-	        <result column="totalAdditional" property="totalAdditional" />
-	    </association>
-	    
-	    <association property="deduction" javaType="springBoot_team_pj_126.dto.DeductionDTO">
-	        <result column="pensionInsurance" property="pensionInsurance" />
-	        <result column="healthInsurance" property="healthInsurance" />
-	        <result column="employmentInsurance" property="employmentInsurance" />
-	        <result column="compensationInsurance" property="compensationInsurance" />
-	        <result column="incomeTax" property="incomeTax" />
-	        <result column="totalDeductions" property="totalDeductions" />
-	    </association>
-	</resultMap>
+   <!-- resultMap -->
+   <resultMap id="EmployeeSalaryResultMap" type="springBoot_team_pj_126.dto.EmployeeSalaryDTO">
+      <association property="salaryInfo" javaType="springBoot_team_pj_126.dto.SalaryInfoDTO">
+           <result column="infoId" property="infoId" />
+           <result column="empId" property="empId" />
+           <result column="baseSalary" property="baseSalary" />
+           <result column="regularWeeklyHours" property="regularWeeklyHours" />
+       </association>
+   
+       <association property="user" javaType="springBoot_team_pj_126.dto.UserDTO">
+           <result column="id" property="id" />
+           <result column="name" property="name" />
+           <result column="address" property="address" />
+           <result column="email" property="email" />
+       </association>
+       
+       <association property="salaryRecord" javaType="springBoot_team_pj_126.dto.SalaryRecordsDTO">
+           <result column="salaryRecordId" property="salaryRecordId" />
+           <result column="netSalary" property="netSalary" />
+           <result column="payDate" property="payDate" />
+           <result column="paymentStatus" property="paymentStatus" />
+       </association>
+       
+       <association property="additionalPayment" javaType="springBoot_team_pj_126.dto.AdditionalPaymentDTO">
+           <result column="overtimePay" property="overtimePay" />
+           <result column="holidayPay" property="holidayPay" />
+           <result column="restDayPay" property="restDayPay" />
+           <result column="bonus" property="bonus" />
+           <result column="totalAdditional" property="totalAdditional" />
+       </association>
+       
+       <association property="deduction" javaType="springBoot_team_pj_126.dto.DeductionDTO">
+           <result column="pensionInsurance" property="pensionInsurance" />
+           <result column="healthInsurance" property="healthInsurance" />
+           <result column="employmentInsurance" property="employmentInsurance" />
+           <result column="compensationInsurance" property="compensationInsurance" />
+           <result column="incomeTax" property="incomeTax" />
+           <result column="totalDeductions" property="totalDeductions" />
+       </association>
+   </resultMap>
 
-	<!-- 급여 관리 리스트 -->
-	<select id="salaryList" resultType="java.util.Map">
-		SELECT sr.salaryrecordId, sr.id, e.name, sr.netSalary, sr.payDate, sr.paymentStatus
-		FROM SALARY_RECORDS_TBL sr
-		JOIN EMPLOYEES_TBL e 
-		ON sr.id = e.id
-	</select>
-	
-	<!-- 급여 상세 -->
-	<select id="salaryeditDetail">
-		SELECT e.ID, e.NAME, e.ADDRESS, e.EMAIL,
-		sr.SALARYRECORDID, sr.NETSALARY, sr.PAYDATE, sr.PAYMENTSTATUS,
-		ap.OVERTIMEPAY, ap.HOLIDAYPAY, ap.RESTDAYPAY, ap.BONUS, ap.TOTALADDITIONAL,
-		dt.PENSIONINSURANCE, dt.HEALTHINSURANCE, dt.EMPLOYMENTINSURANCE, 
-		dt.COMPENSATIONINSURANCE, dt.INCOMETAX, dt.TOTALDEDUCTIONS 
-		FROM SALARY_RECORDS_TBL sr
-		JOIN EMPLOYEES_TBL e 
-		ON sr.id = e.id
-		JOIN ADDITIONAL_PAYMENT_TBL ap
-		ON sr.SALARYRECORDID = ap.SALARYRECORDID 
-		JOIN DEDUCTION_TBL dt 
-		ON sr.SALARYRECORDID = dt.SALARYRECORDID
-		WHERE id = #{id}
-	</select>
-	
-	<!-- ========================================================================= -->
-	<!-- [급여 지급에 필요한 메서드] -->
-	<select id="salaryCreateDetail" parameterType="String" resultType="springBoot_team_pj_126.dto.SalaryInfoDTO">
-		SELECT INFOID, ID, BASESALARY, REGULARWEEKLYHOURS
-		FROM SALARY_INFO_TBL
-		WHERE ID = #{id}
-	</select>
+   <!-- 급여 관리 리스트 -->
+   <select id="salaryList" resultType="java.util.Map">
+      SELECT sr.salaryrecordId, sr.id, e.name, sr.netSalary, sr.payDate, sr.paymentStatus
+      FROM SALARY_RECORDS_TBL sr
+      JOIN EMPLOYEES_TBL e 
+      ON sr.id = e.id
+   </select>
+   
+   <!-- 급여 상세 -->
+   <select id="salaryeditDetail">
+      SELECT e.ID, e.NAME, e.ADDRESS, e.EMAIL,
+      sr.SALARYRECORDID, sr.NETSALARY, sr.PAYDATE, sr.PAYMENTSTATUS,
+      ap.OVERTIMEPAY, ap.HOLIDAYPAY, ap.RESTDAYPAY, ap.BONUS, ap.TOTALADDITIONAL,
+      dt.PENSIONINSURANCE, dt.HEALTHINSURANCE, dt.EMPLOYMENTINSURANCE, 
+      dt.COMPENSATIONINSURANCE, dt.INCOMETAX, dt.TOTALDEDUCTIONS 
+      FROM SALARY_RECORDS_TBL sr
+      JOIN EMPLOYEES_TBL e 
+      ON sr.id = e.id
+      JOIN ADDITIONAL_PAYMENT_TBL ap
+      ON sr.SALARYRECORDID = ap.SALARYRECORDID 
+      JOIN DEDUCTION_TBL dt 
+      ON sr.SALARYRECORDID = dt.SALARYRECORDID
+      WHERE id = #{id}
+   </select>
+   
+   <!-- ========================================================================= -->
+   <!-- [급여 지급에 필요한 메서드] -->
+   <select id="salaryCreateDetail" parameterType="String" resultType="springBoot_team_pj_126.dto.SalaryInfoDTO">
+      SELECT INFOID, ID, BASESALARY, REGULARWEEKLYHOURS
+      FROM SALARY_INFO_TBL
+      WHERE ID = #{id}
+   </select>
 
 
-	<!-- 주말 제외 총 근무 시간 -->
-	<select id="weeklyWorkingHours" parameterType="java.util.Map" resultType="int">
-	<![CDATA[
-		SELECT
-		    COALESCE(SUM(NVL(start_work_duration, 0) - NVL(go_out_duration, 0)), 0) AS "Total_Work_Hours"
-		FROM
-		    (
-		        SELECT
-		            CASE
-		                WHEN statusName = 'start-work' THEN duration
-		                ELSE NULL
-		            END AS start_work_duration,
-		            CASE
-		                WHEN statusName = 'go-out' THEN duration
-		                ELSE NULL
-		            END AS go_out_duration,
-		            startTime
-		        FROM
-		            work_records_tbl
-		        WHERE
-		            employeeId = #{id}
-		            AND EXTRACT(MONTH FROM startTime) = #{month} -- 월을 지정
-		            AND EXTRACT(YEAR FROM startTime) = #{year} -- 년을 지정
-		    )
-		WHERE
-		    TO_CHAR(startTime, 'DY', 'NLS_DATE_LANGUAGE = AMERICAN') NOT IN ('SAT', 'SUN')
+   <!-- 주말 제외 총 근무 시간 -->
+   <select id="weeklyWorkingHours" parameterType="java.util.Map" resultType="int">
+   <![CDATA[
+      SELECT
+          COALESCE(SUM(NVL(start_work_duration, 0) - NVL(go_out_duration, 0)), 0) AS "Total_Work_Hours"
+      FROM
+          (
+              SELECT
+                  CASE
+                      WHEN statusName = 'start-work' THEN duration
+                      ELSE NULL
+                  END AS start_work_duration,
+                  CASE
+                      WHEN statusName = 'go-out' THEN duration
+                      ELSE NULL
+                  END AS go_out_duration,
+                  startTime
+              FROM
+                  work_records_tbl
+              WHERE
+                  employeeId = #{id}
+                  AND EXTRACT(MONTH FROM startTime) = #{month} -- 월을 지정
+                  AND EXTRACT(YEAR FROM startTime) = #{year} -- 년을 지정
+          )
+      WHERE
+          TO_CHAR(startTime, 'DY', 'NLS_DATE_LANGUAGE = AMERICAN') NOT IN ('SAT', 'SUN')
       ]]>
-	</select>
-	
-	<!-- 주말 총 근무 시간 -->
-	<select id="weekendWorkingHours" parameterType="java.util.Map" resultType="int">
-	<![CDATA[
-		SELECT
-		    COALESCE(SUM(NVL(start_work_duration, 0) - NVL(go_out_duration, 0)), 0) AS "Total_Work_Hours"
-		FROM
-		    (
-		        SELECT
-		            CASE
-		                WHEN statusName = 'start-work' THEN duration
-		                ELSE NULL
-		            END AS start_work_duration,
-		            CASE
-		                WHEN statusName = 'go-out' THEN duration
-		                ELSE NULL
-		            END AS go_out_duration,
-		            startTime
-		        FROM
-		            work_records_tbl
-		        WHERE
-		            employeeId = #{id}
-		            AND EXTRACT(MONTH FROM startTime) = #{month} -- 월을 지정
-		            AND EXTRACT(YEAR FROM startTime) = #{year} -- 년을 지정
-		    )
-		WHERE
-		    TO_CHAR(startTime, 'DY', 'NLS_DATE_LANGUAGE = AMERICAN') IN ('SAT', 'SUN')
+   </select>
+   
+   <!-- 주말 총 근무 시간 -->
+   <select id="weekendWorkingHours" parameterType="java.util.Map" resultType="int">
+   <![CDATA[
+      SELECT
+          COALESCE(SUM(NVL(start_work_duration, 0) - NVL(go_out_duration, 0)), 0) AS "Total_Work_Hours"
+      FROM
+          (
+              SELECT
+                  CASE
+                      WHEN statusName = 'start-work' THEN duration
+                      ELSE NULL
+                  END AS start_work_duration,
+                  CASE
+                      WHEN statusName = 'go-out' THEN duration
+                      ELSE NULL
+                  END AS go_out_duration,
+                  startTime
+              FROM
+                  work_records_tbl
+              WHERE
+                  employeeId = #{id}
+                  AND EXTRACT(MONTH FROM startTime) = #{month} -- 월을 지정
+                  AND EXTRACT(YEAR FROM startTime) = #{year} -- 년을 지정
+          )
+      WHERE
+          TO_CHAR(startTime, 'DY', 'NLS_DATE_LANGUAGE = AMERICAN') IN ('SAT', 'SUN')
       ]]>
-	</select>
-	
-	<!-- 급여 기록  -->
-	<insert id="salaryRecordsInsert" parameterType="springBoot_team_pj_126.dto.SalaryRecordsDTO">
-		INSERT INTO SALARY_RECORDS_TBL
-		(SALARYRECORDID, ID, NETSALARY)
-		VALUES((SELECT nvl(max(SALARYRECORDID)+1,1) FROM SALARY_RECORDS_TBL), #{empId}, #{netSalary})
-	</insert>
-	
-	<!-- 가장 최근 아이디 select -->
-	<select id="selectSalaryRecordId" resultType="int">
-		SELECT SALARYRECORDID
-		FROM (
-		  SELECT SALARYRECORDID
-		  FROM SALARY_RECORDS_TBL
-		  ORDER BY SALARYRECORDID DESC
-		)
-		WHERE ROWNUM = 1
-	</select>
-	
-	<!-- 추가급 기록 -->
-	<insert id="additionalPaymentInsert" parameterType="springBoot_team_pj_126.dto.AdditionalPaymentDTO">
-		INSERT INTO ADDITIONAL_PAYMENT_TBL
-		(ADDPAYID, SALARYRECORDID, ID, OVERTIMEPAY, HOLIDAYPAY, RESTDAYPAY, BONUS, TOTALADDITIONAL)
-		VALUES((SELECT nvl(max(ADDPAYID)+1,1) FROM ADDITIONAL_PAYMENT_TBL),
-		 #{salaryRecordId}, #{empId}, #{overtimePay}, #{holidayPay}, #{restDayPay}, #{bonus}, #{totalAdditional})
-	</insert>
-	
-	<!-- 보험료 기록 -->	
-	<insert id="deductionInsert" parameterType="springBoot_team_pj_126.dto.DeductionDTO">
-		INSERT INTO DEDUCTION_TBL
-		(DEDUCTIONID, SALARYRECORDID, ID, PENSIONINSURANCE, HEALTHINSURANCE, 
-		EMPLOYMENTINSURANCE, COMPENSATIONINSURANCE, INCOMETAX, TOTALDEDUCTIONS)
-		VALUES((SELECT nvl(max(DEDUCTIONID)+1,1) FROM DEDUCTION_TBL),
-		 #{salaryRecordId}, #{empId}, #{pensionInsurance}, #{healthInsurance}, #{employmentInsurance}, 
-		 #{compensationInsurance}, #{incomeTax}, #{totalDeductions})
-	</insert>
-	
-	<!-- 지급 상태 업데이트 -->
-	<update id="updateSalaryStatus" parameterType="int">
-		UPDATE SALARY_RECORDS_TBL
-		SET PAYDATE=SYSDATE, PAYMENTSTATUS='paid'
-		WHERE SALARYRECORDID=#{salaryRecordId}
-	</update>
-	
- 	<!-- 급여 상세 가져오기 -->
-	<select id="invoiceDetail" parameterType="int" resultMap="EmployeeSalaryResultMap">
-		SELECT e.id, e.name, e.address, e.email,
-		si.baseSalary, 
-		sr.salaryRecordId, sr.netSalary, sr.payDate, sr.paymentStatus,
-		ap.overtimePay, ap.holidayPay, ap.restDayPay, ap.bonus, ap.totalAdditional,
-		dt.pensionInsurance, dt.healthInsurance, dt.employmentInsurance, 
-		dt.compensationInsurance, dt.incomeTax, dt.totalDeductions 
-		FROM SALARY_RECORDS_TBL sr
-		JOIN EMPLOYEES_TBL e 
-		ON sr.id = e.id
-		JOIN SALARY_INFO_TBL si
-		ON sr.id = si.id
-		JOIN ADDITIONAL_PAYMENT_TBL ap
-		ON sr.salaryRecordId = ap.salaryRecordId 
-		JOIN DEDUCTION_TBL dt 
-		ON sr.salaryRecordId = dt.salaryRecordId
-WHERE sr.salaryRecordId = #{id}
-	</select>
+   </select>
+   
+   <!-- 급여 기록  -->
+   <insert id="salaryRecordsInsert" parameterType="springBoot_team_pj_126.dto.SalaryRecordsDTO">
+      INSERT INTO SALARY_RECORDS_TBL
+      (SALARYRECORDID, ID, NETSALARY)
+      VALUES((SELECT nvl(max(SALARYRECORDID)+1,1) FROM SALARY_RECORDS_TBL), #{empId}, #{netSalary})
+   </insert>
+   
+   <!-- 가장 최근 아이디 select -->
+   <select id="selectSalaryRecordId" resultType="int">
+      SELECT SALARYRECORDID
+      FROM (
+        SELECT SALARYRECORDID
+        FROM SALARY_RECORDS_TBL
+        ORDER BY SALARYRECORDID DESC
+      )
+      WHERE ROWNUM = 1
+   </select>
+   
+   <!-- 추가급 기록 -->
+   <insert id="additionalPaymentInsert" parameterType="springBoot_team_pj_126.dto.AdditionalPaymentDTO">
+      INSERT INTO ADDITIONAL_PAYMENT_TBL
+      (ADDPAYID, SALARYRECORDID, ID, OVERTIMEPAY, HOLIDAYPAY, RESTDAYPAY, BONUS, TOTALADDITIONAL)
+      VALUES((SELECT nvl(max(ADDPAYID)+1,1) FROM ADDITIONAL_PAYMENT_TBL),
+       #{salaryRecordId}, #{empId}, #{overtimePay}, #{holidayPay}, #{restDayPay}, #{bonus}, #{totalAdditional})
+   </insert>
+   
+   <!-- 보험료 기록 -->   
+   <insert id="deductionInsert" parameterType="springBoot_team_pj_126.dto.DeductionDTO">
+      INSERT INTO DEDUCTION_TBL
+      (DEDUCTIONID, SALARYRECORDID, ID, PENSIONINSURANCE, HEALTHINSURANCE, 
+      EMPLOYMENTINSURANCE, COMPENSATIONINSURANCE, INCOMETAX, TOTALDEDUCTIONS)
+      VALUES((SELECT nvl(max(DEDUCTIONID)+1,1) FROM DEDUCTION_TBL),
+       #{salaryRecordId}, #{empId}, #{pensionInsurance}, #{healthInsurance}, #{employmentInsurance}, 
+       #{compensationInsurance}, #{incomeTax}, #{totalDeductions})
+   </insert>
+   
+   <!-- 지급 상태 업데이트 -->
+   <update id="updateSalaryStatus" parameterType="int">
+      UPDATE SALARY_RECORDS_TBL
+      SET PAYDATE=SYSDATE, PAYMENTSTATUS='paid'
+      WHERE SALARYRECORDID=#{salaryRecordId}
+   </update>
+   
+    <!-- 급여 상세 가져오기 -->
+   <select id="invoiceDetail" parameterType="int" resultMap="EmployeeSalaryResultMap">
+      SELECT e.id, e.name, e.address, e.email,
+      si.baseSalary, 
+      sr.salaryRecordId, sr.netSalary, sr.payDate, sr.paymentStatus,
+      ap.overtimePay, ap.holidayPay, ap.restDayPay, ap.bonus, ap.totalAdditional,
+      dt.pensionInsurance, dt.healthInsurance, dt.employmentInsurance, 
+      dt.compensationInsurance, dt.incomeTax, dt.totalDeductions 
+      FROM SALARY_RECORDS_TBL sr
+      JOIN EMPLOYEES_TBL e 
+      ON sr.id = e.id
+      JOIN SALARY_INFO_TBL si
+      ON sr.id = si.id
+      JOIN ADDITIONAL_PAYMENT_TBL ap
+      ON sr.salaryRecordId = ap.salaryRecordId 
+      JOIN DEDUCTION_TBL dt 
+      ON sr.salaryRecordId = dt.salaryRecordId
+      WHERE sr.salaryRecordId = #{id}
+   </select>
 
 </mapper>

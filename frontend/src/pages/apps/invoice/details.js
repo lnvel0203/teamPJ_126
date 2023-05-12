@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router';
-
+import { getAuthToken } from '../../../utils/axios';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 // import { Box, Grid, IconButton, Chip, FormControl, Button, Stack, Typography, Divider } from '@mui/material';
@@ -47,7 +47,19 @@ const Details = () => {
     dispatch(getInvoiceSingleList(Number(id))).then(() => setLoading(true));
     // eslint-disable-next-line react-hooks/exhaustive-deps
     axios
-      .get(`http://localhost:8081/members/invoiceDetail?id=${id}`)
+      .get(`http://localhost:8081/members/invoiceDetail?id=${id}`,
+      {
+        headers : {
+          Authorization: 'Bearer ' + getAuthToken(),
+            'Content-Type': 'multipart/form-data'
+        }
+      }
+      ,{
+        headers : {
+          Authorization: 'Bearer ' + getAuthToken(),
+            'Content-Type': 'multipart/form-data'
+        }
+      })
       .then((response) => {
         setList(response.data); // 데이터를 상태에 설정
       })
@@ -134,7 +146,7 @@ const Details = () => {
 
             {/* # 3 ======================================= */}
             <Grid item xs={12} sm={6}>
-              <MainCard>
+              <MainCard>ADD
                 <Stack spacing={1}>
                   <Typography variant="h5">From:</Typography>
                   <FormControl sx={{ width: '100%' }}>

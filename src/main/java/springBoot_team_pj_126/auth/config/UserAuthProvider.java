@@ -38,7 +38,7 @@ public class UserAuthProvider {
 	protected void init() {
 		// 일단 text로 된 비밀키를 피하기 위해 base64로 인코딩한다.
 		secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
-		System.out.println("secretKey : " +secretKey);
+//		System.out.println("secretKey : " +secretKey);
 	}
 	public String createToken(String id) {
 		System.out.println("UserAuthProvider - token");
@@ -54,21 +54,21 @@ public class UserAuthProvider {
 	
 	public Authentication validateToken(String token) {	//import org.springframework.security.core.Authentication;
 		System.out.println("UserAuthProvider - validateToken");
-		System.out.println("token : " +  token);
+//		System.out.println("token : " +  token);
 		
 		//import com.auth0.jwt.JWTVerifier; -- class인걸로 가져와야함.
 		JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secretKey))
 				.build();
 		
-		System.out.println("UserAuthProvider - validateToken1");
+
 		
 		DecodedJWT decoded = verifier.verify(token);	// JWT를 확인하기 위해 디코딩을 먼저한다.
 														// 유효시간을 초과하면 - 예외를 발생시켜야한다.
 		
-		System.out.println("UserAuthProvider - validateToken2");
+		
 		
 		User user = userService.findById(decoded.getIssuer());
-		System.out.println("JWTuser : " + user);
+		
 		//사용자가 내 데이터베이스에 존재하는지 확인하기.
 		return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
 		

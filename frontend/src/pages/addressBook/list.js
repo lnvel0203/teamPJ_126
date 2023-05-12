@@ -1,8 +1,8 @@
 // Import Axios Services
-import { request } from '../../utils/axios';
+import { getAuthToken  } from '../../utils/axios';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useMemo, useState, Fragment } from 'react';
-
+import axios from 'axios';
 // material-ui
 import { alpha, useTheme } from '@mui/material/styles';
 import {
@@ -294,14 +294,14 @@ const CustomerListPage = () => {
   // 서버에서 회원 정보를 패치해옴
   const fetchUserData = useCallback(async () => {
     try {
-      request(
-        'GET',
-        '/members'
-      ).then(response => {
-        setUserData(response.data);
-      })
-      // const response = await axios.get('http://localhost:8081/members'); //컨트롤러 url로 변경
-      // setUserData(response.data);
+
+    const response = await axios.get('http://localhost:8081/members',
+    {
+      headers : {
+        Authorization: 'Bearer ' + getAuthToken(),
+      }
+    }); //컨트롤러 url로 변경
+    setUserData(response.data);
     } catch (error) {
       console.error(error);
     }

@@ -47,29 +47,30 @@ const CreateDetail = ({ addId, date, onValuesChanged }) => {
   // 연장근무 시간
   const overtimeHours = weeklyWorkingHours <= regularWeeklyHours ? 0 : Math.round(weeklyWorkingHours - regularWeeklyHours);
   // 월 근무 시간
-  const monthlyWorkingHours = weeklyWorkingHours * 4;
+  const monthlyWorkingHours = Math.round(weeklyWorkingHours * 4);
   // 시급
-  const hourlyWage = Math.round(baseSalary / monthlyWorkingHours);
+  // const hourlyWage = Math.round(baseSalary / monthlyWorkingHours);
+  const hourlyWage = monthlyWorkingHours == 0 ? 0 : Math.round(baseSalary / monthlyWorkingHours);
   // 연장 근무 수당 %
   const overtimeRate = 1.5; // 150%의 시급으로 연장근로수당을 지급
   // 연장 근무 수당
-  const overtimePay = weeklyWorkingHours <= regularWeeklyHours ? 0 : hourlyWage * overtimeHours * overtimeRate;
+  const overtimePay = weeklyWorkingHours <= regularWeeklyHours ? 0 : Math.round(hourlyWage * overtimeHours * overtimeRate);
   // 주말 근무 수당
-  const weekendWorkPay = weekendWorkingHours <= 0 ? 0 : hourlyWage * weekendWorkingHours * overtimeRate;
+  const weekendWorkPay = weekendWorkingHours <= 0 ? 0 : Math.round(hourlyWage * weekendWorkingHours * overtimeRate);
   // 주휴 수당
-  const calculateRestDayPay = 4 * (weeklyWorkingHours / 40) * 8 * hourlyWage;
+  const calculateRestDayPay = 4 * Math.round((weeklyWorkingHours / 40) * 8 * hourlyWage);
   // 추가급을 더한 총액
-  const subTotal = baseSalary + totalAdditionalPay;
+  const subTotal = Math.round(baseSalary + totalAdditionalPay);
   // 연금 보험료
-  const pensionInsurance = subTotal * 0.045;
+  const pensionInsurance = Math.round(subTotal * 0.045);
   // 고용 보험료
-  const employeeInsurance = subTotal * 0.009;
+  const employeeInsurance = Math.round(subTotal * 0.009);
   // 건강 보험료
-  const healthInsurance = (subTotal * 0.0709) / 2;
+  const healthInsurance = Math.round((subTotal * 0.0709) / 2);
   // 산재 보험료
-  const compensationInsurance = subTotal * 0.01;
+  const compensationInsurance = Math.round(subTotal * 0.01);
   // 보험료 총액
-  const subTotal2 = subTotal - totalInsurancePay;
+  const subTotal2 = Math.round(subTotal - totalInsurancePay);
 
   // ============================================================================
   // 총 추가금 더함
@@ -98,8 +99,8 @@ const CreateDetail = ({ addId, date, onValuesChanged }) => {
     { limit: 150000000, rate: 0.35, deduction: 14900000 },
     { limit: 300000000, rate: 0.38, deduction: 19400000 },
     { limit: 500000000, rate: 0.4, deduction: 25400000 },
-    { limit: 1000000000, rate: 0.42, deduction: 35400000 },
-    { limit: Infinity, rate: 0.45, deduction: 65400000 }
+    { limit: 1000000000, rate: 0.42, deduction: 35400000 }
+    // { limit: Infinity, rate: 0.45, deduction: 65400000 }
   ];
 
   // 과세표준 속하는 구간 찾음
@@ -110,7 +111,7 @@ const CreateDetail = ({ addId, date, onValuesChanged }) => {
   // 소득세 계산
   function calculateTax() {
     const bracket = findBracket(subTotal2);
-    const tax = subTotal2 * bracket.rate - bracket.deduction;
+    const tax = Math.round(subTotal2 * bracket.rate - bracket.deduction);
     return tax;
   }
 
@@ -190,6 +191,7 @@ const CreateDetail = ({ addId, date, onValuesChanged }) => {
 
   return (
     <MainCard title="급여 상세 내역">
+      {console.log('#시급: ' + baseSalary + ', #총시간: ' + weeklyWorkingHours)}
       <Grid container spacing={2} alignItems="center">
         {console.log(infoId + id + baseSalary + regularWeeklyHours + subTotal)}
         {console.log(overtimePayForm + weekendWorkPayForm + restDayPayForm + bonusForm)}

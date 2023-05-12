@@ -15,6 +15,7 @@ public class MailDTO {
 	private int mailNo;
 	private String documentType;
 	private String id;
+	private String writer;
 	private String responser;
 	private String title;
 	private String content;

@@ -267,7 +267,7 @@ const CustomerListPage = () => {
     try {
       request(
         'GET',
-        '/mail/getMailList/' + ids
+        '/mail/getReqMailList/' + ids
       ).then(response => {
         setUserData(response.data);
         console.log(response.data);
@@ -306,11 +306,11 @@ const CustomerListPage = () => {
         Cell: SelectionCell,
         disableSortBy: true
       },
-      // {
-      //   Header: '번호',
-      //   accessor: 'deptid', // 테이블 컬럼명
-      //   className: 'cell-center'
-      // },
+      {
+        Header: '분류',
+        accessor: 'documentType', // 테이블 컬럼명
+        className: 'cell-center'
+      },
       {
         Header: '제목',
         accessor: 'title',
@@ -318,7 +318,7 @@ const CustomerListPage = () => {
       },
       {
         Header: '받는이',
-        accessor: 'id',
+        accessor: 'responser',
         className: 'cell-center'
       },
       {

@@ -256,6 +256,7 @@ public class DocumentController {
 	            }
 	        }
 	    }
+	    
 	    dto.setDocumentType(documentType);
 	    dto.setAuthor(author);
 	    dto.setRetentionPeriod(retentionPeriod);
@@ -267,6 +268,7 @@ public class DocumentController {
 	    System.out.println("storedApprover0: " + storedApprover0);
 	    System.out.println(dto);
 	    service.updateDocument(dto);
+
 	    System.out.println("수정성공");
 	}
 	

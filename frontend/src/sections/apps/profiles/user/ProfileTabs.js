@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-
+import { getAuthToken } from '../../../../utils/axios';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 // import { Box, Divider, FormLabel, Grid, TextField, Menu, MenuItem, Stack, Typography } from '@mui/material';
@@ -49,6 +49,7 @@ const ProfileTabs = ({ focusInput }) => {
 
       axios.post(`http://localhost:8081/members/mypage/${id}/photo`, formData, {
           headers : {
+            Authorization: 'Bearer ' + getAuthToken(),
               'Content-Type': 'multipart/form-data'
           }
       })
@@ -58,23 +59,26 @@ const ProfileTabs = ({ focusInput }) => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get('http://localhost:8081/members/mypage/'+id);
+        const response = await axios.get('http://localhost:8081/members/mypage/'+id 
+        , {
+          headers: {
+            Authorization: 'Bearer ' + getAuthToken(),
+          }
+        }
+        
+        );
         console.log("성공",response.data)
         
         if (response.data.photo) {
             setAvatar(response.data.photo);
         }
-
         setName(response.data.name)
         setPositionName(response.data.positionName)
         setDeptName(response.data.deptName)
         setAnnualCount(response.data.annualCount)
         setTardy(response.data.tardy)
         console.log("지각",response.data.tardy)
-        
-        
         console.log('이름',response.data.name);
-        
         setIsLoading(false); // 추가 폼 렌더링 관련
          
       } catch (error) {

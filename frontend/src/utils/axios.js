@@ -70,3 +70,28 @@ export const request = (method, url, data) => {
     data: data
   });
 };
+
+export const requestMy = (method, url, data) => {
+  let headers = {};
+
+  if (getAuthToken() !== null && getAuthToken() !== 'null') {
+    headers = {
+      Authorization: 'Bearer ' + getAuthToken(),
+       
+      //Authorization: 'Bearer ${getAuthToken()'
+    };
+  }
+
+  console.log('axios');
+  console.log('method : ', method);
+  console.log('url : ', url);
+  console.log('data : ', data);
+  console.log('headers : ', headers);
+
+  return  axios({
+    method: method,
+    headers: headers,
+    url: url,
+    data: data
+  });
+};

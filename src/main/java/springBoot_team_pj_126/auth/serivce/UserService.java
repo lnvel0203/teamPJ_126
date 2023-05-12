@@ -29,7 +29,7 @@ public class UserService {
 
 		System.out.println("UserService - findById");
 
-		System.out.println("id : " + id);
+		
 		User user = userMapper.findById(id);
 		//User user = userRepository.findById(id)
 		//		.orElseThrow(()-> new AppException("UnKnown user" , HttpStatus.NOT_FOUND));
@@ -45,7 +45,7 @@ public class UserService {
 		System.out.println(credentialsDTO.getId() instanceof String);
 
 		User user = userMapper.findById(credentialsDTO.getId());
-		System.out.println("user" + user);
+		
 		// User user = userRepository.findById(credentialsDTO.getId())
 		//    .orElseThrow(() -> new AppException("UnKnown user", HttpStatus.NOT_FOUND));
 

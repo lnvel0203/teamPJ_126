@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { request } from '../../../../utils/axios';
 // material-ui
 import { useOutletContext } from 'react-router';
 
@@ -61,13 +62,30 @@ const TabPersonal = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get('http://localhost:8081/members/mypage/'+id);
-        setFetchedData(response.data);
-        console.log("성공",response.data)
-        console.log("입사일",response.data.hireDate)
-        setHireDate(response.data.hireDate)
-        setName(response.data.name)
-        format(new Date(hireDate), 'yyyy-MM-dd')
+
+        await request('GET', '/members/mypage/'+ id
+        
+        ).then((response) => {
+
+          setFetchedData(response.data);
+        
+          setHireDate(response.data.hireDate)
+          setName(response.data.name)
+          console.log("성공",response.data)
+          console.log("입사일",response.data.hireDate)
+          //format(new Date(hireDate), 'yyyy-MM-dd')
+
+         
+        });
+
+
+        // const response = await axios.get('http://localhost:8081/members/mypage/'+id);
+        // setFetchedData(response.data);
+        // console.log("성공",response.data)
+        // console.log("입사일",response.data.hireDate)
+        // setHireDate(response.data.hireDate)
+        // setName(response.data.name)
+        // format(new Date(hireDate), 'yyyy-MM-dd')
 
         setIsLoading(false); // 추가 폼 렌더링 관련
         // console.log(response.data.name);

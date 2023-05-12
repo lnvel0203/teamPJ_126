@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-
+import { getAuthToken } from '../../../utils/axios';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import {
@@ -92,7 +92,12 @@ const Address = ({ handlerAddress }) => {
   useEffect(() => {
     const fetchAddresses = async () => {
       try {
-        const response = await axios.get('http://localhost:8081/members');
+        const response = await axios.get('http://localhost:8081/members',{
+          headers : {
+            Authorization: 'Bearer ' + getAuthToken(),
+              'Content-Type': 'multipart/form-data'
+          }
+        });
         setAddressData(response.data);
       } catch (error) {
         console.error('Error fetching addresses:', error);

@@ -47,9 +47,23 @@ public class MailController {
 		return list;
 	}
 
+	@GetMapping("/getReMailList/{id}")
+	public List<MailDTO> reMailList(@PathVariable String id) throws ServletException, IOException{
+		
+		logger.info("MailController - mailList()");
+		
+		List<MailDTO> list = service.reMailList(id);
+		return list;
+	}
 
-
-
+	@GetMapping("/getReqMailList/{id}")
+	public List<MailDTO> reqMailList(@PathVariable String id) throws ServletException, IOException{
+		
+		logger.info("MailController - mailList()");
+		
+		List<MailDTO> list = service.reqMailList(id);
+		return list;
+	}
 
 
 

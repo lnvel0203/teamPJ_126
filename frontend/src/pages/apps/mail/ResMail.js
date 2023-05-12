@@ -114,6 +114,11 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,handl
     // eslint-disable-next-line
   }, [matchDownSM]);
 
+  const handleTitleClick = (mailNo) => {
+    console.log('mailNo',mailNo)
+    window.open('/apps/mailDetail?mailNo='+mailNo, '_blank', 'width=1200,height=900,top=300,left=300');
+  };
+
   return (
     <>
       <TableRowSelection selected={Object.keys(selectedRowIds).length} />
@@ -163,7 +168,13 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,handl
                   <TableRow
                     {...row.getRowProps()}
                     onClick={() => {
-                      row.toggleRowSelected();
+                   //   row.toggleRowSelected();
+                      handleTitleClick(row.original.mailNo);
+
+
+
+
+
                     }}
                     sx={{ cursor: 'pointer', bgcolor: row.isSelected ? alpha(theme.palette.primary.lighter, 0.35) : 'inherit' }}
                   >
@@ -267,7 +278,7 @@ const CustomerListPage = () => {
     try {
       request(
         'GET',
-        '/mail/getMailList/' + ids
+        '/mail/getReMailList/' + ids
       ).then(response => {
         setUserData(response.data);
         console.log(response.data);
@@ -306,11 +317,11 @@ const CustomerListPage = () => {
         Cell: SelectionCell,
         disableSortBy: true
       },
-      // {
-      //   Header: '번호',
-      //   accessor: 'deptid', // 테이블 컬럼명
-      //   className: 'cell-center'
-      // },
+      {
+        Header: '분류',
+        accessor: 'documentType', // 테이블 컬럼명
+        className: 'cell-center'
+      },
       {
         Header: '제목',
         accessor: 'title',

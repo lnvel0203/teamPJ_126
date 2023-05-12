@@ -2,7 +2,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import { useMemo, useEffect, Fragment, useState, useRef } from 'react';
 import { useNavigate } from 'react-router';
-
+import { getAuthToken } from '../../../utils/axios';
 // material-ui
 import {
   Box,
@@ -49,7 +49,15 @@ const handleClick = async (SALARYRECORDID) => {
   //미승인 상태 사원 -> 승인상태로 변경 및 승인버튼 삭제
 
   try {
-    const response = await axios.put('http://localhost:8081/members/updateSalaryStatus', { SALARYRECORDID });
+    const response = await axios.put('http://localhost:8081/members/updateSalaryStatus', { SALARYRECORDID },
+    {
+      headers : {
+        Authorization: 'Bearer ' + getAuthToken(),
+          'Content-Type': 'multipart/form-data'
+      }
+    }
+    
+    );
     if (response.data == 1) {
       window.location.reload(); // 자동 새로고침
       dispatch(
@@ -368,7 +376,14 @@ const List = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:8081/members/salaryList')
+      .get('http://localhost:8081/members/salaryList',
+      {
+        headers : {
+          Authorization: 'Bearer ' + getAuthToken(),
+            'Content-Type': 'multipart/form-data'
+        }
+      }
+      )
       .then((response) => {
         setList(response.data);
       })
@@ -386,7 +401,14 @@ const List = () => {
   const handleClose = (status) => {
     if (status) {
       axios
-        .delete(`/api/invoices/${invoiceId}`)
+        .delete(`/api/invoices/${invoiceId}`,
+        {
+          headers : {
+            Authorization: 'Bearer ' + getAuthToken(),
+              'Content-Type': 'multipart/form-data'
+          }
+        }
+        )
         .then(() => {
           setList((prevList) => prevList.filter((item) => item.id !== invoiceId));
           setAlertPopup({

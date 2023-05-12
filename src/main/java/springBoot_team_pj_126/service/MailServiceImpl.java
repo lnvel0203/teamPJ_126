@@ -29,4 +29,19 @@ public class MailServiceImpl implements MailService{
 		return list;
 	}
 
+	@Override
+	public List<MailDTO> reMailList(String id) {
+
+		
+		List<MailDTO> list = mapper.reMailList(id);
+		return list;
+	}
+
+	@Override
+	public List<MailDTO> reqMailList(String id) {
+
+		
+		List<MailDTO> list = mapper.reqMailList(id);
+		return list;
+	}
 }

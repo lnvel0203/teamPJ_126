@@ -125,6 +125,7 @@ const AttendanceList = Loadable(lazy(() => import('pages/attendance/AttendanceLi
 const Mail = Loadable(lazy(() => import('pages/apps/mail/Mail')));
 const ReqMail = Loadable(lazy(() => import('pages/apps/mail/ReqMail')));
 const ResMail = Loadable(lazy(() => import('pages/apps/mail/ResMail')));
+const MailDetail = Loadable(lazy(() => import('pages/apps/mail/MailDetail')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -189,6 +190,10 @@ const MainRoutes = {
             {
               path: 'resMail',
               element: <ResMail />,
+            },
+            {
+              path: 'mailDetail',
+              element: <MailDetail />,
             },
 
             
