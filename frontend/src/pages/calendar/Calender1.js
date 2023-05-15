@@ -207,7 +207,7 @@ function Calendar() {
   return (
     <div>
       <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]} // api에서 시간 떙겨옴. 확인
+        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]} 
         initialView="dayGridMonth"
         headerToolbar={{
           start: 'today prev,next',
