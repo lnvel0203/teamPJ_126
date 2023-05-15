@@ -4,7 +4,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { getAuthToken } from '../../utils/axios';
+import {getAuthToken } from '../../utils/axios';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 const DocumentWritePage = () => {
