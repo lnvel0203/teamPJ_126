@@ -343,7 +343,7 @@ SelectionHeader.propTypes = {
   getToggleAllPageRowsSelectedProps: PropTypes.func
 };
 
-const CustomerListPage = () => {
+const Departloaletext = () => {
   const theme = useTheme();
 
   const [userData, setUserData] = useState([]);
@@ -486,4 +486,4 @@ const CustomerListPage = () => {
   );
 };
 
-export default CustomerListPage;
+export default Departloaletext;

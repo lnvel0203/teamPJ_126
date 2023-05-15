@@ -2,7 +2,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import { useMemo, useEffect, Fragment, useState, useRef } from 'react';
 import { useNavigate } from 'react-router';
-import { getAuthToken } from '../../../utils/axios';
+import { getAuthToken } from '../../../../utils/axios';
 // material-ui
 import {
   Box,
@@ -25,7 +25,7 @@ import { alpha, useTheme } from '@mui/material/styles';
 
 // third-party
 import { useExpanded, useFilters, useGlobalFilter, usePagination, useRowSelect, useSortBy, useTable } from 'react-table';
-import { DeleteTwoTone, EditTwoTone, EyeTwoTone } from '@ant-design/icons';
+import {  EyeTwoTone } from '@ant-design/icons';
 
 // project import
 import MainCard from 'components/MainCard';
@@ -35,59 +35,12 @@ import IconButton from 'components/@extended/IconButton';
 import { CSVExport, HeaderSort, IndeterminateCheckbox, TablePagination, TableRowSelection } from 'components/third-party/ReactTable';
 import AlertColumnDelete from 'sections/apps/kanban/Board/AlertColumnDelete';
 
-import { dispatch } from 'store';
-import { openSnackbar } from '../../../store/reducers/snackbar';
-
-import { alertPopupToggle } from 'store/reducers/invoice';
 import { renderFilterTypes, GlobalFilter, DateColumnFilter } from 'utils/react-table';
 
 const avatarImage = require.context('assets/images/users', true);
 
 // ==============================|| REACT TABLE ||============================== //
 
-const handleClick = async (SALARYRECORDID) => {
-  //미승인 상태 사원 -> 승인상태로 변경 및 승인버튼 삭제
-
-  try {
-    const response = await axios.put('http://localhost:8081/members/updateSalaryStatus', { SALARYRECORDID },
-    {
-      headers : {
-        Authorization: 'Bearer ' + getAuthToken(),
-       
-      }
-    }
-    
-    );
-    if (response.data == 1) {
-      window.location.reload(); // 자동 새로고침
-      dispatch(
-        openSnackbar({
-          open: true,
-          message: '성공적으로 업데이트 되었습니다.',
-          variant: 'alert',
-          alert: {
-            color: 'success'
-          }
-        })
-      );
-
-      return;
-    } else if (response.data == 0) {
-      dispatch(
-        openSnackbar({
-          open: true,
-          message: '업데이트에 실패했습니다.',
-          variant: 'alert',
-          alert: {
-            color: 'error'
-          }
-        })
-      );
-    }
-  } catch (error) {
-    console.error(error);
-  }
-};
 
 function ReactTable({ columns, data }) {
   const theme = useTheme();
@@ -312,38 +265,6 @@ const ActionCell = (row, setGetInvoiceId, setInvoiceId, navigation, theme) => {
           <EyeTwoTone twoToneColor={theme.palette.secondary.main} />
         </IconButton>
       </Tooltip>
-
-      {/* 수정 버튼 */}
-      <Tooltip title="지급">
-        <IconButton
-          color="primary"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleClick(row.values.SALARYRECORDID);
-          }}
-        >
-          <EditTwoTone twoToneColor={theme.palette.primary.main} />
-        </IconButton>
-      </Tooltip>
-
-      {/* 삭제 버튼 */}
-      <Tooltip title="삭제">
-        <IconButton
-          color="error"
-          onClick={(e) => {
-            e.stopPropagation();
-            setInvoiceId(row.values.SALARYRECORDID);
-            setGetInvoiceId(row.original.invoice_id);
-            dispatch(
-              alertPopupToggle({
-                alertToggle: true
-              })
-            );
-          }}
-        >
-          <DeleteTwoTone twoToneColor={theme.palette.error.main} />
-        </IconButton>
-      </Tooltip>
     </Stack>
   );
 };
@@ -373,10 +294,10 @@ SelectionHeader.propTypes = {
 const List = () => {
   const [list, setList] = useState([]);
   const [alertPopup, setAlertPopup] = useState(false);
-
+  
   useEffect(() => {
     axios
-      .get('http://localhost:8081/members/salaryList',
+      .get(`http://localhost:8081/members/paymentList/${empId}`,
       {
         headers : {
           Authorization: 'Bearer ' + getAuthToken(),

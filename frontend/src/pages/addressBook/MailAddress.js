@@ -1,4 +1,3 @@
-// Import Axios Services
 import { getAuthToken  } from '../../utils/axios';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useMemo, useState, Fragment } from 'react';
@@ -354,28 +353,13 @@ const CustomerListPage = () => {
         accessor: 'id',
         className: 'cell-center'
       },
-      {
-        Header: 'User Name',
-        accessor: 'name',
-        className: 'cell-center'
-      },
+      
       {
         Header: 'Email',
         accessor: 'email',
         className: 'cell-center'
       },
-      {
-        Header: 'Birth',
-        accessor: 'birth',
-        className: 'cell-center'
-      },
-      {
-        Header: 'Address',
-        accessor: 'address',
-        className: 'cell-center'
-      },
-
-      {
+         {
         Header: 'Actions',
         className: 'cell-center',
         disableSortBy: true,

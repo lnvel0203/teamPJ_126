@@ -1,12 +1,14 @@
 // Import Axios Services
-import { getAuthToken  } from '../../utils/axios';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useMemo, useState, Fragment } from 'react';
 import axios from 'axios';
+import { getAuthToken } from '../../../utils/axios';
+import { format } from 'date-fns';
+
 // material-ui
 import { alpha, useTheme } from '@mui/material/styles';
 import {
-  //   Button,
+  Button,
   Chip,
   Dialog,
   Stack,
@@ -15,7 +17,8 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Tooltip,
+  //5월 8일 수정 김성훈  삭제 요청
+  // Tooltip,
   Typography,
   useMediaQuery
 } from '@mui/material';
@@ -25,20 +28,24 @@ import NumberFormat from 'react-number-format';
 import { useFilters, useExpanded, useGlobalFilter, useRowSelect, useSortBy, useTable, usePagination } from 'react-table';
 
 // project import
+import Write from '../Write';
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
-import IconButton from 'components/@extended/IconButton';
+
+//5월 8일 수정 김성훈  삭제 요청
+// import IconButton from 'components/@extended/IconButton';
 import { PopupTransition } from 'components/@extended/Transitions';
 import {
-  //   CSVExport,
+  //CSVExport,
   HeaderSort,
   IndeterminateCheckbox,
-  //   SortingSelect,
+  //5월4일 김성훈 수정 삭제 요청 
+  //SortingSelect,
   TablePagination,
   TableRowSelection
 } from 'components/third-party/ReactTable';
 
-// import AddCustomer from 'sections/apps/customer/AddCustomer';
+
 import CustomerView from 'sections/apps/customer/CustomerView';
 import AlertCustomerDelete from 'sections/apps/customer/AlertCustomerDelete';
 
@@ -46,12 +53,19 @@ import AlertCustomerDelete from 'sections/apps/customer/AlertCustomerDelete';
 import { renderFilterTypes, GlobalFilter } from 'utils/react-table';
 
 // assets
-// import { CloseOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
-import { CloseOutlined, EyeTwoTone } from '@ant-design/icons';
+//5월 4일 김성훈 PlusQutlined,삭제 요청 
+import {  PlusOutlined   } from '@ant-design/icons';
+
+//5월 8일 김성훈 수정 ,삭제 요청 
+//import { CloseOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
+
 
 // ==============================|| REACT TABLE ||============================== //
+//5월 4일 김성훈 handleAdd,삭제
+//function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, handleAdd })
 
-function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent }) {
+//5월 8일 김성훈 직원 팀 선택하기 
+function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,handleAdd}) {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -64,7 +78,8 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent }) {
     headerGroups,
     prepareRow,
     setHiddenColumns,
-    // allColumns,
+    //5월 4일 김성훈 수정 
+    //allColumns,
     visibleColumns,
     rows,
     page,
@@ -72,9 +87,10 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent }) {
     setPageSize,
     state: { globalFilter, selectedRowIds, pageIndex, pageSize, expanded },
     preGlobalFilteredRows,
-    setGlobalFilter
-    // setSortBy,
-    // selectedFlatRows
+    setGlobalFilter,
+    //5월 4일 김성훈 수정
+    //setSortBy,
+    //selectedFlatRows
   } = useTable(
     {
       columns,
@@ -82,8 +98,7 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent }) {
       // @ts-ignore
       filterTypes,
       // @ts-ignore
-      initialState: { pageIndex: 0, pageSize: 10, hiddenColumns: ['avatar', ], sortBy: [sortBy] }
-      //initialState: { pageIndex: 0, pageSize: 10, hiddenColumns: ['avatar', 'email'], sortBy: [sortBy] }
+      initialState: { pageIndex: 0, pageSize: 10, hiddenColumns: ['avatar', 'email'], sortBy: [sortBy] }
     },
     useGlobalFilter,
     useFilters,
@@ -95,21 +110,17 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent }) {
 
   useEffect(() => {
     if (matchDownSM) {
-      setHiddenColumns(['age', 'contact', 'visits', 'status', 'avatar']);
+      setHiddenColumns(['age', 'contact', 'visits', 'email', 'status', 'avatar']);
     } else {
-      setHiddenColumns(['avatar', ]);
+      setHiddenColumns(['avatar', 'email']);
     }
     // eslint-disable-next-line
   }, [matchDownSM]);
 
-  // useEffect(() => {
-  //   if (matchDownSM) {
-  //     setHiddenColumns(['age', 'contact', 'visits', 'email', 'status', 'avatar']);
-  //   } else {
-  //     setHiddenColumns(['avatar', 'email']);
-  //   }
-  //   // eslint-disable-next-line
-  // }, [matchDownSM]);
+  const handleTitleClick = (documentNo) => {
+    console.log('documentNo',documentNo)
+    window.open('/apps/document/documentDetail?documentNo='+documentNo, '_blank', 'width=1200,height=900,top=300,left=300');
+  };
 
   return (
     <>
@@ -128,13 +139,14 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent }) {
             setGlobalFilter={setGlobalFilter}
             size="small"
           />
-          {/* <Stack direction={matchDownSM ? 'column' : 'row'} alignItems="center" spacing={1}>
-            <SortingSelect sortBy={sortBy.id} setSortBy={setSortBy} allColumns={allColumns} />
+          <Stack direction={matchDownSM ? 'column' : 'row'} alignItems="center" spacing={1}>
+            {/* <SortingSelect sortBy={sortBy.id} setSortBy={setSortBy} allColumns={allColumns} /> */}
+            {/*  5월 4일 김성훈 Add Custorme 제거   사용안함 삭제 요청 */ }
             <Button variant="contained" startIcon={<PlusOutlined />} onClick={handleAdd} size="small">
-              Add Customer
+              서류 작성
             </Button>
-            <CSVExport data={selectedFlatRows.length > 0 ? selectedFlatRows.map((d) => d.original) : data} filename={'customer-list.csv'} />
-          </Stack> */}
+            {/* <CSVExport data={selectedFlatRows.length > 0 ? selectedFlatRows.map((d) => d.original) : data} filename={'customer-list.csv'} /> */}
+          </Stack>
         </Stack>
 
         <Table {...getTableProps()}>
@@ -159,12 +171,19 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent }) {
                   <TableRow
                     {...row.getRowProps()}
                     onClick={() => {
-                      row.toggleRowSelected();
+                      handleTitleClick(row.original.documentNo);
                     }}
                     sx={{ cursor: 'pointer', bgcolor: row.isSelected ? alpha(theme.palette.primary.lighter, 0.35) : 'inherit' }}
                   >
                     {row.cells.map((cell, index) => (
-                      <TableCell key={index} {...cell.getCellProps([{ className: cell.column.className }])}>
+                      <TableCell
+                        key={index}
+                        {...cell.getCellProps([{ className: cell.column.className }])}
+                        onClick={cell.column.id === 'selection' ? (e) => {
+                          e.stopPropagation();
+                          row.toggleRowSelected();
+                        } : undefined}
+                      >
                         {cell.render('Cell')}
                       </TableCell>
                     ))}
@@ -229,52 +248,6 @@ const StatusCell = ({ value }) => {
   }
 };
 
-const ActionCell = (row, setCustomer, setCustomerDeleteId, handleClose, theme) => {
-  const collapseIcon = row.isExpanded ? (
-    <CloseOutlined style={{ color: theme.palette.error.main }} />
-  ) : (
-    <EyeTwoTone twoToneColor={theme.palette.secondary.main} />
-  );
-  return (
-    <Stack direction="row" alignItems="center" justifyContent="center" spacing={0}>
-      <Tooltip title="View">
-        <IconButton
-          color="secondary"
-          onClick={(e) => {
-            e.stopPropagation();
-            row.toggleRowExpanded();
-          }}
-        >
-          {collapseIcon}
-        </IconButton>
-      </Tooltip>
-      {/* <Tooltip title="Edit">
-        <IconButton
-          color="primary"
-          onClick={(e) => {
-            e.stopPropagation();
-            setCustomer(row.values);
-            handleAdd();
-          }}
-        >
-          <EditTwoTone twoToneColor={theme.palette.primary.main} />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Delete">
-        <IconButton
-          color="error"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleClose();
-            setCustomerDeleteId(row.values.fatherName);
-          }}
-        >
-          <DeleteTwoTone twoToneColor={theme.palette.error.main} />
-        </IconButton>
-      </Tooltip> */}
-    </Stack>
-  );
-};
 
 StatusCell.propTypes = {
   value: PropTypes.number
@@ -296,40 +269,40 @@ SelectionHeader.propTypes = {
   getToggleAllPageRowsSelectedProps: PropTypes.func
 };
 
-const CustomerListPage = () => {
-  const theme = useTheme();
 
-  const [userData, setUserData] = useState([]);
-
-  // 서버에서 회원 정보를 패치해옴
-  const fetchUserData = useCallback(async () => {
-    try {
-
-    const response = await axios.get('http://localhost:8081/members',
-    {
-      headers : {
-        Authorization: 'Bearer ' + getAuthToken(),
+const ApprovalPendingList = () => {
+  
+  
+    const id = localStorage.getItem('id');
+    const theme = useTheme();
+    const closecheck = localStorage.getItem("closeCheck")
+    const [userData, setUserData] = useState([]);
+  
+    // Fetch user data from the server
+    const fetchUserData = useCallback(async () => {
+      try {
+        const response = await axios.get('http://localhost:8081/members/ApprovalPendingList/'+id, {
+          headers: {
+            Authorization: 'Bearer ' + getAuthToken(),
+          }
+        });
+        setUserData(response.data);
+        localStorage.setItem('pendingListCount',response.data.length);
+      } catch (error) {
+        console.error(error);
       }
-    }); //컨트롤러 url로 변경
-    setUserData(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
+    }, []);
 
   useEffect(() => {
     fetchUserData();
-  }, [fetchUserData]);
+  }, [fetchUserData,closecheck]);
 
-  const data = useMemo(() => userData, [userData]); //리스트
-
-  // # 삭제 : 테스트 리스트 출력
-  console.log(data);
+  const data = useMemo(() => userData, [userData]);
 
   const [add, setAdd] = useState(false);
   const [open, setOpen] = useState(false);
   const [customer, setCustomer] = useState();
-  const [customerDeleteId, setCustomerDeleteId] = useState();
+  const [customerDeleteId] = useState();
 
   const handleAdd = () => {
     setAdd(!add);
@@ -350,37 +323,33 @@ const CustomerListPage = () => {
         disableSortBy: true
       },
       {
-        Header: 'Id',
-        accessor: 'id',
-        className: 'cell-center'
+        Header: '상태',
+        accessor: 'documentState',
+        className: 'cell-left'
       },
       {
-        Header: 'User Name',
-        accessor: 'name',
-        className: 'cell-center'
+        Header: '문서번호',
+        accessor: 'documentNo',
+        className: 'cell-left'
       },
       {
-        Header: 'Email',
-        accessor: 'email',
-        className: 'cell-center'
+        Header: '작성자',
+        accessor: 'author',
+        className: 'cell-left'
       },
       {
-        Header: 'Birth',
-        accessor: 'birth',
-        className: 'cell-center'
-      },
-      {
-        Header: 'Address',
-        accessor: 'address',
-        className: 'cell-center'
-      },
-
-      {
-        Header: 'Actions',
-        className: 'cell-center',
-        disableSortBy: true,
-        Cell: ({ row }) => ActionCell(row, setCustomer, setCustomerDeleteId, handleClose, theme)
+        Header: '제목',
+        accessor: 'title',
       }
+      ,
+      {
+        Header: '작성일',
+        accessor: 'draftDate',
+        className: 'cell-left',
+        Cell: ({ value }) => format(new Date(value), 'yyyy-mm-dd HH:mm:ss')
+
+      }
+      
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [theme]
@@ -399,7 +368,6 @@ const CustomerListPage = () => {
           renderRowSubComponent={renderRowSubComponent}
         />
       </ScrollX>
-      {/* 이부분 주소록에서는 삭제 */}
       <AlertCustomerDelete title={customerDeleteId} open={open} handleClose={handleClose} />
       {/* add user dialog */}
       <Dialog
@@ -412,10 +380,10 @@ const CustomerListPage = () => {
         sx={{ '& .MuiDialog-paper': { p: 0 }, transition: 'transform 225ms' }}
         aria-describedby="alert-dialog-slide-description"
       >
-        {/* <AddCustomer customer={customer} onCancel={handleAdd} /> */}
+        <Write customer={customer} onCancel={handleAdd} />
       </Dialog>
     </MainCard>
   );
 };
 
-export default CustomerListPage;
+export default ApprovalPendingList;

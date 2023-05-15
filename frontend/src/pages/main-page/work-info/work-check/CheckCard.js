@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-
+import { getAuthToken  } from '../../../../utils/axios';
 // material-ui
 import { Grid, Typography, Stack } from '@mui/material';
 // import { openSnackbar } from 'store/reducers/snackbar';
@@ -37,7 +37,12 @@ const CheckCard = ({ onStatusChange }) => {
   // 백엔드에서 외출 상태를 확인하는 함수
   const checkOutStatus = async () => {
     try {
-      const response = await axios.get(`http://localhost:8081/members/checkOutStatus?id=${id}`);
+      const response = await axios.get(`http://localhost:8081/members/checkOutStatus?id=${id}`,
+      {
+        headers : {
+          Authorization: 'Bearer ' + getAuthToken(),
+        }
+      });
       setIsOut(response.data === 1);
       console.log('isOut?: ' + isOut);
     } catch (error) {
@@ -64,7 +69,12 @@ const CheckCard = ({ onStatusChange }) => {
     // 출근 안했는데 버튼 다른 버튼 누를 때
     if (status !== 'start-work') {
       try {
-        const response = await axios.get(`http://localhost:8081/members/isStartWork?id=${id}`);
+        const response = await axios.get(`http://localhost:8081/members/isStartWork?id=${id}`,
+        {
+          headers : {
+            Authorization: 'Bearer ' + getAuthToken(),
+          }
+        });
         if (response.data == 0) {
           dispatch(
             openSnackbar({
@@ -109,7 +119,12 @@ const CheckCard = ({ onStatusChange }) => {
 
     // 퇴근 상태 확인
     try {
-      const response = await axios.get(`http://localhost:8081/members/isEndWork?id=${id}`);
+      const response = await axios.get(`http://localhost:8081/members/isEndWork?id=${id}`,
+      {
+        headers : {
+          Authorization: 'Bearer ' + getAuthToken(),
+        }
+      });
       if (response.data == 1) {
         dispatch(
           openSnackbar({
@@ -137,7 +152,12 @@ const CheckCard = ({ onStatusChange }) => {
     // 출근 상태 확인
     if (status === 'start-work' && status !== 'end-work') {
       try {
-        const response = await axios.get(`http://localhost:8081/members/isStartWork?id=${id}`);
+        const response = await axios.get(`http://localhost:8081/members/isStartWork?id=${id}`,
+        {
+          headers : {
+            Authorization: 'Bearer ' + getAuthToken(),
+          }
+        });
         if (response.data == 1) {
           dispatch(
             openSnackbar({
@@ -163,7 +183,12 @@ const CheckCard = ({ onStatusChange }) => {
 
     // 근무 체크
     axios
-      .post('http://localhost:8081/members/workCheck', { id: id, status: status })
+      .post('http://localhost:8081/members/workCheck', { id: id, status: status },
+      {
+        headers : {
+          Authorization: 'Bearer ' + getAuthToken(),
+        }
+      })
       .then((response) => {
         console.log(response);
         onStatusChange();

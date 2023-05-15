@@ -1,7 +1,7 @@
 package springBoot_team_pj_126.service;
 
 import java.io.IOException;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,10 +28,11 @@ public interface MypageService {
 	public void photo(String id, String absolutePath);
 	
 	// 급여 상세 가져오기
-	
 
 	public EmployeeSalaryDTO mySalary(String empId);
 	
+	public ArrayList<Map<String, Object>> paymentList(String empId)
+			throws ServletException,IOException;
 	
 //	public void insertMember(MemberDTO dto) throws ServletException, IOException;
 //	

@@ -30,33 +30,26 @@ class AuthLogin extends Component {
   };
 
   login = (e) => {
-    //로컬데이터 클리어
     localStorage.clear();
-    //여기부터
     e.preventDefault();
     request(
       'POST',
-
-      //axios_helpers 에서 디폴트 URL을 써서 가능한거다.
-
       '/members/login',
       {
         id: this.state.id,
         pwd: this.state.pwd
       }
-    )
-      .then((response) => {
-        // 콜백함수
+    ).then((response) => {
         this.setState({ componentToShow: 'messages' });
-        //정상이면 토큰을 셋 해라!
         setAuthToken(response.data.token);
         setId(this.state.id);
         window.location.href = '/apps/main-page';
-      })
-
-      .catch((err) => console.log(`Error Occured : ${err}`));
+      }).catch((err) => {
+        console.log(`Error Occured : ${err}`),
+        alert("비밀번호를 잘못 입력하셨습니다.")
+      });
   };
-  //여기까지
+
   render() {
     const style = {
       width: 390,

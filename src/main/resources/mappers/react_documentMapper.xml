@@ -6,51 +6,63 @@
      
 <mapper namespace="springBoot_team_pj_126.dao.DocumentMapper">
 
-
-
+<!-- 목록  -->
 <select id="approvalPendingList" resultType="springBoot_team_pj_126.dto.DocumentDTO">
     SELECT * FROM document_tbl
-	WHERE (FirstApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND FirstAPPROVERSTATE = '결재중')
-	   OR (SecondApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND SecondAPPROVERSTATE = '결재중')
-	   OR (ThirdApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND THIRDAPPROVERSTATE = '결재중')
-	   OR (FourthApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND FOURTHAPPROVERSTATE = '결재중')
+   WHERE (FirstApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND FirstAPPROVERSTATE = '결재중')
+      OR (SecondApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND SecondAPPROVERSTATE = '결재중')
+      OR (ThirdApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND THIRDAPPROVERSTATE = '결재중')
+      OR (FourthApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND FOURTHAPPROVERSTATE = '결재중')
 </select>
 
 <select id="approvalScheduledList" resultType="springBoot_team_pj_126.dto.DocumentDTO">
     SELECT * FROM document_tbl
-	WHERE (FirstApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND FirstAPPROVERSTATE = '대기중')
-	   OR (SecondApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND SecondAPPROVERSTATE = '대기중')
-	   OR (ThirdApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND THIRDAPPROVERSTATE = '대기중')
-	   OR (FourthApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND FOURTHAPPROVERSTATE = '대기중')
+   WHERE (FirstApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND FirstAPPROVERSTATE = '대기중')
+      OR (SecondApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND SecondAPPROVERSTATE = '대기중')
+      OR (ThirdApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND THIRDAPPROVERSTATE = '대기중')
+      OR (FourthApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND FOURTHAPPROVERSTATE = '대기중')
 </select>
 
 <select id="approvalCompletedList" resultType="springBoot_team_pj_126.dto.DocumentDTO">
     SELECT * FROM document_tbl
-	WHERE (FirstApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND FirstAPPROVERSTATE = '결재완료')
-	   OR (SecondApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND SecondAPPROVERSTATE = '결재완료')
-	   OR (ThirdApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND THIRDAPPROVERSTATE = '결재완료')
-	   OR (FourthApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND FOURTHAPPROVERSTATE = '결재완료')
+   WHERE (FirstApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND FirstAPPROVERSTATE = '결재완료')
+      OR (SecondApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND SecondAPPROVERSTATE = '결재완료')
+      OR (ThirdApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND THIRDAPPROVERSTATE = '결재완료')
+      OR (FourthApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND FOURTHAPPROVERSTATE = '결재완료')
 </select>
 
 <select id="draftDocumentList" resultType="springBoot_team_pj_126.dto.DocumentDTO">
-	SELECT * FROM DOCUMENT_TBL 
-     WHERE AUTHOR = (SELECT name FROM EMPLOYEES_TBL WHERE id=#{id})
+    SELECT * FROM DOCUMENT_TBL 
+    WHERE AUTHOR = (SELECT name FROM EMPLOYEES_TBL WHERE id=#{id})
+    AND documentState != '반려됨'
 </select>
 
 <select id="rejectionDocumentList" resultType="springBoot_team_pj_126.dto.DocumentDTO">
-	SELECT * FROM DOCUMENT_TBL 
+   SELECT * FROM DOCUMENT_TBL 
      WHERE AUTHOR = (SELECT name FROM EMPLOYEES_TBL WHERE id=#{id})
      AND DOCUMENTSTATE = '반려됨'
 </select>
 
 
-
+<!-- 결재자 목록 -->
 <select id="approverList" resultType="springBoot_team_pj_126.dto.UserDTO">
-		SELECT e.NO,e.name,d.deptname,e.stemp, p.POSITIONNAME,e.positionId 
-		FROM EMPLOYEES_TBL e,DEPARTMENT_TBl d ,POSITION_TBL p 
-		WHERE e.DEPTID = d.DEPTID 
-		AND e.POSITIONID = p.POSITIONID
+      SELECT e.NO, e.name, d.deptname, e.stemp, p.POSITIONNAME, e.positionId 
+      FROM EMPLOYEES_TBL e, DEPARTMENT_TBl d, POSITION_TBL p 
+      WHERE e.DEPTID = d.DEPTID 
+      AND e.POSITIONID = p.POSITIONID
+      AND e.positionId >= 3
 </select>
+
+
+
+
+
+
+
+
+
+
+
 
 
 <insert id="addDocument" parameterType="springBoot_team_pj_126.dto.DocumentDTO">
@@ -101,9 +113,33 @@
 </insert>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 <select id="documentDetail" resultType="springBoot_team_pj_126.dto.DocumentDTO">
     select * from document_tbl where documentNo =#{documentNo}
 </select>
+
+
+
+
+
+
+
+
+
+
+
+<!-- 결재자 불러오기 -->
 
 <select id="findApproverByNo" parameterType="map" resultType="springBoot_team_pj_126.dto.UserDTO">
     SELECT e.*, d.deptname, p.positionname, doc.firstApproverState, doc.secondApproverState, doc.thirdApproverState, doc.fourthApproverState
@@ -118,25 +154,57 @@
     AND doc.documentNo = #{documentNo}
 </select>
 
+
+
+
+
+
+
 <update id="updateDocument" parameterType="springBoot_team_pj_126.dto.DocumentDTO">
-    <![CDATA[
-        UPDATE document_tbl
-        SET
-            title = #{title},
-            author = #{author},
-            documentType = #{documentType},
-            retentionPeriod = #{retentionPeriod},
-            securityLevel = #{securityLevel},
-            content = #{content},
-            firstApproverNo = #{firstApproverNo},
-            secondApproverNo = #{secondApproverNo},
-            thirdApproverNo = #{thirdApproverNo, jdbcType=NUMERIC},
-            fourthApproverNo = #{fourthApproverNo, jdbcType=NUMERIC},
-            filePath = #{filePath}
-        WHERE
-            documentNo = #{documentNo}
-    ]]>
+  <![CDATA[
+    UPDATE document_tbl
+    SET
+        title = #{title},
+        author = #{author},
+        documentType = #{documentType},
+        retentionPeriod = #{retentionPeriod},
+        securityLevel = #{securityLevel},
+        content = #{content},
+        firstApproverNo = #{firstApproverNo},
+        secondApproverNo = #{secondApproverNo},
+        thirdApproverNo = #{thirdApproverNo, jdbcType=NUMERIC},
+        fourthApproverNo = #{fourthApproverNo, jdbcType=NUMERIC},
+        filePath = #{filePath},
+        firstApproverState = CASE
+            WHEN #{documentState} = '반려됨' AND #{firstApproverState} = '반려' THEN '결재중'
+            ELSE #{firstApproverState}
+        END,
+        secondApproverState = CASE
+            WHEN #{documentState} = '반려됨' AND #{secondApproverState} = '반려' THEN '결재중'
+            ELSE #{secondApproverState}
+        END,
+        thirdApproverState = CASE
+            WHEN #{documentState} = '반려됨' AND #{thirdApproverState} = '반려' THEN '결재중'
+            ELSE #{thirdApproverState}
+        END,
+        fourthApproverState = CASE
+            WHEN #{documentState} = '반려됨' AND #{fourthApproverState} = '반려' THEN '결재중'
+            ELSE #{fourthApproverState}
+        END,
+        documentState = CASE
+            WHEN #{documentState} = '반려됨' THEN '결재진행중'
+            ELSE #{documentState}
+        END
+    WHERE
+        documentNo = #{documentNo}
+  ]]>
 </update>
+
+
+
+
+
+
 
 <select id="getEmployeeNo" resultType="Integer">
     select NO from Employees_tbl where id =#{id}
@@ -146,6 +214,18 @@
     select * from document_tbl where documentNO =#{documentNO}
 </select>
 
+
+
+
+
+
+
+
+
+
+
+
+<!-- 결재! -->
 <update id="documentApprove" parameterType="springBoot_team_pj_126.dto.DocumentDTO">
     UPDATE Document_tbl
     SET 
@@ -153,10 +233,21 @@
         secondApproverState = #{secondApproverState},
         thirdApproverState = #{thirdApproverState},
         fourthApproverState = #{fourthApproverState},
-        documentState = #{documentState},
-        rejectionReason = #{rejectionReason}
+        documentState = #{documentState}
     WHERE documentNo = #{documentNo}
 </update>
+
+
+
+
+
+
+
+
+
+
+
+<!-- 반려 -->
 
 <update id="documentRejection" parameterType="springBoot_team_pj_126.dto.DocumentDTO">
     UPDATE Document_tbl
@@ -169,6 +260,19 @@
         rejectionReason = #{rejectionReason}
     WHERE documentNo = #{documentNo}
 </update>
+
+
+
+
+
+
+
+
+
+
+<select id="getUserData" resultType="springBoot_team_pj_126.dto.UserDTO">
+    select * from employees_tbl where id = #{id}
+</select>
 
 
 

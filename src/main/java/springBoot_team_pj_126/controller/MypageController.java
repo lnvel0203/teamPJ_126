@@ -2,6 +2,8 @@ package springBoot_team_pj_126.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 
@@ -45,21 +47,31 @@ public class MypageController {
 	
 	// ========================================================
 
+	@GetMapping("/paymentList/{id}")
+	public ArrayList<Map<String, Object>> paymentList(@PathVariable String id)
+			throws ServletException, IOException {
+		logger.info("SalaryController - salaryList()");
+		
+		System.out.println("id : " + id);
+		ArrayList<Map<String, Object>> map = mypage.paymentList(id);
+		
+		return map;
+	}
+	
 	@GetMapping("/mypage/{id}")
 	public UserDTO userinfo(@PathVariable String id) 
 			throws ServletException, IOException{
 		logger.info("MypageController - mypage()");
-		System.out.println("id"+ id);
+		System.out.println("id : "+ id);
 		UserDTO dto = mypage.userinfo(id);
 		attendance.attendanceList(id);
-		
-		
 		return dto;
 	}
 	
 	//프로필 사진 업로드
 	@PostMapping("/mypage/{id}/photo")
 	public void photo(@PathVariable String id, MultipartFile file) throws Exception {
+		System.out.println("file : " + file + "id : " + id);
 		File uploadFile = new File("C:\\images\\", file.getOriginalFilename());
 		if (!uploadFile.exists()) {
 			uploadFile.mkdirs();

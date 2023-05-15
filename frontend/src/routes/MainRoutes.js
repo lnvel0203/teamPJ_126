@@ -25,7 +25,7 @@ const AppCustomerCard = Loadable(lazy(() => import('pages/apps/customer/card')))
 
 // 인사관리 
 const CustomLocaleText = Loadable(lazy(() => import('pages/apps/adminperson-customer/customlocaletext')));
-const CustomerListPage = Loadable(lazy(() => import('pages/apps/adminperson-customer/departloaletext')));
+const Departloaletext = Loadable(lazy(() => import('pages/apps/adminperson-customer/Departloaletext')));
 const HierarchyLocaleText = Loadable(lazy(() => import('pages/apps/adminperson-customer/hierarchylocaletext')));
 const Personnelevaluation = Loadable(lazy(() => import('pages/apps/adminperson-customer/Personnelevaluation')));
 const DepartDepartments = Loadable(lazy(() => import('pages/apps/adminperson-customer/departdepartments')));
@@ -114,13 +114,11 @@ const MainPage = Loadable(lazy(() => import('pages/main-page/Main')));
 
 // 추가
 const AddApprover = Loadable(lazy(() => import('pages/document/AddApprover')));
-const EditorComponent = Loadable(lazy(() => import('pages/document/EditorComponent')));
-const DocumentForm = Loadable(lazy(() => import('pages/document/Form')));
 const DocumentList = Loadable(lazy(() => import('pages/document/list')));
 const DocumentDetail = Loadable(lazy(() => import('pages/document/DocumentDetail')));
-const DraftDocumentList = Loadable(lazy(() => import('pages/document/DraftDocumentList')));
+const DraftDocumentList = Loadable(lazy(() => import('pages/document/List/DraftDocumentList')));
 
-const Documentwrite = Loadable(lazy(() => import('pages/document/write')));
+const Documentwrite = Loadable(lazy(() => import('pages/document/Write')));
 const AttendanceList = Loadable(lazy(() => import('pages/attendance/AttendanceList')));
 const Mail = Loadable(lazy(() => import('pages/apps/mail/Mail')));
 const ReqMail = Loadable(lazy(() => import('pages/apps/mail/ReqMail')));
@@ -227,14 +225,14 @@ const MainRoutes = {
                   path: 'AddApprover',
                   element: <AddApprover />
                 },
-                {
-                  path: 'EditorComponent',
-                  element: <EditorComponent />
-                },
-                {
-                  path: 'DocumentForm',
-                  element: <DocumentForm />
-                },
+                // {
+                //   path: 'EditorComponent',
+                //   element: <EditorComponent />
+                // },
+                // {
+                //   path: 'DocumentForm',
+                //   element: <DocumentForm />
+                // },
                 {
                   path: 'DocumentList',
                   element: <DocumentList />
@@ -327,8 +325,8 @@ const MainRoutes = {
                   element: <CustomLocaleText />
                 },
                 {
-                  path: 'departloaletext',
-                  element: <CustomerListPage />
+                  path: 'Departloaletext',
+                  element: <Departloaletext />
                 },
                 {
                   path: 'hierarchylocaletext',

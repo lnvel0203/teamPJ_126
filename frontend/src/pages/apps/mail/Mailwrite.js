@@ -111,7 +111,7 @@ const DocumentWritePage = () => {
 
   const addressBook = () =>{
     const features = "width=400,height=600,top=100,left=100";
-    window.open("/apps/customer/customer-list", "_blank", features);
+    window.open("/apps/customer/customer-MailList", "_blank", features);
   }
   
     return (

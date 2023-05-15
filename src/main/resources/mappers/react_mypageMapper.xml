@@ -47,6 +47,14 @@
 	    </association>
 	</resultMap>
 
+   <!-- 급여 관리 리스트 -->
+   <select id="paymentList" resultType="java.util.Map">
+      SELECT sr.salaryrecordId, sr.id, e.name, sr.netSalary, sr.payDate, sr.paymentStatus
+      FROM SALARY_RECORDS_TBL sr
+      JOIN EMPLOYEES_TBL e 
+      ON sr.id = e.id
+      where e.id = #{id}
+   </select>
 
 <select id="userinfo" resultType="springBoot_team_pj_126.dto.UserDTO">
 SELECT e.* ,d.deptName, p.positionName

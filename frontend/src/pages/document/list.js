@@ -1,26 +1,20 @@
-// Import Axios Services
-// import { request } from '../../utils/axios';
-import axios from 'axios';
 import PropTypes from 'prop-types';
-import { useCallback, useEffect, useMemo, useState, Fragment } from 'react';
-import { format } from 'date-fns';
+import { useEffect, useMemo, useState, Fragment} from 'react';
 import { Box, Tabs, Tab } from '@mui/material';
-import DfraftDocumentList from './DraftDocumentList';
-import RejectionDocumentList from './RejectionDocumentList';
+import DfraftDocumentList from './List/DraftDocumentList';
+import RejectionDocumentList from './List/RejectionDocumentList';
 
 // material-ui
 import { alpha, useTheme } from '@mui/material/styles';
 import {
   Button,
   Chip,
-  Dialog,
   Stack,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
-  Tooltip,
   Typography,
   useMediaQuery
 } from '@mui/material';
@@ -30,10 +24,6 @@ import NumberFormat from 'react-number-format';
 import { useFilters, useExpanded, useGlobalFilter, useRowSelect, useSortBy, useTable, usePagination } from 'react-table';
 
 // project import
-import MainCard from 'components/MainCard';
-import ScrollX from 'components/ScrollX';
-import IconButton from 'components/@extended/IconButton';
-import { PopupTransition } from 'components/@extended/Transitions';
 import {
   CSVExport,
   HeaderSort,
@@ -43,15 +33,17 @@ import {
   TableRowSelection
 } from 'components/third-party/ReactTable';
 
-import AddCustomer from 'sections/apps/customer/AddCustomer';
-import CustomerView from 'sections/apps/customer/CustomerView';
-import AlertCustomerDelete from 'sections/apps/customer/AlertCustomerDelete';
+import ApprovalPendingList from './List/ApprovalPendingList';
+import ApprovalCompletedList from './List/ApprovalCompletedList';
+import ApprovalScheduledList from './List/ApprovalScheduledList';
+
+
 
 // import makeData from 'data/react-table';
 import { renderFilterTypes, GlobalFilter } from 'utils/react-table';
 
 // assets
-import { CloseOutlined, PlusOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
+import { PlusOutlined,} from '@ant-design/icons';
 
 // ==============================|| REACT TABLE ||============================== //
 
@@ -244,53 +236,6 @@ const StatusCell = ({ value }) => {
   }
 };
 
-const ActionCell = (row, setCustomer, setCustomerDeleteId, handleClose, theme) => {
-  const collapseIcon = row.isExpanded ? (
-    <CloseOutlined style={{ color: theme.palette.error.main }} />
-  ) : (
-    <EyeTwoTone twoToneColor={theme.palette.secondary.main} />
-  );
-  return (
-    <Stack direction="row" alignItems="center" justifyContent="center" spacing={0}>
-      <Tooltip title="View">
-        <IconButton
-          color="secondary"
-          onClick={(e) => {
-            e.stopPropagation();
-            row.toggleRowExpanded();
-          }}
-        >
-          {collapseIcon}
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Edit">
-        <IconButton
-          color="primary"
-          onClick={(e) => {
-            e.stopPropagation();
-            setCustomer(row.values);
-            handleAdd();
-          }}
-        >
-          <EditTwoTone twoToneColor={theme.palette.primary.main} />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Delete">
-        <IconButton
-          color="error"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleClose();
-            setCustomerDeleteId(row.values.fatherName);
-          }}
-        >
-          <DeleteTwoTone twoToneColor={theme.palette.error.main} />
-        </IconButton>
-      </Tooltip>
-    </Stack>
-  );
-};
-
 StatusCell.propTypes = {
   value: PropTypes.number
 };
@@ -311,378 +256,36 @@ SelectionHeader.propTypes = {
   getToggleAllPageRowsSelectedProps: PropTypes.func
 };
 
-// 결재대기 목록 
-const ApprovalPendingList = () => {
-  
-  const id = localStorage.getItem('id');
-  const theme = useTheme();
-
-  const [userData, setUserData] = useState([]);
-
-  // Fetch user data from the server
-  const fetchUserData = useCallback(async () => {
-    try {
-      const response = await axios.get('http://localhost:8081/members/ApprovalPendingList/'+id);
-      setUserData(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchUserData();
-  }, [fetchUserData]);
-
-  const data = useMemo(() => userData, [userData]);
-  console.log('data',data);
-  const [add, setAdd] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [customer, setCustomer] = useState();
-  const [customerDeleteId, setCustomerDeleteId] = useState();
-
-  const handleAdd = () => {
-    setAdd(!add);
-    if (customer && !add) setCustomer(null);
-  };
-
-  const handleClose = () => {
-    setOpen(!open);
-  };
-
- 
-  const columns = useMemo(
-    () => [
-      {
-        title: 'Row Selection',
-        Header: SelectionHeader,
-        accessor: 'selection',
-        Cell: SelectionCell,
-        disableSortBy: true
-      },
-      {
-        Header: '상태',
-        accessor: 'documentState',
-        className: 'cell-left'
-      },
-      {
-        Header: '문서번호',
-        accessor: 'documentNo',
-        className: 'cell-left'
-      },
-      {
-        Header: '작성자',
-        accessor: 'author',
-        className: 'cell-left'
-      },
-      {
-        Header: '제목',
-        accessor: 'title',
-      }
-      ,
-      {
-        Header: '작성일',
-        accessor: 'draftDate',
-        className: 'cell-left',
-        Cell: ({ value }) => format(new Date(value), 'yyyy-mm-dd HH:mm:ss')
-
-      },
-      {
-        Header: 'Actions',
-        className: 'cell-right',
-        disableSortBy: true,
-        Cell: ({ row }) => ActionCell(row, setCustomer, setCustomerDeleteId, handleClose, theme)
-      }
-    ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [theme]
-  );
-  
-  const renderRowSubComponent = useCallback(({ row }) => <CustomerView data={data[row.id]} />, [data]);
-
-  return (
-    <MainCard content={false}>
-      <ScrollX>
-        <ReactTable
-          columns={columns}
-          data={userData}
-          handleAdd={handleAdd}
-          getHeaderProps={(column) => column.getSortByToggleProps()}
-          renderRowSubComponent={renderRowSubComponent}
-        />
-      </ScrollX>
-      <AlertCustomerDelete title={customerDeleteId} open={open} handleClose={handleClose} />
-      {/* add user dialog */}
-      <Dialog
-        maxWidth="sm"
-        TransitionComponent={PopupTransition}
-        keepMounted
-        fullWidth
-        onClose={handleAdd}
-        open={add}
-        sx={{ '& .MuiDialog-paper': { p: 0 }, transition: 'transform 225ms' }}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <AddCustomer customer={customer} onCancel={handleAdd} />
-      </Dialog>
-    </MainCard>
-  );
-};
-
-
-// 결재예정 목록 
-
-
-const ApprovalScheduledList = () => {
-  
-  const id = localStorage.getItem('id');
-  const theme = useTheme();
-
-  const [userData, setUserData] = useState([]);
-
-  // Fetch user data from the server
-  const fetchUserData = useCallback(async () => {
-    try {
-      const response = await axios.get('http://localhost:8081/members/ApprovalScheduledList/'+id);
-      setUserData(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchUserData();
-  }, [fetchUserData]);
-
-  const data = useMemo(() => userData, [userData]);
-  console.log('data',data);
-  const [add, setAdd] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [customer, setCustomer] = useState();
-  const [customerDeleteId, setCustomerDeleteId] = useState();
-
-  const handleAdd = () => {
-    setAdd(!add);
-    if (customer && !add) setCustomer(null);
-  };
-
-  const handleClose = () => {
-    setOpen(!open);
-  };
-
- 
-  const columns = useMemo(
-    () => [
-      {
-        title: 'Row Selection',
-        Header: SelectionHeader,
-        accessor: 'selection',
-        Cell: SelectionCell,
-        disableSortBy: true
-      },
-      {
-        Header: '상태',
-        accessor: 'documentState',
-        className: 'cell-left'
-      },
-      {
-        Header: '문서번호',
-        accessor: 'documentNo',
-        className: 'cell-left'
-      },
-      {
-        Header: '작성자',
-        accessor: 'author',
-        className: 'cell-left'
-      },
-      {
-        Header: '제목',
-        accessor: 'title',
-      }
-      ,
-      {
-        Header: '작성일',
-        accessor: 'draftDate',
-        className: 'cell-left',
-        Cell: ({ value }) => format(new Date(value), 'yyyy-mm-dd HH:mm:ss')
-
-      },
-      {
-        Header: 'Actions',
-        className: 'cell-right',
-        disableSortBy: true,
-        Cell: ({ row }) => ActionCell(row, setCustomer, setCustomerDeleteId, handleClose, theme)
-      }
-    ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [theme]
-  );
-  
-  const renderRowSubComponent = useCallback(({ row }) => <CustomerView data={data[row.id]} />, [data]);
-
-  return (
-    <MainCard content={false}>
-      <ScrollX>
-        <ReactTable
-          columns={columns}
-          data={userData}
-          handleAdd={handleAdd}
-          getHeaderProps={(column) => column.getSortByToggleProps()}
-          renderRowSubComponent={renderRowSubComponent}
-        />
-      </ScrollX>
-      <AlertCustomerDelete title={customerDeleteId} open={open} handleClose={handleClose} />
-      {/* add user dialog */}
-      <Dialog
-        maxWidth="sm"
-        TransitionComponent={PopupTransition}
-        keepMounted
-        fullWidth
-        onClose={handleAdd}
-        open={add}
-        sx={{ '& .MuiDialog-paper': { p: 0 }, transition: 'transform 225ms' }}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <AddCustomer customer={customer} onCancel={handleAdd} />
-      </Dialog>
-    </MainCard>
-  );
-};
-
-// 결재완료 목록
-const ApprovalCompletedList = () => {
-  
-  const id = localStorage.getItem('id');
-  const theme = useTheme();
-
-  const [userData, setUserData] = useState([]);
-
-  // Fetch user data from the server
-  const fetchUserData = useCallback(async () => {
-    try {
-      const response = await axios.get('http://localhost:8081/members/ApprovalCompletedList/'+id);
-      setUserData(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchUserData();
-  }, [fetchUserData]);
-
-  const data = useMemo(() => userData, [userData]);
-  console.log('data',data);
-  const [add, setAdd] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [customer, setCustomer] = useState();
-  const [customerDeleteId, setCustomerDeleteId] = useState();
-
-  const handleAdd = () => {
-    setAdd(!add);
-    if (customer && !add) setCustomer(null);
-  };
-
-  const handleClose = () => {
-    setOpen(!open);
-  };
-
- 
-  const columns = useMemo(
-    () => [
-      {
-        title: 'Row Selection',
-        Header: SelectionHeader,
-        accessor: 'selection',
-        Cell: SelectionCell,
-        disableSortBy: true
-      },
-      {
-        Header: '상태',
-        accessor: 'documentState',
-        className: 'cell-left'
-      },
-      {
-        Header: '문서번호',
-        accessor: 'documentNo',
-        className: 'cell-left'
-      },
-      {
-        Header: '작성자',
-        accessor: 'author',
-        className: 'cell-left'
-      },
-      {
-        Header: '제목',
-        accessor: 'title',
-      }
-      ,
-      {
-        Header: '작성일',
-        accessor: 'draftDate',
-        className: 'cell-left',
-        Cell: ({ value }) => format(new Date(value), 'yyyy-mm-dd HH:mm:ss')
-
-      },
-      {
-        Header: 'Actions',
-        className: 'cell-right',
-        disableSortBy: true,
-        Cell: ({ row }) => ActionCell(row, setCustomer, setCustomerDeleteId, handleClose, theme)
-      }
-    ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [theme]
-  );
-  
-  const renderRowSubComponent = useCallback(({ row }) => <CustomerView data={data[row.id]} />, [data]);
-
-  return (
-    <MainCard content={false}>
-      <ScrollX>
-        <ReactTable
-          columns={columns}
-          data={userData}
-          handleAdd={handleAdd}
-          getHeaderProps={(column) => column.getSortByToggleProps()}
-          renderRowSubComponent={renderRowSubComponent}
-        />
-      </ScrollX>
-      <AlertCustomerDelete title={customerDeleteId} open={open} handleClose={handleClose} />
-      {/* add user dialog */}
-      <Dialog
-        maxWidth="sm"
-        TransitionComponent={PopupTransition}
-        keepMounted
-        fullWidth
-        onClose={handleAdd}
-        open={add}
-        sx={{ '& .MuiDialog-paper': { p: 0 }, transition: 'transform 225ms' }}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <AddCustomer customer={customer} onCancel={handleAdd} />
-      </Dialog>
-    </MainCard>
-  );
-};
-
 const ApproveList = () => {
 
-  const [value, setValue] = useState(0);
+  const rejectionListCount = localStorage.getItem('rejectionListCount');
+  const pendingListCount = localStorage.getItem('pendingListCount');
+  const scheduledListCount = localStorage.getItem('scheduledListCount');
+  const completedListCount = localStorage.getItem('completedListCount');
+
+  const closeCheck = localStorage.getItem('closeCheck');
+  const initialTabIndex = closeCheck === 'approval' ? 4 : 0;
+  const [value, setValue] = useState(initialTabIndex);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-
   }
+
+  useEffect(() => {
+    const closeCheck = localStorage.getItem('closeCheck');
+    const newTabIndex = closeCheck === 'approval' ? 4 : value;
+    setValue(newTabIndex);
+  }, [value]);
 
   return (
     <>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
       <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
         <Tab label="기안 문서"/>
-        <Tab label="반려 문서"/>
-        <Tab label="결재 대기"/>
-        <Tab label="결재 예정"/>
-        <Tab label="결재 완료"/>
+         <Tab label={`반려 문서 (${rejectionListCount})`}/>
+         <Tab label={`결재 대기 (${pendingListCount})`}/>
+         <Tab label={`결재 예정 (${scheduledListCount})`}/>
+         <Tab label={`결재 완료 (${completedListCount})`}/>
       </Tabs>
     </Box>
     <TabPanel value={value} index={0}>
@@ -700,7 +303,6 @@ const ApproveList = () => {
     <TabPanel value={value} index={4}>
     <ApprovalCompletedList />
     </TabPanel>
-    
     
     </>
   );

@@ -1,35 +1,75 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './DocumentComponent.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { request } from '../../utils/axios';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { getAuthToken } from '../../utils/axios';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 const DocumentWritePage = () => {
-  
+
+  const [annualCount, setAnnualCount] = useState(0);
   const navigate = useNavigate();
   const [documentType,setDocumentType] = useState('');
-  const [author,setAuthor] = useState('');
   const [retentionPeriod,setRetentionPeriod] = useState('');
   const [securityLevel,setSecurityLevel] = useState('');
   const [approver, setApprover] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
   const id = localStorage.getItem('id');
   const [title, setTitle] = useState('');
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [vacationDate, setVacationDate] = useState(0);
+  const [name, setName] = useState('');
+  const [a, setA] = useState(0);
 
+  useEffect(() => {
+    // 서버에서 이름과 남은 휴가일수를 가져오는 함수 호출
+    fetchUserData();
+  }, []);
 
+  const fetchUserData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8081/members/getAnnualCount/${id}`, {
+        headers: {
+          Authorization: 'Bearer ' + getAuthToken(),
+        }
+      });
+      const userData = response.data;
+      console.log('userdata',userData)
+      setName(userData.name); 
+      setAnnualCount(userData.annualCount);
+    } catch (error) {
+      console.error('Failed to fetch user data:', error);
+    }
+  };
   
-  
- 
   const handleDocumentTypeChange = (event) => {
     setDocumentType(event.target.value);
+    if (event.target.value === '휴가') {
+      setVacationDate(true);
+      setRetentionPeriod('');
+      setSecurityLevel('');
+    } else {
+      setVacationDate(false);
+    }
+    console.log('타입',documentType)
   };
 
-  
-
-  const handleAuthorChange = (event) => {
-    setAuthor(event.target.value);
-    console.log("id",{id})
-  };
+  useEffect(() => {
+    setA(annualCount);
+    if (startDate && endDate) {
+      
+      const diffTime = Math.abs(endDate - startDate);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      //부석현
+      
+      setA(annualCount - diffDays);
+      
+      setVacationDate(diffDays);
+    }
+  }, [startDate, endDate]);
 
   const handleRetentionPeriodChange = (event) => {
     setRetentionPeriod(event.target.value);
@@ -39,10 +79,14 @@ const DocumentWritePage = () => {
     setSecurityLevel(event.target.value);
     console.log('write로컬',localStorage.getItem("approver"))
   };
-
+//2번
   const handleAddButtonClick = () => {
+    let width = 530;
+    let height = 710;
+    let top = (window.innerHeight / 2) - (height / 2) + window.screenY;
+    let left = (window.innerWidth / 2) - (width / 2) + window.screenX;
     localStorage.removeItem("approver");
-    window.open('/apps/document/AddApprover', '_blank', 'width=800,height=600,top=300,left=300');
+    window.open('/apps/document/AddApprover', '_blank', `width=${width},height=${height},top=${top},left=${left}`);
   };
 
   const handleFileUpload = (event) => {
@@ -119,7 +163,7 @@ const DocumentWritePage = () => {
     
     const storedApprover = JSON.parse(localStorage.getItem('approver')) || [];
     setApprover(storedApprover);
-    
+     //7번 -- 값
     const formData = new FormData();
 
     storedApprover.forEach((apv, index) => {
@@ -128,14 +172,19 @@ const DocumentWritePage = () => {
     formData.append(`approverNo${index}`, apv.no);
   });
     
+    //if(documentType=='휴가')
     formData.append('id',id);
     formData.append('documentType', documentType);
-    formData.append('author', author);
+    formData.append('author', name);
     formData.append('retentionPeriod', retentionPeriod);
     formData.append('securityLevel', securityLevel);
+    formData.append('VacationStartDate',startDate);
+    formData.append('VacationDedtDate',endDate);
+    formData.append('vacationDate', vacationDate);
     formData.append('title', title);
     formData.append('content', value); 
 
+    //결제자 -> 
     storedApprover.forEach((apv, index) => {
       formData.append(`storedApprover${index}`, JSON.stringify(apv));
     });
@@ -149,29 +198,64 @@ const DocumentWritePage = () => {
     }
     console.log('selectedFile',selectedFile)
     console.log("전송시작")
-  
+ 
+    //8번 컨트롤러 0
     try {
-      request(
-        'POST',
-        '/members/addDocument', formData
-      ).then(response => {
-        console.log('Insert success:', response.data);
-        console.log("성공한듯 ? ")
-        navigate('/apps/document/documentList', { state: { id: id } });
-      })
-      // const response = await axios.post('http://localhost:8081/members/addDocument', formData);
-      // console.log('Insert success:', response.data);
-      // console.log("성공한듯 ? ")
-      // navigate('/apps/document/documentList', { state: { id: id } });
+      // request(
+      //   'POST',
+      //   '/members/addDocument', formData
+      // ).then(response => {
+      //   console.log('Insert success:', response.data);
+      //   console.log("성공한듯 ? ")        
+      //   navigate('/apps/document/documentList', { state: { id: id } });
+      // })
+      const response = await axios.post('http://localhost:8081/members/addDocument', formData, {
+        headers: {
+          Authorization: 'Bearer ' + getAuthToken(),
+        }
+      });
+      console.log('Insert success:', response.data);
+      navigate('/apps/document/documentList', { state: { id: id } });
       
       // 이후 처리 (예: 페이지 이동 등)
     } catch (error) {
-      console.log("되겠냐고 ㅋ ");
       console.error('Insert error:', error);
       // 이후 처리 (예: 에러 메시지 표시 등)
     }
   };
 
+  
+//휴가 계산
+  useEffect(() => {
+    if (startDate && endDate) {
+      const diffTime = Math.abs(endDate - startDate);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      if (diffDays>annualCount) {
+        window.alert('휴가가 부족합니다')
+        setEndDate(null);
+        setVacationDate(0);
+      }
+      else {
+        setVacationDate(diffDays);
+      } 
+    }
+  }, [startDate, endDate]);
+
+  const handleStartDateChange = (date) => {
+    if (endDate && date > endDate) {
+      window.alert('휴가 시작 날짜는 종료 날짜보다 이전이어야 합니다');
+    } else {
+      setStartDate(date);
+    }
+  };
+  
+  const handleEndDateChange = (date) => {
+    if (startDate && date < startDate) {
+      window.alert('휴가 종료 날짜는 시작 날짜보다 이후이어야 합니다');
+    } else {
+      setEndDate(date);
+    }
+  };
   
     return (
     
@@ -187,14 +271,16 @@ const DocumentWritePage = () => {
                   <option value="보고서">보고서</option>
                   <option value="프레젠테이션">프레젠테이션</option>
                   <option value="계약서">계약서</option>
-                  <option value="기타">기타</option>
+                  <option value="휴가">휴가</option>
                 </select>
               </td>
               <td className='write-td'>작성자</td>
               <td>
-                <input type="text" value={author} onChange={handleAuthorChange} />
+                {name}
               </td>
             </tr>
+            
+            {documentType !== '휴가' && (
             <tr className="tr-1">
               <td>보존 연한</td>
               <td className='write-td'>
@@ -217,8 +303,27 @@ const DocumentWritePage = () => {
                 </select>
               </td>
             </tr>
-          </tbody>
-        </table>
+            )}
+            {documentType === '휴가' && (
+            <tr className="tr-1">
+            <td>휴가 시작 날짜</td>
+            <td className="write-td">
+              <DatePicker selected={startDate} onChange={handleStartDateChange} />
+            </td>
+            <td>휴가 종료 날짜</td>
+            <td className="write-td">
+              <DatePicker selected={endDate} onChange={handleEndDateChange} dateFormat="yyyy/MM/dd" />
+            </td>
+            <td>사용 가능 휴가: {annualCount}</td>
+            <td>사용할 휴가: {vacationDate}</td>
+            <td>남는 휴가 : {a}</td>
+            {/* <td>남는 휴가 : {annualCount - vacationDate}</td> */}
+          </tr>
+                )}
+      </tbody>
+    </table>
+
+          
         <br />
         <br />
         <h1>결재선</h1>
@@ -242,8 +347,6 @@ const DocumentWritePage = () => {
               <td className="col-4">{approver[2] ? "(결재란)" : ""}</td>
               <td className="col-5">{approver[3] ? "(결재란)" : ""}</td>
             </tr>
-
-
             <tr className="tr-3">
               <td className="col-2">{approver[0] ? approver[0].name : ""}</td>
               <td className="col-3">{approver[1] ? approver[1].name : ""}</td>

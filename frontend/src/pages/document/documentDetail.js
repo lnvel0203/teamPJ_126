@@ -3,10 +3,10 @@ import './DocumentComponent.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import axios from 'axios';
-import { useNavigate,useLocation } from 'react-router-dom';
+import {request, getAuthToken } from '../../utils/axios';
+import {useLocation } from 'react-router-dom';
 const DocumentDetail = () => {
   
-  const navigate = useNavigate();
   const [documentType,setDocumentType] = useState('');
   const [author,setAuthor] = useState('');
   const [retentionPeriod,setRetentionPeriod] = useState('');
@@ -36,6 +36,10 @@ const DocumentDetail = () => {
   const [showEditCancelButtons, setShowEditCancelButtons] = useState(false);
   const [showFilePath, setShowFilePath] = useState(false);
   const [filePath , setFilePath] = useState("");
+
+  // const [startDate, setStartDate] = useState(null);
+  // const [endDate, setEndDate] = useState(null);
+  // const [vacationDate, setVacationDate] = useState(0);
   
   
 
@@ -45,12 +49,13 @@ const DocumentDetail = () => {
 
     const query = useQuery();
     const documentNo = query.get('documentNo');
-
-    
-
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:8081/members/documentDetail/'+documentNo);
+      const response = await axios.get('http://localhost:8081/members/documentDetail/'+documentNo, {
+        headers: {
+          Authorization: 'Bearer ' + getAuthToken(),
+        }
+      });
       console.log(response.data)
       const data = response.data;
       setDocumentType(data.documentType)
@@ -82,8 +87,10 @@ const DocumentDetail = () => {
           approverNos: approverNos.join(","),
           documentNo: documentNo,
         },
+        headers: {
+          Authorization: 'Bearer ' + getAuthToken(),
+        }
       });
-
       if (response.data[0]) {
         setFirstApproverId(response.data[0].id);
         setFirstApproverState(response.data[0].firstApproverState); // Set firstApproverState
@@ -107,7 +114,7 @@ const DocumentDetail = () => {
       return null;
     }
   };
-
+//존재하는 결재자 아이디값만으로 - 
   useEffect(() => {
     const approverIds = [
         firstApproverId,
@@ -115,7 +122,9 @@ const DocumentDetail = () => {
         thirdApproverId,
         fourthApproverId,
     ].filter((no) => no !== null);
-
+//포함시 -> 로그인된 아이디와 비교 위 배열이랑 
+//포함시 0->setShowEditCancelButtons, setShowFilePath
+//
     if (approverIds.includes(id)) {
       setShowEditCancelButtons(true);
       setShowFilePath(true);
@@ -240,22 +249,17 @@ const DocumentDetail = () => {
     'color',
     'background'
   ];
-
   //수정하기 
   const handleUpdateDocument = async (event) => { 
 
+    // 여기가 조건
     const result = window.confirm('수정 하시겠습니까 ?');
     if(result) {
-      if(documentState=='반려' || documentState=='임시저장') {
+      if(documentState=='반려됨' || documentState=='임시저장') {
                 event.preventDefault();
               const storedApprover = JSON.parse(localStorage.getItem('approver')) || [];
               setApprover(storedApprover);
               const formData = new FormData();
-              storedApprover.forEach((apv, index) => {
-              formData.append(`storedApprover${index}`, JSON.stringify(apv));
-              // Add approver number to formData
-              formData.append(`approverNo${index}`, apv.no);
-            });
               
               formData.append('documentNo',documentNo);
               formData.append('id',id);
@@ -265,6 +269,20 @@ const DocumentDetail = () => {
               formData.append('securityLevel', securityLevel);
               formData.append('title', title);
               formData.append('content', content); 
+              formData.append('documentState',documentState);
+              formData.append('documentNo',documentNo);
+              if(firstApproverState) {
+                formData.append('firstApproverState',firstApproverState)
+              }
+              if(secondApproverState) {
+                formData.append('secondApproverState',secondApproverState)
+              }
+              if(thirdApproverState) {
+                formData.append('thirdApproverState',thirdApproverState)
+              }
+              if(fourthApproverState) {
+                formData.append('fourthApproverState',fourthApproverState)
+              }
 
               storedApprover.forEach((apv, index) => {
                 formData.append(`storedApprover${index}`, JSON.stringify(apv));
@@ -280,13 +298,18 @@ const DocumentDetail = () => {
               console.log("전송시작")
             
               try {
-                const response = await axios.post('http://localhost:8081/members/updateDocument', formData);
+                const response = await axios.post('http://localhost:8081/members/updateDocument', formData, {
+                  headers: {
+                    Authorization: 'Bearer ' + getAuthToken(),
+                  }
+                });
                 console.log('Update success:', response.data);
-                navigate('/apps/document/documentList', { state: { id: id } });
+                window.alert('수정되었습니다.')
+                localStorage.setItem('closeCheck',1);
+                window.close();
                 
                 // 이후 처리 (예: 페이지 이동 등)
               } catch (error) {
-                console.log("되겠냐고 ㅋ ");
                 console.error('Insert error:', error);
                 // 이후 처리 (예: 에러 메시지 표시 등)
               }
@@ -297,17 +320,35 @@ const DocumentDetail = () => {
     }
   };
 
+
+  // {
+  //   headers: {
+  //     Authorization: 'Bearer ' + getAuthToken(),
+  //   }
+  // }
+
+  //승인
   const handleApprovalButtonClick = async () => {
     const result = window.confirm('결재승인 하시겠습니까 ?');
     if(result) {
         console.log('승인')
         try {
             console.log(id)
-            await axios.post('http://localhost:8081/members/approve/'+id+'/'+documentNo);
+            //문서번호  + 아이디 -> 로컬저장.
+            request(
+              'POST',
+              '/members/approve/'+id+'/'+documentNo
+            );
             window.alert('결재승인 되었습니다')
+            window.close();
 
-            window.location.reload();
 
+
+            // await axios.post('http://localhost:8081/members/approve/'+id+'/'+documentNo, );
+            // window.alert('결재승인 되었습니다')
+            
+            // window.close();
+            
             // 
         } catch(error) {
             console.error('Error:',error)
@@ -317,9 +358,6 @@ const DocumentDetail = () => {
     }
     // 결재 처리 로직
   };
-
-  
-
   const handleRejectionButtonClick = async  () => {
     const result = window.confirm('반려하시겠습니까 ?');
 
@@ -328,9 +366,14 @@ const DocumentDetail = () => {
         if (rejectionReason) {
           try {
 
-            await axios.post('http://localhost:8081/members/addRejectionReason/'+rejectionReason+'/'+id+'/'+documentNo);
-
+            await request(
+              'POST',
+              '/members/addRejectionReason/'+rejectionReason+'/'+id+'/'+documentNo
+            );
+            //await axios.post('http://localhost:8081/members/addRejectionReason/'+rejectionReason+'/'+id+'/'+documentNo);
             window.alert('반려처리 되었습니다')
+            localStorage.setItem('closeCheck',2);
+            window.close();
           } catch (error) {
             console.error('Error:', error);
           }
@@ -342,10 +385,10 @@ const DocumentDetail = () => {
       }
     // 반려 처리 로직
   };
-
   
   return (
-    
+    // showEditCancelButtons == TRUE 이면 혹은 아니면 3항
+
     <div style={{ marginLeft: '' }}>
         <div>
         {showEditCancelButtons ? (
@@ -366,6 +409,8 @@ const DocumentDetail = () => {
           </>
         )}
       </div> 
+      
+      <h2>반려사유 :{rejectionReason}</h2>
       <h1>기본 설정</h1>
        <table className="tb-1">
         <tbody>
@@ -417,7 +462,11 @@ const DocumentDetail = () => {
           <tr className="tr-1">
             <td rowSpan="3" className="col-1">
               신청
-              <button className="add-button" onClick={handleAddButtonClick}>
+              <button 
+                className="add-button" 
+                onClick={handleAddButtonClick}
+                disabled={documentState !== '임시저장' && documentState !== '반려됨'}
+              >
                 +
               </button>
             </td>
@@ -427,12 +476,10 @@ const DocumentDetail = () => {
             <td className="col-5">{approver[3] ? approver[3].positionName : ""}</td>
           </tr>
           <tr className="tr-2">
-
             <td className="col-2">{firstApproverState === "결재완료" ? firstApproverState : ""}</td>
             <td className="col-3">{secondApproverState === "결재완료" ? secondApproverState : ""}</td>
             <td className="col-4">{thirdApproverState === "결재완료" ? thirdApproverState : ""}</td>
             <td className="col-5">{fourthApproverState === "결재완료" ? fourthApproverState : ""}</td>
-
           </tr>
 
 

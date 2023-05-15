@@ -1,13 +1,12 @@
 // import React, { useCallback } from 'react';
 import axios from 'axios';
+import { getAuthToken } from '../../../../utils/axios';
 import { useEffect, useState, useRef } from 'react';
-import { useNavigate, useParams } from 'react-router';
-import { getAuthToken } from '../../../utils/axios';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 // import { Box, Grid, IconButton, Chip, FormControl, Button, Stack, Typography, Divider } from '@mui/material';
 import { Box, Grid, IconButton, FormControl, Stack, Typography, Divider } from '@mui/material';
-
+import { useNavigate, useParams } from 'react-router';
 // third-party
 import ReactToPrint from 'react-to-print';
 // import { PDFDownloadLink } from '@react-pdf/renderer';
@@ -26,17 +25,18 @@ import { getInvoiceSingleList } from 'store/reducers/invoice';
 // import { DownloadOutlined, EditOutlined, PrinterFilled } from '@ant-design/icons';
 import { EditOutlined, PrinterFilled } from '@ant-design/icons';
 
-import InvoiceDetail from './InvoiceDetail';
+import InvoiceDetail from '../../../../pages/apps/invoice/InvoiceDetail';
 
 // 돈 포맷
 const formatter = new Intl.NumberFormat('ko-KR');
 
 // ==============================|| INVOICE - DETAILS ||============================== //
 
-const Details = () => {
+const TabPayments = () => {
   // ===============================================
 
   const theme = useTheme();
+  const empId = localStorage.getItem("id");
   const { id } = useParams();
   const navigation = useNavigate();
 
@@ -45,19 +45,12 @@ const Details = () => {
 
   useEffect(() => {
     dispatch(getInvoiceSingleList(Number(id))).then(() => setLoading(true));
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
     axios
-      .get(`http://localhost:8081/members/invoiceDetail?id=${id}`,
-      {
-        headers : {
+      .get(`http://localhost:8081/members/mySalary/${empId}`, {
+        headers: {
           Authorization: 'Bearer ' + getAuthToken(),
-    
-        }
-      }
-      ,{
-        headers : {
-          Authorization: 'Bearer ' + getAuthToken(),
-          
         }
       })
       .then((response) => {
@@ -146,7 +139,7 @@ const Details = () => {
 
             {/* # 3 ======================================= */}
             <Grid item xs={12} sm={6}>
-              <MainCard>ADD
+              <MainCard>
                 <Stack spacing={1}>
                   <Typography variant="h5">From:</Typography>
                   <FormControl sx={{ width: '100%' }}>
@@ -228,8 +221,7 @@ const Details = () => {
               <Stack direction="row" spacing={1}>
                 <Typography color="secondary">Notes: </Typography>
                 <Typography>
-                  It was a pleasure working with you and your team. We hope you will keep us in mind for future freelance projects. Thank
-                  You!
+                  귀하의 노고에 감사드립니다.
                 </Typography>
               </Stack>
             </Grid>
@@ -247,4 +239,4 @@ const Details = () => {
   );
 };
 
-export default Details;
+export default TabPayments;

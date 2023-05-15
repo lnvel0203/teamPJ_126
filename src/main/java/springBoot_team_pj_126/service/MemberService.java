@@ -1,7 +1,9 @@
 package springBoot_team_pj_126.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -34,5 +36,6 @@ public interface MemberService {
 	// 5월 8일 추가 김성훈 // 팀 수정
 	public void editDeptname(String id ,String DeptName)
 			throws ServletException,IOException;
+
 
 }

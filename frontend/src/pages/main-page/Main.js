@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState} from 'react';
 // material-ui
 import { Box, Grid } from '@mui/material';
 
@@ -12,6 +12,11 @@ import CheckCard from './work-info/work-check/CheckCard';
 // 캘린더 변경
 import AppCalendar from 'pages/calendar/Calender1';
 import Chart from './work-info/work-plan/Chart';
+
+// 서류 목록 
+import ListCount from 'pages/document/List/ListCount';
+
+
 
 const Main = () => {
   const [refreshStatus, setRefreshStatus] = useState(false);
@@ -50,6 +55,7 @@ const Main = () => {
           </MainCard>
         </Grid>
       </Grid>
+      <ListCount />
     </Box>
   );
 };

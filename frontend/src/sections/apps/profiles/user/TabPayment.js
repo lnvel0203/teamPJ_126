@@ -1,237 +1,449 @@
-// import React, { useCallback } from 'react';
 import axios from 'axios';
-import { useEffect, useState, useRef } from 'react';
+import PropTypes from 'prop-types';
+import { useMemo, useEffect, Fragment, useState, useRef } from 'react';
+import { useNavigate } from 'react-router';
+import { getAuthToken } from '../../../../utils/axios';
 // material-ui
-import { useTheme } from '@mui/material/styles';
-// import { Box, Grid, IconButton, Chip, FormControl, Button, Stack, Typography, Divider } from '@mui/material';
-import { Box, Grid, IconButton, FormControl, Stack, Typography, Divider } from '@mui/material';
-import { useNavigate, useParams } from 'react-router';
+import {
+  Box,
+  Chip,
+  LinearProgress,
+  Tabs,
+  Tab,
+  Grid,
+  Typography,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  useMediaQuery,
+  Tooltip
+} from '@mui/material';
+import { alpha, useTheme } from '@mui/material/styles';
+
 // third-party
-import ReactToPrint from 'react-to-print';
-// import { PDFDownloadLink } from '@react-pdf/renderer';
+import { useExpanded, useFilters, useGlobalFilter, usePagination, useRowSelect, useSortBy, useTable } from 'react-table';
+import {  EyeTwoTone } from '@ant-design/icons';
 
 // project import
-import Loader from 'components/Loader';
 import MainCard from 'components/MainCard';
-// 로고
-// import LogoSection from 'components/logo';
-// import ExportPDFView from 'sections/apps/invoice/export-pdf';
+import ScrollX from 'components/ScrollX';
+import Avatar from 'components/@extended/Avatar';
+import IconButton from 'components/@extended/IconButton';
+import { CSVExport, HeaderSort, IndeterminateCheckbox, TablePagination, TableRowSelection } from 'components/third-party/ReactTable';
+import AlertColumnDelete from 'sections/apps/kanban/Board/AlertColumnDelete';
 
-import { dispatch } from 'store';
-import { getInvoiceSingleList } from 'store/reducers/invoice';
+import { renderFilterTypes, GlobalFilter, DateColumnFilter } from 'utils/react-table';
 
-// assets
-// import { DownloadOutlined, EditOutlined, PrinterFilled } from '@ant-design/icons';
-import { EditOutlined, PrinterFilled } from '@ant-design/icons';
+const avatarImage = require.context('assets/images/users', true);
 
-import InvoiceDetail from '../../../../pages/apps/invoice/InvoiceDetail';
+// ==============================|| REACT TABLE ||============================== //
 
-// 돈 포맷
-const formatter = new Intl.NumberFormat('ko-KR');
 
-// ==============================|| INVOICE - DETAILS ||============================== //
-
-const TabPayments = () => {
-  // ===============================================
-
+function ReactTable({ columns, data }) {
   const theme = useTheme();
-  const empId = localStorage.getItem("id");
-  const { id } = useParams();
-  const navigation = useNavigate();
-
-  const [list, setList] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    dispatch(getInvoiceSingleList(Number(id))).then(() => setLoading(true));
-    
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    axios
-      .get(`http://localhost:8081/members/mySalary/${empId}`)
-      .then((response) => {
-        setList(response.data); // 데이터를 상태에 설정
-      })
-      .catch((error) => {
-        console.error('error: ', error);
-      });
-  }, [id]);
-
-  // const today = new Date(`${list?.date}`).toLocaleDateString('en-GB', {
-  //   month: 'numeric',
-  //   day: 'numeric',
-  //   year: 'numeric'
-  // });
-
-  // const due_dates = new Date(`${list?.due_date}`).toLocaleDateString('en-GB', {
-  //   month: 'numeric',
-  //   day: 'numeric',
-  //   year: 'numeric'
-  // });
+  const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'));
+  const defaultColumn = useMemo(() => ({ Filter: DateColumnFilter }), []);
+  const filterTypes = useMemo(() => renderFilterTypes, []);
+  const initialState = useMemo(
+    () => ({
+      filters: [{ id: 'id', value: '' }],
+      hiddenColumns: ['avatar', 'email'],
+      pageIndex: 0,
+      pageSize: 5
+    }),
+    []
+  );
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    prepareRow,
+    rows,
+    page,
+    gotoPage,
+    setPageSize,
+    state: { globalFilter, selectedRowIds, pageIndex, pageSize },
+    preGlobalFilteredRows,
+    setGlobalFilter,
+    setFilter
+  } = useTable(
+    {
+      columns,
+      data,
+      filterTypes,
+      defaultColumn,
+      initialState
+    },
+    useGlobalFilter,
+    useFilters,
+    useSortBy,
+    useExpanded,
+    usePagination,
+    useRowSelect
+  );
 
   const componentRef = useRef(null);
 
-  if (!loading) return <Loader />;
+  // ================ Tab ================
+
+  const groups = ['All', ...new Set(data.map((item) => item.PAYMENTSTATUS))];
+  const countGroup = data.map((item) => item.PAYMENTSTATUS);
+  const counts = countGroup.reduce(
+    (acc, value) => ({
+      ...acc,
+      [value]: (acc[value] || 0) + 1
+    }),
+    {}
+  );
+
+  const [activeTab, setActiveTab] = useState(groups[0]);
+
+  useEffect(() => {
+    setFilter('PAYMENTSTATUS', activeTab === 'All' ? '' : activeTab);
+    // eslint-disable-next-line
+  }, [activeTab]);
 
   return (
-    <MainCard content={false}>
-      <Stack spacing={2.5}>
-        {/* # 1 ======================================= */}
-        <Box sx={{ p: 2.5, pb: 0 }}>
-          {console.log('id: ' + id)}
-          <MainCard content={false} sx={{ p: 1.25, bgcolor: 'primary.lighter', borderColor: theme.palette.primary[100] }}>
-            <Stack direction="row" justifyContent="flex-end" spacing={1}>
-              <IconButton onClick={() => navigation(`/apps/invoice/edit/${id}`)}>
-                <EditOutlined style={{ color: theme.palette.grey[900] }} />
-              </IconButton>
-              {/* PDF */}
-              {/* <PDFDownloadLink document={<ExportPDFView list={list} />} fileName={`${list?.user?.name}-${list?.user?.name}.pdf`}>
-                <IconButton>
-                  <DownloadOutlined style={{ color: theme.palette.grey[900] }} />
-                </IconButton>
-              </PDFDownloadLink> */}
+    <>
+      <Box sx={{ p: 3, pb: 0, width: '100%' }}>
+        <Tabs value={activeTab} onChange={(e, value) => setActiveTab(value)} sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          {groups.map((status, index) => (
+            <Tab
+              key={index}
+              label={status}
+              value={status}
+              icon={
+                <Chip
+                  label={
+                    status === 'All'
+                      ? data.length
+                      : status === 'paid'
+                      ? counts.Paid
+                      : status === 'Unpaid'
+                      ? counts.Unpaid
+                      : counts.Cancelled
+                  }
+                  color={status === 'All' ? 'primary' : status === 'paid' ? 'success' : status === 'unpaid' ? 'warning' : 'error'}
+                  variant="light"
+                  size="small"
+                />
+              }
+              iconPosition="end"
+            />
+          ))}
+        </Tabs>
+      </Box>
+      <Stack direction={matchDownSM ? 'column' : 'row'} spacing={1} justifyContent="space-between" alignItems="center" sx={{ p: 3, pb: 3 }}>
+        <Stack direction={matchDownSM ? 'column' : 'row'} spacing={2}>
+          <GlobalFilter
+            preGlobalFilteredRows={preGlobalFilteredRows}
+            globalFilter={globalFilter}
+            setGlobalFilter={setGlobalFilter}
+            size="small"
+          />
+        </Stack>
 
-              {/* 프린트 */}
-              <ReactToPrint
-                trigger={() => (
-                  <IconButton>
-                    <PrinterFilled style={{ color: theme.palette.grey[900] }} />
-                  </IconButton>
-                )}
-                content={() => componentRef.current}
-              />
+        <Stack direction={matchDownSM ? 'column' : 'row'} alignItems="center" spacing={matchDownSM ? 1 : 0}>
+          <TableRowSelection selected={Object.keys(selectedRowIds).length} />
+          {headerGroups.map((group, index) => (
+            <Stack key={index} direction={matchDownSM ? 'column' : 'row'} spacing={1} {...group.getHeaderGroupProps()}>
+              {group.headers.map((column, i) => (
+                <Box key={i} {...column.getHeaderProps([{ className: column.className }])}>
+                  {column.canFilter ? column.render('Filter') : null}
+                </Box>
+              ))}
             </Stack>
-          </MainCard>
-        </Box>
-
-        {/* # 2 ======================================= */}
-        <Box sx={{ p: 2.5 }} id="print" ref={componentRef}>
-          <Grid container spacing={2.5}>
-            <Grid item xs={12}>
-              <Stack direction="row" justifyContent="space-between">
-                <Box>
-                  <Stack direction="row" spacing={2}>
-                    {/* <LogoSection /> */}
-                    {/* <Chip label="Paid" variant="light" color="success" size="small" /> */}
-                  </Stack>
-                  <Typography color="secondary">{list?.invoice_id}</Typography>
-                </Box>
-                <Box>
-                  <Stack direction="row" spacing={1} justifyContent="flex-end">
-                    <Typography variant="subtitle1">Date</Typography>
-                    <Typography color="secondary">{0}</Typography>
-                    {/* 위에는 원래 today 자리 */}
-                  </Stack>
-                  <Stack direction="row" spacing={1} justifyContent="flex-end">
-                    <Typography sx={{ overflow: 'hidden' }} variant="subtitle1">
-                      Due Date
-                    </Typography>
-                    <Typography color="secondary">{0}</Typography>
-                    {/* 위에는 원래 due_dates 자리 */}
-                  </Stack>
-                </Box>
-              </Stack>
-            </Grid>
-
-            {/* # 3 ======================================= */}
-            <Grid item xs={12} sm={6}>
-              <MainCard>
-                <Stack spacing={1}>
-                  <Typography variant="h5">From:</Typography>
-                  <FormControl sx={{ width: '100%' }}>
-                    <Typography color="subtitle1">(주)한국소프트웨어아이엔씨</Typography>
-                    <br />
-                    <br />
-                  </FormControl>
-                </Stack>
-              </MainCard>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <MainCard>
-                <Stack spacing={1}>
-                  <Typography variant="h5">To:</Typography>
-                  <FormControl sx={{ width: '100%' }}>
-                    <Typography color="subtitle1">{list?.user?.name}</Typography>
-                    <Typography color="secondary">{list?.user?.address}</Typography>
-                    <Typography color="secondary">{list?.user?.hp}</Typography>
-                    <Typography color="secondary">{list?.user?.email}</Typography>
-                  </FormControl>
-                </Stack>
-              </MainCard>
-            </Grid>
-
-            {/* # 4 ======================================= */}
-            {/** 새 컴포넌트 */}
-            {/* Form Layout 시작 */}
-            <Grid item xs={12}>
-              <InvoiceDetail list={list} />
-            </Grid>
-
-            {/* Form Layout 시작 끝 */}
-
-            {/* # 5 ======================================= */}
-            <Divider />
-
-            <Grid item xs={12}>
-              <Divider sx={{ borderWidth: 1 }} />
-            </Grid>
-
-            <Grid container justifyContent="right">
-              <Grid item xs={12} md={4} mt={2}>
-                <Stack spacing={2}>
-                  {/* Sub Total 시작 */}
-                  <Stack direction="row" justifyContent="space-between">
-                    <Typography color={theme.palette.grey[500]}>추가 급여 :</Typography>
-                    <Typography>{formatter.format(list?.additionalPayment?.totalAdditional)}원</Typography>
-                  </Stack>
-                  {/* Sub Total 끝 */}
-
-                  {/* Discount 시작 */}
-                  <Stack direction="row" justifyContent="space-between">
-                    <Typography color={theme.palette.grey[500]}>보험료 :</Typography>
-                    <Typography variant="h6">{formatter.format(Math.round(list?.deduction?.totalDeductions))}원</Typography>
-                  </Stack>
-                  {/* Discount 끝 */}
-
-                  {/* Tax 시작 */}
-                  <Stack direction="row" justifyContent="space-between">
-                    <Typography color={theme.palette.grey[500]}>소득세 :</Typography>
-                    <Typography>{formatter.format(Math.round(list?.deduction?.incomeTax))}원</Typography>
-                  </Stack>
-                  {/* Tax 끝 */}
-
-                  {/* Grand Total 시작 */}
-                  <Stack direction="row" justifyContent="space-between">
-                    <Typography variant="subtitle1">실 수령액 :</Typography>
-                    <Typography variant="subtitle1" color={theme.palette.success.main}>
-                      {' '}
-                      {formatter.format(Math.round(list?.salaryRecord?.netSalary))}원
-                    </Typography>
-                  </Stack>
-                  {/* Grand Total 끝 */}
-                </Stack>
-              </Grid>
-            </Grid>
-
-            <Grid item xs={12}>
-              <Stack direction="row" spacing={1}>
-                <Typography color="secondary">Notes: </Typography>
-                <Typography>
-                  귀하의 노고에 감사드립니다.
-                </Typography>
-              </Stack>
-            </Grid>
-          </Grid>
-        </Box>
-        <Stack direction="row" justifyContent="flex-end" spacing={2} sx={{ p: 2.5, a: { textDecoration: 'none', color: 'inherit' } }}>
-          {/* <PDFDownloadLink document={<ExportPDFView list={list} />} fileName={`${list?.user?.name}-${list?.user?.name}.pdf`}>
-            <Button variant="contained" color="primary">
-              Download
-            </Button>
-          </PDFDownloadLink> */}
+          ))}
+          <CSVExport data={data} filename={'invoice-list.csv'} />
         </Stack>
       </Stack>
-    </MainCard>
+      <Box ref={componentRef}>
+        <Table {...getTableProps()}>
+          <TableHead>
+            {headerGroups.map((headerGroup, i) => (
+              <TableRow key={i} {...headerGroup.getHeaderGroupProps()} sx={{ '& > th:first-of-type': { width: '58px' } }}>
+                {headerGroup.headers.map((column, x) => (
+                  <TableCell key={x} {...column.getHeaderProps([{ className: column.className }])}>
+                    <HeaderSort column={column} sort />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableHead>
+          <TableBody {...getTableBodyProps()}>
+            {page.map((row, i) => {
+              prepareRow(row);
+              return (
+                <Fragment key={i}>
+                  <TableRow
+                    {...row.getRowProps()}
+                    onClick={() => {
+                      row.toggleRowSelected();
+                    }}
+                    sx={{ cursor: 'pointer', bgcolor: row.isSelected ? alpha(theme.palette.primary.lighter, 0.35) : 'inherit' }}
+                  >
+                    {row.cells.map((cell, i) => (
+                      <TableCell key={i} {...cell.getCellProps([{ className: cell.column.className }])}>
+                        {cell.render('Cell')}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </Fragment>
+              );
+            })}
+            <TableRow sx={{ '&:hover': { bgcolor: 'transparent !important' } }}>
+              <TableCell sx={{ p: 2, py: 3 }} colSpan={9}>
+                <TablePagination gotoPage={gotoPage} rows={rows} setPageSize={setPageSize} pageSize={pageSize} pageIndex={pageIndex} />
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </Box>
+    </>
+  );
+}
+
+ReactTable.propTypes = {
+  columns: PropTypes.array,
+  data: PropTypes.array
+};
+
+// ==============================|| INVOICE - LIST ||============================== //
+
+const CustomerCell = ({ row }) => {
+  const { values } = row;
+  return (
+    <Stack direction="row" spacing={1.5} alignItems="center">
+      <Avatar alt="Avatar" size="sm" src={avatarImage(`./avatar-${!values.avatar ? 1 : values.avatar}.png`)} />
+      <Stack spacing={0}>
+        <Typography variant="subtitle1">{values.customer_name}</Typography>
+        <Typography variant="caption" color="textSecondary">
+          {values.email}
+        </Typography>
+      </Stack>
+    </Stack>
   );
 };
 
-export default TabPayments;
+CustomerCell.propTypes = {
+  row: PropTypes.object
+};
+
+// Status
+const StatusCell = ({ value }) => {
+  switch (value) {
+    case 'cancelled':
+      return <Chip color="error" label="Cancelled" size="small" variant="light" />;
+    case 'paid':
+      return <Chip color="success" label="Paid" size="small" variant="light" />;
+    case 'unpaid':
+    default:
+      return <Chip color="info" label="Unpaid" size="small" variant="light" />;
+  }
+};
+
+StatusCell.propTypes = {
+  value: PropTypes.string
+};
+
+// Action Cell
+const ActionCell = (row, setGetInvoiceId, setInvoiceId, navigation, theme) => {
+  return (
+    <Stack direction="row" alignItems="center" justifyContent="center" spacing={0}>
+      {/* 상세 버튼 */}
+      <Tooltip title="상세">
+        <IconButton
+          color="secondary"
+          onClick={(e) => {
+            e.stopPropagation();
+            navigation(`/apps/invoice/details/${row.values.SALARYRECORDID}`);
+          }}
+        >
+          <EyeTwoTone twoToneColor={theme.palette.secondary.main} />
+        </IconButton>
+      </Tooltip>
+    </Stack>
+  );
+};
+
+ActionCell.propTypes = {
+  row: PropTypes.array,
+  setInvoiceId: PropTypes.func,
+  setGetInvoiceId: PropTypes.func,
+  navigation: PropTypes.func,
+  theme: PropTypes.object
+};
+
+// Section Cell and Header
+const SelectionCell = ({ row }) => <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />;
+const SelectionHeader = ({ getToggleAllPageRowsSelectedProps }) => (
+  <IndeterminateCheckbox indeterminate {...getToggleAllPageRowsSelectedProps()} />
+);
+
+SelectionCell.propTypes = {
+  row: PropTypes.object
+};
+
+SelectionHeader.propTypes = {
+  getToggleAllPageRowsSelectedProps: PropTypes.func
+};
+
+const List = () => {
+  const empId = localStorage.getItem("id");
+  const [list, setList] = useState([]);
+  const [alertPopup, setAlertPopup] = useState(false);
+  
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8081/members/paymentList/${empId}`,
+      {
+        headers : {
+          Authorization: 'Bearer ' + getAuthToken(),
+          
+        }
+      }
+      )
+      .then((response) => {
+        setList(response.data);
+      })
+      .catch((error) => {
+        // Handle error
+        console.log(error);
+      });
+  }, []);
+
+  const [invoiceId, setInvoiceId] = useState(0);
+  const [getInvoiceId, setGetInvoiceId] = useState(0);
+
+  const navigation = useNavigate();
+
+  const handleClose = (status) => {
+    if (status) {
+      axios
+        .delete(`/api/invoices/${invoiceId}`,
+        {
+          headers : {
+            Authorization: 'Bearer ' + getAuthToken(),
+            
+          }
+        }
+        )
+        .then(() => {
+          setList((prevList) => prevList.filter((item) => item.id !== invoiceId));
+          setAlertPopup({
+            open: true,
+            message: 'Column deleted successfully',
+            anchorOrigin: { vertical: 'top', horizontal: 'right' },
+            variant: 'alert',
+            alert: {
+              color: 'success'
+            },
+            close: false
+          });
+        })
+        .catch((error) => {
+          // Handle error
+          console.log(error);
+        });
+    }
+    setAlertPopup(false);
+  };
+
+  const columns = useMemo(
+    () => [
+      {
+        title: 'Row Selection',
+        Header: SelectionHeader,
+        accessor: 'selection',
+        Cell: SelectionCell,
+        disableSortBy: true,
+        disableFilters: true
+      },
+      {
+        Header: 'NO',
+        accessor: 'SALARYRECORDID',
+        className: 'cell-center',
+        disableFilters: true
+      },
+      {
+        Header: 'ID',
+        accessor: 'ID',
+        className: 'cell-center'
+      },
+      {
+        Header: '이름',
+        accessor: 'NAME',
+        className: 'cell-center',
+        disableFilters: true
+      },
+      {
+        Header: '지급액',
+        accessor: 'NETSALARY',
+        disableFilters: true
+      },
+      {
+        Header: '지급날짜',
+        accessor: 'PAYDATE',
+        disableFilters: true,
+        Cell: ({ value }) => new Date(value).toLocaleDateString()
+      },
+      {
+        Header: '지급상태',
+        accessor: 'PAYMENTSTATUS',
+        disableFilters: true,
+        filter: 'includes',
+        Cell: StatusCell
+      },
+      {
+        Header: 'Actions',
+        className: 'cell-center',
+        disableSortBy: true,
+        Cell: ({ row }) => ActionCell(row, setGetInvoiceId, setInvoiceId, navigation, theme)
+      }
+    ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
+  const theme = useTheme();
+  const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'));
+
+  return (
+    <>
+      <Grid container direction={matchDownSM ? 'column' : 'row'} spacing={2} sx={{ pb: 2 }}>
+        <Grid item md={8}></Grid>
+        <Grid item md={4} sm={12} xs={12}></Grid>
+      </Grid>
+
+      <MainCard content={false}>
+        <ScrollX>
+          <ReactTable columns={columns} data={list} />
+        </ScrollX>
+      </MainCard>
+      <AlertColumnDelete title={`${getInvoiceId}`} open={alertPopup} handleClose={handleClose} />
+    </>
+  );
+};
+
+function LinearWithLabel({ value, ...others }) {
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Box sx={{ width: '100%', mr: 1 }}>
+        <LinearProgress color="warning" variant="determinate" value={value} {...others} />
+      </Box>
+      <Box sx={{ minWidth: 35 }}>
+        <Typography variant="body2" color="white">{`${Math.round(value)}%`}</Typography>
+      </Box>
+    </Box>
+  );
+}
+
+LinearWithLabel.propTypes = {
+  value: PropTypes.number,
+  others: PropTypes.any
+};
+
+export default List;

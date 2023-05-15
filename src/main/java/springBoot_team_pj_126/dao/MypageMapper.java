@@ -1,7 +1,8 @@
 package springBoot_team_pj_126.dao;
 
+import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -22,7 +23,8 @@ public interface MypageMapper {
 	// 급여 상세 가져오기
 	public EmployeeSalaryDTO mySalary(String empId);
 	
-	
+	// 급여 관리 리스트
+	public ArrayList<Map<String, Object>> paymentList(String empId);
 }
 
 

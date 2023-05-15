@@ -3,7 +3,7 @@ import axios from 'axios';
 import { request } from '../../../../utils/axios';
 // material-ui
 import { useOutletContext } from 'react-router';
-
+import { getAuthToken } from '../../../../utils/axios';
 import { useDispatch } from 'react-redux';
 
 // material-ui
@@ -63,7 +63,11 @@ const TabPersonal = () => {
     async function fetchData() {
       try {
 
-        await request('GET', '/members/mypage/'+ id
+        await request('GET', '/members/mypage/'+ id , {
+          headers: {
+            Authorization: 'Bearer ' + getAuthToken(),
+          }
+        }
         
         ).then((response) => {
 
@@ -105,6 +109,7 @@ const TabPersonal = () => {
         console.log('NewLists:', JSON.stringify(NewLists, null, 2));
         const response = await axios.post(`http://localhost:8081/members/userInfoUpdate/${id}`, NewLists, {
           headers: {
+            Authorization: 'Bearer ' + getAuthToken(),
             'Content-Type': 'application/json'
           }
         });

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getAuthToken } from '../../../utils/axios';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
@@ -129,7 +130,11 @@ const CreateDetail = ({ addId, date, onValuesChanged }) => {
           // id 값이 없으면 함수를 실행하지 않음
           return;
         }
-        const response = await axios.get(`http://localhost:8081/members/salaryCreateDetail?id=${addId}`);
+        const response = await axios.get(`http://localhost:8081/members/salaryCreateDetail?id=${addId}`, {
+          headers: {
+            Authorization: 'Bearer ' + getAuthToken(),
+          }
+        });
         setInfoId(response.data.infoId);
         setId(response.data.id);
         setBaseSalary(response.data.baseSalary);
@@ -144,7 +149,11 @@ const CreateDetail = ({ addId, date, onValuesChanged }) => {
           // id 값이 없으면 함수를 실행하지 않음
           return;
         }
-        const response = await axios.get(`http://localhost:8081/members/salaryCreateInfo?id=${addId}&dateString=${date}`);
+        const response = await axios.get(`http://localhost:8081/members/salaryCreateInfo?id=${addId}&dateString=${date}`, {
+          headers: {
+            Authorization: 'Bearer ' + getAuthToken(),
+          }
+        });
         // 총 분에서 주 당 시간으로 변경
         setWeeklyWorkingHours(response.data.weeklyWorkingHours / 60 / 4);
         setWeekendWorkingHours(response.data.weekendWorkingHours / 60);

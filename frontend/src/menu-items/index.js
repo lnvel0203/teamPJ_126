@@ -4,7 +4,7 @@ import applications from './applications';
 // import formsTables from './forms-tables';
 // import chartsMap from './charts-map';
 // import other from './other';
-import pages from './pages';
+// import pages from './pages';
 
 // ==============================|| MENU ITEMS ||============================== //
 
@@ -12,8 +12,9 @@ import pages from './pages';
 //   items: [widget, applications, formsTables, chartsMap, pages, other]
 // };
 
+
 const menuItems = {
-  items: [applications, pages]
+  items: [applications]
 };
 
 export default menuItems;

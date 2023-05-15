@@ -137,7 +137,6 @@ const Edit = () => {
         {
           headers : {
             Authorization: 'Bearer ' + getAuthToken(),
-              'Content-Type': 'multipart/form-data'
           }
         })
         .then((response) => {
@@ -157,7 +156,7 @@ const Edit = () => {
       {
         headers : {
           Authorization: 'Bearer ' + getAuthToken(),
-            'Content-Type': 'multipart/form-data'
+        
         }
       });
       if (response.data == 1) {

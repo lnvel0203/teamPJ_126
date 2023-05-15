@@ -1,9 +1,7 @@
 package springBoot_team_pj_126.service;
 
 import java.io.IOException;
-
-
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -92,43 +90,16 @@ public class MypageServiceImpl implements MypageService{
 		
 		return dto;
 	}
+
+	@Override
+	public ArrayList<Map<String, Object>> paymentList(String empId)
+			throws ServletException, IOException {
+		
+		 ArrayList<Map<String, Object>> map = mapper.paymentList(empId);
+	      
+	      return map;
 	
+	}
 	
-//	
-////	@Override
-////	public void insertMember(MemberDTO dto) throws ServletException, IOException {
-////		System.out.println("서비스 - insert");
-////		
-////		mapper.insertMember(dto);
-////	}
-////
-////	@Override
-////	public void updateMember(MemberDTO dto) throws ServletException, IOException {
-////		System.out.println("서비스 - update");
-////		mapper.updateMember(dto);
-////	}
-////
-////	@Override
-////	public void deleteMember(int id) throws ServletException, IOException {
-////		System.out.println("서비스 - delete");
-////		mapper.deleteById(id);
-////	}
-////
-////	@Override
-////	public MemberDTO selectMember(MemberDTO dto) throws ServletException, IOException {
-////		System.out.println("서비스 - select");
-////		
-////		
-////		Map<String, Object> map = new HashMap<String, Object>();
-////
-////		map.put("id", dto.getId());
-////		map.put("password", dto.getPassword());
-////		
-////		MemberDTO dot = mapper.findById(map);
-////		if(dot !=null) {
-////			System.out.println("성공");
-////		}
-////		return dot;
-////	}
 
 }

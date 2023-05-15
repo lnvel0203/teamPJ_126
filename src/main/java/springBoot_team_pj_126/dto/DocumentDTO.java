@@ -15,7 +15,7 @@ import lombok.Data;
 @Data
 public class DocumentDTO {
     
-	
+   
     private String id;
     
     @Id

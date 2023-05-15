@@ -32,11 +32,10 @@ public class SecurityConfig {
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)	//스프링에게 세션과 쿠키를 생성하지 않고 jwt가 직접 들고다닌다.
 			.and()
 			.authorizeHttpRequests((requests) -> requests
+					.antMatchers(HttpMethod.GET, "/images/**").permitAll()
 					.antMatchers(HttpMethod.POST, "/members/login", "/members/register", "/members/dupleChk").permitAll()		// 반드시 리액트와 일치시켜야한다. 내생각엔 여기에 /members/login이나 join도  붙여야하나?
-					//.antMatchers(HttpMethod.GET, "/members/calender").authenticated()	
-//					.antMatchers(HttpMethod.POST, "/members/insert").authenticated()
-					//.anyRequest().authenticated()//나머지는 토큰 인증을 해야한다.
-					.anyRequest().permitAll()	
+					.anyRequest().authenticated()//나머지는 토큰 인증을 해야한다.
+					//.anyRequest().permitAll()	
 			);
 			
 		//이 설정을 리턴하라.

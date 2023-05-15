@@ -52,6 +52,8 @@ const Profile = () => {
   //const { logout, user } = useAuth();
   const handleLogout = async () => {
     try {
+    //로컬데이터 클리어
+    localStorage.clear();
       await logout();
       navigate(`/login`, {
         state: {

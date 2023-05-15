@@ -146,49 +146,58 @@
          FROM dual
       ]]>
    </select>
-   
-   <!-- 결근 횟수 -->
-	<select id="absence" parameterType="String" resultType="int">
+      <!-- 결근 횟수 -->
+   <select id="absence" parameterType="String" resultType="int">
       <![CDATA[
-      	WITH work_dates AS (
-		    SELECT
-		        DATE '2023-04-01' + LEVEL - 1 AS work_date
-		    FROM
-		        dual
-		    CONNECT BY
-		        LEVEL <= DATE '2023-04-30' - DATE '2023-04-01' + 1
-		),
-		filtered_dates AS (
-		    SELECT
-		        work_date
-		    FROM
-		        work_dates
-		    WHERE
-		        TO_CHAR(work_date, 'DY', 'NLS_DATE_LANGUAGE = AMERICAN') NOT IN ('SAT', 'SUN')
-		),
-		absent_dates AS (
-		    SELECT
-		        fd.work_date
-		    FROM
-		        filtered_dates fd
-		    WHERE
-		        NOT EXISTS (
-		            SELECT
-		                1
-		            FROM
-		                work_records_tbl wrt
-		            WHERE
-		                wrt.employeeId = #{id}
-		                AND wrt.statusName = 'start-work' 
-		                AND TRUNC(wrt.startTime) = fd.work_date
-		        )
-		)
-		SELECT
-		    COUNT(*) AS "Absence_Count"
-		FROM
-		    absent_dates
+      WITH work_dates AS (
+        SELECT
+            TRUNC(SYSDATE, 'YYYY') + LEVEL - 1 AS work_date
+        FROM
+            dual
+        CONNECT BY
+            LEVEL <= SYSDATE - TRUNC(SYSDATE, 'YYYY') + 1
+      ),
+      employee_hire_date AS (
+        SELECT
+            hireDate
+        FROM
+            EMPLOYEES_TBL
+        WHERE
+            ID = #{id}
+      ),
+      filtered_dates AS (
+        SELECT
+            work_date
+        FROM
+            work_dates
+        WHERE
+            TO_CHAR(work_date, 'DY', 'NLS_DATE_LANGUAGE = AMERICAN') NOT IN ('SAT', 'SUN')
+            AND work_date >= (SELECT hireDate FROM employee_hire_date)
+      ),
+      absent_dates AS (
+        SELECT
+            fd.work_date
+        FROM
+            filtered_dates fd
+        WHERE
+            NOT EXISTS (
+                SELECT
+                    1
+                FROM
+                    work_records_tbl wrt
+                WHERE
+                    wrt.employeeId = #{id}
+                    AND wrt.statusName = 'start-work' 
+                    AND TRUNC(wrt.startTime) = fd.work_date
+            )
+      )
+      SELECT
+          COUNT(*) AS "Absence_Count"
+      FROM
+          absent_dates
       ]]>
    </select>
+  
 
    <!-- 조기 퇴근 횟수 -->
    <select id="earlyLeave" parameterType="String" resultType="int">

@@ -37,8 +37,7 @@ const ProfileTabs = ({ focusInput }) => {
   const theme = useTheme();
   const [selectedImage, setSelectedImage] = useState(undefined);
   const [avatar, setAvatar] = useState('./default.png');
-  
-
+  //const [isLoading, setIsLoading] = useState(true); // 추가 데이터를 가져오기 전까지 폼이 렌더링 되지 못하게 함
   
   useEffect(() => {
     if (selectedImage) {
@@ -50,7 +49,7 @@ const ProfileTabs = ({ focusInput }) => {
       axios.post(`http://localhost:8081/members/mypage/${id}/photo`, formData, {
           headers : {
             Authorization: 'Bearer ' + getAuthToken(),
-              'Content-Type': 'multipart/form-data'
+            'Content-Type': 'multipart/form-data'
           }
       })
     }
@@ -63,8 +62,9 @@ const ProfileTabs = ({ focusInput }) => {
         , {
           headers: {
             Authorization: 'Bearer ' + getAuthToken(),
-          }
+            }
         }
+        
         
         );
         console.log("성공",response.data)
@@ -79,11 +79,11 @@ const ProfileTabs = ({ focusInput }) => {
         setTardy(response.data.tardy)
         console.log("지각",response.data.tardy)
         console.log('이름',response.data.name);
-        setIsLoading(false); // 추가 폼 렌더링 관련
+       // setIsLoading(false); // 추가 폼 렌더링 관련
          
       } catch (error) {
         console.error('Error fetching data', error);
-        setIsLoading(false); // 추가 폼 렌더링 관련
+        //setIsLoading(false); // 추가 폼 렌더링 관련
       }
     }
 

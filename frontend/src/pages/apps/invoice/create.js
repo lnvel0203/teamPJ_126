@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-
+import { getAuthToken } from '../../../utils/axios';
 // import { useNavigate, useParams } from 'react-router';
 import React, { useCallback } from 'react';
 
@@ -147,7 +147,11 @@ const Create = () => {
 
     // axios 요청
     try {
-      const response = await axios.post('http://localhost:8081/members/invoiceCreate', { sendData });
+      const response = await axios.post('http://localhost:8081/members/invoiceCreate', { sendData }, {
+        headers: {
+          Authorization: 'Bearer ' + getAuthToken(),
+        }
+      });
       if (response.data == 1) {
         dispatch(
           openSnackbar({
