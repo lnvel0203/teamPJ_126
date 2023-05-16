@@ -21,7 +21,8 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 	
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
-		registry.addMapping("/images/**")
+		registry.addMapping(UPLOAD_PATH)
+		//registry.addMapping("/images/**")
 				.allowedOrigins("http://localhost:3000")
 				.allowedMethods("GET");
 	}

@@ -29,6 +29,13 @@ class AuthLogin extends Component {
     alert('1');
   };
 
+  onKeyPress=(e)=>{
+    console.log(e.data);
+    if(e.key === 'Enter'){
+      this.login(e);
+    }
+  }
+
   login = (e) => {
     localStorage.clear();
     e.preventDefault();
@@ -90,15 +97,15 @@ class AuthLogin extends Component {
                     value={this.state.pwd}
                     className="text_input"
                     onChange={this.onChange}
+                    onKeyDown={this.onKeyPress}
                     placeholder="비밀번호를 입력하세요"
                   />
                 </div>
               </Stack>
             </Grid>
-
             <Grid item xs={12}>
               <AnimateButton>
-                <Button disableElevation fullWidth size="large" type="button" variant="contained" color="primary" onClick={this.login}>
+                <Button disableElevation fullWidth size="large" type="button" variant="contained" color="primary" onClick={this.onKeyPress}>
                   Login
                 </Button>
               </AnimateButton>

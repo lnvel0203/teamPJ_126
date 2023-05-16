@@ -183,7 +183,7 @@ const dupleChk = (e) =>{
                     </div>
                     </Stack>
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} md={12}>
                     <Stack spacing={1}>
                     <InputLabel htmlFor="firstname-signup">비밀번호*</InputLabel>
                     <div style={styleMargin}>
@@ -197,8 +197,9 @@ const dupleChk = (e) =>{
                         onChange={onChangePassword}
                         
                       />
+                      <div className='join_Chk'>{passwordError && <div className="invalid-input">비밀번호는 8자리 이상 영문+숫자를 입력해야 합니다. </div>}</div>
                     </div>
-                    <div className='join_Chk'>{passwordError && <div className="invalid-input">비밀번호는 8자리 이상 영문+숫자를 입력해야 합니다. </div>}</div>
+                    
                     </Stack>
                     </Grid>
                     <Grid item xs={12}>
@@ -214,8 +215,9 @@ const dupleChk = (e) =>{
                         placeholder="이름을 입력하세요"
                         onChange={onChangeUserName}
                       />
+                      <div className='join_Chk'>{userNameError && <div className="invalid-input">반드시 입력해야 합니다.</div>}</div>
                     </div>
-                    <div className='join_Chk'>{userNameError && <div className="invalid-input">반드시 입력해야 합니다.</div>}</div>
+                    
                     </Stack>
                     </Grid>
                     <Grid item xs={12}>
@@ -234,8 +236,9 @@ const dupleChk = (e) =>{
                       />
                     <FormHelperText error id="helper-text-firstname-signup">
                     </FormHelperText>
-                    </div>
                     <div className='join_Chk'>{emailError && <div className="invalid-input">이메일 형식을 맞춰서 입력해야 합니다.</div>}</div>
+                    </div>
+                    
                     </Stack>
                     </Grid>
                     <Grid item xs={12}>

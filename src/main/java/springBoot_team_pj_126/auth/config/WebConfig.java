@@ -49,7 +49,6 @@ public class WebConfig {
 		System.out.println("WebConfig - 3");
 		FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source)); //import org.springframework.web.filter.CorsFilter;
 		bean.setOrder(-102);
-		System.out.println("WebConfig - 4");
 		return bean;
 	}
 	
