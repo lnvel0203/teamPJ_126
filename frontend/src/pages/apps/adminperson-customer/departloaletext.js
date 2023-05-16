@@ -1,6 +1,15 @@
 // Import Axios Services
-//import axios from 'axios';
-import { request } from '../../../utils/axios';
+import axios from 'axios';
+import { getAuthToken, request } from '../../../utils/axios';
+
+
+
+
+
+
+
+
+
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useMemo, useState, Fragment } from 'react';
 
@@ -16,11 +25,14 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  //2023-05-09 김희수 Tooltip 삭제
-  // Tooltip,
   Typography,
-  useMediaQuery
+  useMediaQuery,
+  Tooltip
 } from '@mui/material';
+import IconButton from 'components/@extended/IconButton';
+
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 // third-party
 import NumberFormat from 'react-number-format';
@@ -29,80 +41,27 @@ import { useFilters, useExpanded, useGlobalFilter, useRowSelect, useSortBy, useT
 // project import
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
-// import IconButton from 'components/@extended/IconButton';
 import { PopupTransition } from 'components/@extended/Transitions';
 import {
   CSVExport,
   HeaderSort,
   IndeterminateCheckbox,
-  //2023-05-09 김희수 SortingSelect 삭제
-  // SortingSelect,
+  //   SortingSelect,
   TablePagination,
   TableRowSelection
 } from 'components/third-party/ReactTable';
 
-// import AddCustomer from 'sections/apps/customer/AddCustomer';
 import AddDepart from 'sections/apps/depart/AddDepart';
 import CustomerView from 'sections/apps/customer/CustomerView';
-// import AlertCustomerDelete from 'sections/apps/customer/AlertCustomerDelete';
-// import DeletDepart from 'sections/apps/depart/DeletDepart';
+import AlertCustomerDelete from 'sections/apps/customer/AlertCustomerDelete';
 
 // import makeData from 'data/react-table';
 import { renderFilterTypes, GlobalFilter } from 'utils/react-table';
 
 // assets
-import {  PlusOutlined } from '@ant-design/icons';
-
-// 수정 팝업 컴포넌트
-//  import EditDepart from 'sections/apps/depart/EditDepart';
+import { PlusOutlined, DeleteTwoTone } from '@ant-design/icons';
 
 // ==============================|| REACT TABLE ||============================== //
-
-// 2023-05-09 김희수 부서 수정 버튼기능 추가
-// const editClick = () => {
-//   alert('test');
-//   window.open('sections/apps/depart/EditDepart');
-//   axios
-//     .put(`http://localhost:8081/department/editDepartment/${deptid}/${deptname}`, deptid,deptname)
-//     .then((EditDepart) => {
-//       console.log(EditDepart);
-//     })
-//     .catch((error) => {
-//       console.error(error);
-//     });
-// }
-
-const handleDelet = (deptid) => {
-  //미승인 상태 사원 -> 승인상태로 변경 및 승인버튼 삭제
-
-    request(
-      'DELETE',
-      `department/deleteDepartment/${deptid}`, deptid
-    ).then((response) => {
-      console.log(response.data); // logs the updated user data
-      window.location.reload(); // 자동 새로고침
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-};
-
-// 2023-05-09 김희수 부서 수정 버튼기능 추가
-function SelectCell({ positionName, onChange }) {
-  return (
-    <select value={positionName} onChange={e => onChange(e.target.value)}>
-
-      <option value="선택">-</option>
-
-      <option value="인사팀">인사팀</option>
-      <option value="경영지원팀">경영지원팀</option>
-      <option value="영업팀">영업팀</option>
-      <option value="기획팀">기획팀</option>
-      <option value="개발팀">개발팀</option>
-    </select>
-  );
-}
-
 
 function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, handleAdd }) {
   const theme = useTheme();
@@ -116,8 +75,7 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
     getTableBodyProps,
     headerGroups,
     prepareRow,
-    // setHiddenColumns,
-    // allColumns,
+    setHiddenColumns,
     visibleColumns,
     rows,
     page,
@@ -146,13 +104,12 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
   );
 
   useEffect(() => {
-    // if (matchDownSM) {
-    //   setHiddenColumns(['age', 'contact', 'visits', 'email', 'status', 'avatar']);
-    // } else {
-    //   setHiddenColumns(['avatar', 'email']);
-    // }
+    if (matchDownSM) {
+      setHiddenColumns(['no', 'id', 'age', 'contact', 'visits', 'email', 'status', 'avatar']);
+    } else {
+      setHiddenColumns(['avatar', 'email']);
+    }
     // eslint-disable-next-line
-    
   }, [matchDownSM]);
 
   return (
@@ -175,7 +132,7 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
           <Stack direction={matchDownSM ? 'column' : 'row'} alignItems="center" spacing={1}>
             {/* <SortingSelect sortBy={sortBy.id} setSortBy={setSortBy} allColumns={allColumns} /> */}
             <Button variant="contained" startIcon={<PlusOutlined />} onClick={handleAdd} size="small">
-              부서 추가
+              부서 신설
             </Button>
             <CSVExport data={selectedFlatRows.length > 0 ? selectedFlatRows.map((d) => d.original) : data} filename={'customer-list.csv'} />
           </Stack>
@@ -226,9 +183,7 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
         </Table>
       </Stack>
     </>
-    
   );
-  
 }
 
 ReactTable.propTypes = {
@@ -275,63 +230,104 @@ const StatusCell = ({ value }) => {
   }
 };
 
-// const ActionCell = (row, setCustomerDeleteId, handleClose, theme) => {
-//   const collapseIcon = row.isExpanded ? (
-//     <CloseOutlined style={{ color: theme.palette.error.main }} />
-//   ) : (
-//     <EyeTwoTone twoToneColor={theme.palette.secondary.main} />
-//   );
-//   return (
-//     <Stack direction="row" alignItems="center" justifyContent="center" spacing={0}>
-//       <Tooltip title="View">
-//         <IconButton
-//           color="secondary"
-//           onClick={(e) => {
-//             e.stopPropagation();
-//             row.toggleRowExpanded();
-//           }}
-//         >
-//           {collapseIcon}
-//         </IconButton>
-//       </Tooltip>
-//       <Tooltip title="수정">
-//         <IconButton
-//           color="primary"
-//           onClick={(e) => {
-//             e.stopPropagation();
-//             // setCustomer(row.values);
-//             // setCustomerEditId(row.values); 
-//             handleEditClick(row.values.deptid); 
-//           }}
-//         >
-//           <EditTwoTone twoToneColor={theme.palette.primary.main} />
-//         </IconButton>
-//       </Tooltip>
-//       <Tooltip title="Delete">
-//         <IconButton
-//           color="error"
-//           onClick={(e) => {
-//             e.stopPropagation();
-//             handleClose();
-//             setCustomerDeleteId(row.values.deptname);
-//           }}
-//         >
-//           <DeleteTwoTone twoToneColor={theme.palette.error.main} />
-//         </IconButton>
-//       </Tooltip>
-//     </Stack>
-//   );
-// };
+const ActionCell = (row) => {
+  // 추가 시작 ==========================================================
+
+  const [positionData, setPositionData] = useState([]);
+  // 2023-05-15
+
+  // 서버에서 직급 정보를 패치해옴
+  useEffect(() => {
+    axios
+      .get('http://localhost:8081/department/positionData', {
+        headers: {
+          Authorization: 'Bearer ' + getAuthToken(),
+        }
+      })
+      .then((response) => {
+        setPositionData(response.data);
+        console.log('#');
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  // 추가 끝 ==============================================================
+
+  const [selectedOption, setSelectedOption] = useState();
+
+  const handleButtonClick = async (deptid) => {
+    const sendData = {
+      deptId: deptid,
+      deptReaderName: selectedOption
+    };
+
+    await axios
+      .put(`http://localhost:8081/department/updatePosition`, { sendData }, {
+        headers: {
+          Authorization: 'Bearer ' + getAuthToken(),
+        }
+      })
+      .then((response) => {
+        console.log(response);
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  // 부서 삭제
+  const handleDelete = (deptid) => {
+    request('DELETE', `department/deleteDepartment/${deptid}`, deptid)
+      .then((response) => {
+        console.log(response.data); // logs the updated user data
+        window.location.reload(); // 자동 새로고침
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  return (
+    <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
+      <Autocomplete
+        id="optionList"
+        options={positionData}
+        sx={{ width: 130 }}
+        onChange={(event, value) => setSelectedOption(value)}
+        renderInput={(params) => <TextField {...params} />}
+      />
+      <Button variant="contained" onClick={() => handleButtonClick(row.original.deptid)}>
+        변경
+      </Button>
+      <Tooltip title="부서 삭제">
+        <IconButton
+          color="error"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDelete(row.original.deptid);
+          }}
+        >
+          <DeleteTwoTone />
+        </IconButton>
+      </Tooltip>
+    </Stack>
+  );
+};
 
 StatusCell.propTypes = {
   value: PropTypes.number
 };
 
 NumberFormatCell.propTypes = {
+  //번호형식 셀
   value: PropTypes.string
 };
 
 CustomCell.propTypes = {
+  //사용자 지정 셀
   row: PropTypes.object
 };
 
@@ -343,21 +339,19 @@ SelectionHeader.propTypes = {
   getToggleAllPageRowsSelectedProps: PropTypes.func
 };
 
+// # 리스트 시작
+
 const Departloaletext = () => {
   const theme = useTheme();
 
   const [userData, setUserData] = useState([]);
 
-  // 서버에서 부서 정보를 패치해옴
+  // 서버에서 회원 정보를 패치해옴
   const fetchUserData = useCallback(async () => {
     try {
-      request(
-        'GET',
-        '/department'
-      ).then(response => {
+      request('GET', 'department').then((response) => {
         setUserData(response.data);
-        console.log(response.data);
-      })
+      });
     } catch (error) {
       console.error(error);
     }
@@ -367,19 +361,18 @@ const Departloaletext = () => {
     fetchUserData();
   }, [fetchUserData]);
 
-  const data = useMemo(() => userData, [userData]);
+  const data = useMemo(() => userData, [userData]); //리스트
 
   const [add, setAdd] = useState(false);
   const [open, setOpen] = useState(false);
-  const [customer, setCustomerEditId] = useState();
-  // 2023-05-09 김희수 setCustomerDeleteId 삭제
-  const [customerDeleteId, DeletDepart] = useState();
+  const [customer, setCustomer] = useState();
+  const [customerDeleteId, setCustomerDeleteId] = useState();
 
   const handleAdd = () => {
     setAdd(!add);
-    if (customer && !add) setCustomerEditId(null);
+    if (customer && !add) setCustomer(null);
   };
- 
+
   const handleClose = () => {
     setOpen(!open);
   };
@@ -409,45 +402,17 @@ const Departloaletext = () => {
         className: 'cell-center'
       },
       {
-        Header: '설립일', 
+        Header: '설립일',
         accessor: 'deptdate',
         className: 'cell-center',
         Cell: ({ value }) => new Date(value).toLocaleDateString()
       },
+
       {
         Header: '부서장 변경',
         className: 'cell-center',
         disableSortBy: true,
-        // Cell: ({ row }) => ActionCell(row, setCustomerEditId, setCustomerDeleteId, handleClose, theme)
-        Cell: ({ value, row, setValue }) => {
-          const [selectedPosition, setSelectedPosition] = useState(value);
-          
-          const handlePositionChange = (newValue) => {
-            setSelectedPosition(newValue);
-            setValue(newValue, row.index, 'positionName', row.original.positionName);
-          };
-        
-          return (
-            // const ActionCell = (row, setCustomerDeleteId, handleClose, theme) => {
-            <div>
-              <SelectCell positionName={selectedPosition} onChange={handlePositionChange} />
-              <button onClick={() => handleEdit({ ...row.original, positionName: selectedPosition })}>수정</button>
-              
-              {/* 2023-05-10 김희수 삭제버튼 추가 */} 
-              <button 
-              color='error'
-              style={{ marginLeft: '10px' }} 
-              onClick={(e) =>{
-                e.stopPropagation();
-                handleDelet(row.values.deptid);
-                // DeletDepart(row.values.deptid);
-              }}
-              // onClick={() => handleDelet({ ...row.original, positionName: selectedPosition })}
-              >삭제</button>
-            </div>
-            // }
-          );
-        }
+        Cell: ({ row }) => ActionCell(row, setCustomer, setCustomerDeleteId, handleClose, theme)
       }
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -467,8 +432,7 @@ const Departloaletext = () => {
           renderRowSubComponent={renderRowSubComponent}
         />
       </ScrollX>
-      {/* <AlertCustomerDelete title={customerDeleteId} open={open} handleClose={handleClose} /> */}
-      <DeletDepart title={customerDeleteId} open={open} handleClose={handleClose} />
+      <AlertCustomerDelete title={customerDeleteId} open={open} handleClose={handleClose} />
       {/* add user dialog */}
       <Dialog
         maxWidth="sm"

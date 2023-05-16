@@ -410,12 +410,6 @@ const DocumentDetail = () => {
         )}
       </div> 
     {documentState === '반려됨' && rejectionReason && <h2>반려사유 : {rejectionReason}</h2>}
-      {/* <h2>반려사유 :
-      {documentState === '반려됨' && rejectionReason && <h2>반려사유 : {rejectionReason}</h2>}
-        
-        {rejectionReason}
-      
-      </h2> */}
       <h1>기본 설정</h1>
        <table className="tb-1">
         <tbody>

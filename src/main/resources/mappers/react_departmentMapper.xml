@@ -8,25 +8,42 @@
 
 <!-- 5월 9일 김희수 직원목록 sql문 수정  -->
 <select id="departmentList" resultType="springBoot_team_pj_126.dto.DeptDTO">
-	SELECT deptid, deptname, deptdate, deptreadername
-	FROM department_tbl 
-	ORDER BY deptid DESC
+   SELECT deptid, deptname, deptdate, deptreadername
+   FROM department_tbl 
+   ORDER BY deptid DESC
 </select>
 
 <insert id="addDeptment" parameterType="springBoot_team_pj_126.dto.DeptDTO">
-	INSERT INTO DEPARTMENT_TBL values(#{deptid}, #{deptname}, sysdate, null)
+   INSERT INTO DEPARTMENT_TBL values(#{deptid}, #{deptname}, sysdate, null)
 </insert>
 
  <!-- 5월 9일 김희수 부서 수정  -->
-<update id="editDepartment" parameterType="springBoot_team_pj_126.dto.DeptDTO">
-	UPDATE department_tbl
-	SET deptname = #{deptname}
-	WHERE deptid = #{deptid}
-</update>
+<!-- <update id="editDepartment" parameterType="springBoot_team_pj_126.dto.DeptDTO">
+   UPDATE department_tbl
+   SET deptname = #{deptname}
+   WHERE deptid = #{deptid}
+</update> -->
 
  <!-- 5월 11일 김희수 부서삭제  -->
 <delete id="deleteDepartment" parameterType="int">
-	delete from department_tbl where deptid=#{deptid} 
+   delete from department_tbl where deptid=#{deptid} 
 </delete>
+
+   <!-- 2023-05-15 -->
+   <select id="positionData" resultType="java.lang.String">
+      SELECT name
+      FROM EMPLOYEES_TBL e
+      JOIN POSITION_TBL p
+      ON e.POSITIONID = p.POSITIONID
+      WHERE p.POSITIONID = 5
+   </select>
+   
+   <!-- 2023-05-15 -->
+   <update id="updatePosition" parameterType="java.util.Map">
+      UPDATE DEPARTMENT_TBL
+      SET DEPTREADERNAME=#{deptReaderName}
+      WHERE DEPTID=#{deptId}
+   </update>
+   
 
 </mapper>

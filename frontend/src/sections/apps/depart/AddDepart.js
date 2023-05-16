@@ -1,7 +1,8 @@
 // AddCustomer.js
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import axios from 'axios';
+import { request } from '../../../utils/axios';
+//import axios from 'axios';
 // material-ui
 import {
   //Box,
@@ -30,53 +31,59 @@ import AlertCustomerDelete from '../customer/AlertCustomerDelete';
 // ==============================|| CUSTOMER ADD / EDIT / DELETE ||============================== //
 
 const AddCustomer = ({ customer, onCancel }) => {
-
   const [openAlert, setOpenAlert] = useState(false);
 
   const handleAlertClose = () => {
     setOpenAlert(!openAlert);
     onCancel();
-    
   };
-  const formik = useFormik({
+  const formik = useFormik({});
+  //const API_BASE_URL = 'http://localhost:8081/department';
 
-  });
-  const API_BASE_URL = 'http://localhost:8081/department';
- 
   const [dept, setDept] = useState({
-    deptid: "",
-    deptname: "",
+    deptid: '',
+    deptname: ''
   });
 
   //input에 입력될 때마다 account state값 변경되게 하는 함수
   const onChange = (e) => {
     setDept({
       ...dept,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
   };
-  const addDepartment = (e) =>{
-
+  const addDepartment = (e) => {
     e.preventDefault();
     console.log(dept);
-    axios.post(API_BASE_URL + "/addDepartment", dept)
-  
-    .then(response => {
-      onCancel();
-      console.log(response.data);
-      alert('부서가 추가되었습니다.');
-    })
-    .catch(error => {
-      console.error(error);
-    });
+
+
+
+    request(
+      'POST',
+      '/department/addDepartment/',dept
+    )
+
+
+
+   // axios.post(API_BASE_URL + '/addDepartment', dept)
+
+    .then((response) => {
+        onCancel();
+        console.log(response.data);
+        alert('부서가 추가되었습니다.');
+      })
+
+      .catch((error) => {
+        console.error(error);
+      });
     window.location.reload(); // 자동 새로고침
-  }
+  };
   return (
     <>
       <FormikProvider value={formik}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <Form autoComplete="off" noValidate onSubmit={addDepartment}>
-            <DialogTitle>{customer ? 'Edit Customer' : 'New Customer'}</DialogTitle>
+            <DialogTitle>{customer ? '부서 수정' : '부서 신설'}</DialogTitle>
             <Divider />
             <DialogContent sx={{ p: 2.5 }}>
               <Grid container spacing={3}>
@@ -91,8 +98,7 @@ const AddCustomer = ({ customer, onCancel }) => {
                         '&:hover .MuiBox-root': { opacity: 1 },
                         cursor: 'pointer'
                       }}
-                    >
-                    </FormLabel>
+                    ></FormLabel>
                   </Stack>
                 </Grid>
                 <Grid item xs={9} md={8}>
@@ -100,29 +106,15 @@ const AddCustomer = ({ customer, onCancel }) => {
                     <Grid item xs={9}>
                       <Stack spacing={1.25}>
                         <InputLabel htmlFor="customer-name">부서번호</InputLabel>
-                        <TextField
-                          fullWidth
-                          id="customer-name"
-                          placeholder="Enter Department Number"
-                          name='deptid'
-                          onChange={onChange}
-
-                        />
+                        <TextField fullWidth id="customer-name" placeholder="Enter Department Number" name="deptid" onChange={onChange} />
                       </Stack>
                     </Grid>
                     <Grid item xs={9}>
                       <Stack spacing={1.25}>
                         <InputLabel htmlFor="customer-email">부서명</InputLabel>
-                        <TextField
-                          fullWidth
-                          id="customer-email"
-                          placeholder="Enter Department Name"
-                          name='deptname'
-                          onChange={onChange}
-                        />
+                        <TextField fullWidth id="customer-email" placeholder="Enter Department Name" name="deptname" onChange={onChange} />
                       </Stack>
                     </Grid>
-                   
                   </Grid>
                 </Grid>
               </Grid>
@@ -148,5 +140,6 @@ AddCustomer.propTypes = {
   customer: PropTypes.object,
   onCancel: PropTypes.func.isRequired
 };
+
 
 export default AddCustomer;
