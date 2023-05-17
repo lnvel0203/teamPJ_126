@@ -15,7 +15,7 @@ import lombok.Data;
 @Data
 public class DocumentDTO {
     
-   
+	
     private String id;
     
     @Id
@@ -41,6 +41,10 @@ public class DocumentDTO {
     private String fourthApproverState;
     private Integer deptid;
     private String filePath;
+    
+    private String vacationDate;
+    private String startDate;
+    private String endDate;
 
     
 }

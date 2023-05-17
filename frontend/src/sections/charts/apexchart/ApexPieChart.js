@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-
+import axios from 'axios';
+import { getAuthToken } from '../../../utils/axios';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 
@@ -38,10 +39,6 @@ const pieChartOptions = {
   responsive: [
     {
       breakpoint: 450,
-      chart: {
-        width: 280,
-        height: 280
-      },
       options: {
         legend: {
           show: false,
@@ -52,8 +49,6 @@ const pieChartOptions = {
   ]
 };
 
-// ==============================|| APEXCHART - PIE ||============================== //
-
 const ApexPieChart = () => {
   const theme = useTheme();
   const { mode } = useConfig();
@@ -63,7 +58,7 @@ const ApexPieChart = () => {
   const grey200 = theme.palette.grey[200];
   const backColor = theme.palette.background.paper;
 
-  const [series] = useState([44, 55, 13, 43, 22]);
+  const [series, setSeries] = useState([]);
   const [options, setOptions] = useState(pieChartOptions);
 
   const secondary = theme.palette.primary[700];
@@ -73,35 +68,64 @@ const ApexPieChart = () => {
   const orangeDark = theme.palette.warning.main;
 
   useEffect(() => {
-    setOptions((prevState) => ({
-      ...prevState,
-      colors: [secondary, primaryMain, successDark, error, orangeDark],
-      xaxis: {
-        labels: {
-          style: {
-            colors: [primary, primary, primary, primary, primary, primary, primary]
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:8081/members/deptList', {
+          headers: {
+            Authorization: 'Bearer ' + getAuthToken(),
           }
-        }
-      },
-      yaxis: {
-        labels: {
-          style: {
-            colors: [primary]
+        });
+        const data = response.data;
+        console.log(data);
+
+        const newSeries = data.map((item) => item.value);
+        const newLabels = data.map((item) => item.label);
+
+        setSeries(newSeries);
+
+        setOptions((prevState) => ({
+          ...prevState,
+          labels: newLabels,
+          colors: [secondary, primaryMain, successDark, error, orangeDark],
+          xaxis: {
+            labels: {
+              style: {
+                colors: [primary, primary, primary, primary, primary, primary, primary]
+              }
+            }
+          },
+          yaxis: {
+            labels: {
+              style: {
+                colors: [primary]
+              }
+            }
+          },
+          grid: {
+            borderColor: line
+          },
+          legend: {
+            labels: {
+              colors: 'grey.500'
+            }
+          },
+          stroke: {
+            colors: [backColor]
+          },
+          tooltip: {
+            y: {
+              formatter: function (val) {
+                return '₩' + val.toLocaleString();
+              }
+            }
           }
-        }
-      },
-      grid: {
-        borderColor: line
-      },
-      legend: {
-        labels: {
-          colors: 'grey.500'
-        }
-      },
-      stroke: {
-        colors: [backColor]
+        }));
+      } catch (error) {
+        console.error('Error fetching data: ', error);
       }
-    }));
+    };
+
+    fetchData();
   }, [mode, primary, line, grey200, backColor, secondary, primaryMain, successDark, error, orangeDark]);
 
   return (

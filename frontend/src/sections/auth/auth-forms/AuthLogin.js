@@ -11,7 +11,6 @@ import AnimateButton from 'components/@extended/AnimateButton';
 class AuthLogin extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       id: '',
       pwd: '',

@@ -4,7 +4,7 @@ import { useRoutes } from 'react-router-dom';
 // project import
 //import CommonLayout from 'layout/CommonLayout';
 import Loadable from 'components/Loadable';
-import ComponentsRoutes from './ComponentsRoutes';
+//import ComponentsRoutes from './ComponentsRoutes';
 import LoginRoutes from './LoginRoutes';
 import MainRoutes from './MainRoutes';
 const AuthLogin = Loadable(lazy(() => import('pages/auth/login')));
@@ -20,8 +20,9 @@ export default function ThemeRoutes() {
       element: <AuthLogin />
      
     },
+    MainRoutes,
     LoginRoutes,
-    ComponentsRoutes,
-    MainRoutes
+    //ComponentsRoutes,
+   
   ]);
 }

@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import springBoot_team_pj_126.dao.SalaryMapper;
 import springBoot_team_pj_126.dto.AdditionalPaymentDTO;
+import springBoot_team_pj_126.dto.ChartDTO;
 import springBoot_team_pj_126.dto.DeductionDTO;
 import springBoot_team_pj_126.dto.EmployeeSalaryDTO;
 import springBoot_team_pj_126.dto.SalaryInfoDTO;
@@ -171,5 +173,47 @@ public class SalaryServiceImpl implements SalaryService{
    }
 
    // ========================================================
+   // 기본급 관리 리스트
+   @Override
+   public ArrayList<Map<String, Object>> baseSalaryList() {
+      System.out.println("SalaryServiceImpl - baseSalaryList()");
+      
+      ArrayList<Map<String, Object>> map = mapper.baseSalaryList();
+      
+      return map;
+   }
    
+   // 기본급 업데이트
+   @Override
+   public void updateBaseSalary(Map<String, Object> map) {
+      System.out.println("SalaryServiceImpl - updateBaseSalary()");
+      
+      Map<String, Object> data = (Map<String, Object>) map.get("sendData");
+       System.out.println(data.get("infoId"));
+       System.out.println(data.get("formValue"));
+         
+       mapper.updateBaseSalary(data);
+   }
+// ========================================================
+   // 차트
+   
+   // 부서별 급여 퍼센트
+   @Override
+   public List<ChartDTO> getChartData() {
+      System.out.println("SalaryServiceImpl - getChartData()");
+     
+      List<ChartDTO> list =  mapper.getChartData();
+      
+      return list;
+   }
+
+   // 부서별 급여 평균, 최저, 최고
+   @Override
+   public List<ChartDTO> getChartData2() {
+      System.out.println("SalaryServiceImpl - getChartData2()");
+
+      List<ChartDTO> list =  mapper.getChartData2();
+      
+      return list;
+   }
 }

@@ -1,8 +1,11 @@
 import PropTypes from 'prop-types';
-import { useEffect, useMemo, useState, Fragment} from 'react';
+import { useEffect, useMemo, useState, Fragment, useCallback} from 'react';
 import { Box, Tabs, Tab } from '@mui/material';
 import DfraftDocumentList from './List/DraftDocumentList';
 import RejectionDocumentList from './List/RejectionDocumentList';
+import axios from 'axios';
+import { getAuthToken } from '../../utils/axios';
+import { useLocation } from 'react-router-dom';
 
 // material-ui
 import { alpha, useTheme } from '@mui/material/styles';
@@ -37,8 +40,6 @@ import ApprovalPendingList from './List/ApprovalPendingList';
 import ApprovalCompletedList from './List/ApprovalCompletedList';
 import ApprovalScheduledList from './List/ApprovalScheduledList';
 
-
-
 // import makeData from 'data/react-table';
 import { renderFilterTypes, GlobalFilter } from 'utils/react-table';
 
@@ -53,8 +54,6 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
 
   const filterTypes = useMemo(() => renderFilterTypes, []);
   const sortBy = { id: 'documentNo', desc: false };
-
-  
 
   const {
     getTableProps,
@@ -99,12 +98,6 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
     }
     // eslint-disable-next-line
   }, [matchDownSM]);
-
-  const handleTitleClick = (documentNo) => {
-    console.log('documentNo',documentNo)
-    window.open('/apps/document/documentDetail?documentNo='+documentNo, '_blank', 'width=1200,height=900,top=300,left=300');
-  };
-
   return (
     <>
       <TableRowSelection selected={Object.keys(selectedRowIds).length} />{' '}
@@ -153,9 +146,6 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
                 <Fragment key={i}>
                   <TableRow
                     {...row.getRowProps()}
-                    onClick={() => {
-                      handleTitleClick(row.original.documentNo);
-                    }}
                     sx={{ cursor: 'pointer', bgcolor: row.isSelected ? alpha(theme.palette.primary.lighter, 0.35) : 'inherit' }}
                   >
                     {row.cells.map((cell, index) => (
@@ -256,31 +246,85 @@ SelectionHeader.propTypes = {
   getToggleAllPageRowsSelectedProps: PropTypes.func
 };
 
+
+
 const ApproveList = () => {
 
-  const rejectionListCount = localStorage.getItem('rejectionListCount');
-  const pendingListCount = localStorage.getItem('pendingListCount');
-  const scheduledListCount = localStorage.getItem('scheduledListCount');
-  const completedListCount = localStorage.getItem('completedListCount');
-
-  const closeCheck = localStorage.getItem('closeCheck');
-  const initialTabIndex = closeCheck === 'approval' ? 4 : 0;
-  const [value, setValue] = useState(initialTabIndex);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  }
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
-    const closeCheck = localStorage.getItem('closeCheck');
-    const newTabIndex = closeCheck === 'approval' ? 4 : value;
-    setValue(newTabIndex);
-  }, [value]);
+    const query = new URLSearchParams(location.search);
+    const shouldRefresh = query.get('refresh');
+    const tab = query.get('tab');
+    if (shouldRefresh) {
+      ListCountData();
+      if (tab === 'pending') {
+        setActiveTab(2); // pending 탭이 1번째라고 가정
+      }
+       if(tab === 'update') {
+        setActiveTab(0); 
+      } 
+      if(tab === 'approve') {
+        setActiveTab(4); 
+      } 
+    }
+  }, [location]);
+
+  const [completedListCount, setCompletedListCount] = useState(0);
+  const [scheduledListCount, setScheduledListCount] = useState(0);
+  const [rejectionListCount, setRejectionListCount] = useState(0);
+  const [pendingListCount, setPendingListCount] = useState(0);
+
+  const id = localStorage.getItem('id')
+
+  const ListCountData = useCallback(async () => {
+    try {
+      const getCompletedList = await axios.get('http://localhost:8081/members/ApprovalCompletedList/'+id, {
+        headers: {
+          Authorization: 'Bearer ' + getAuthToken(),
+        }
+      });
+      console.log('나와 ? ',getCompletedList.data)
+      setCompletedListCount(getCompletedList.data.length);
+
+      const getScheduledList = await axios.get('http://localhost:8081/members/ApprovalScheduledList/'+id, {
+        headers: {
+          Authorization: 'Bearer ' + getAuthToken(),
+        }
+      });
+      setScheduledListCount(getScheduledList.data.length);
+
+      const getRejectionList = await axios.get('http://localhost:8081/members/RejectionDocumentList/'+id, {
+        headers: {
+          Authorization: 'Bearer ' + getAuthToken(),
+        }
+      });
+      setRejectionListCount(getRejectionList.data.length);
+
+      const getPendingList = await axios.get('http://localhost:8081/members/ApprovalPendingList/'+id, {
+        headers: {
+          Authorization: 'Bearer ' + getAuthToken(),
+        }
+      });
+      setPendingListCount(getPendingList.data.length);
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    ListCountData();
+  }, [ListCountData]);
+
+  const handleChange = (event, newValue) => {
+    setActiveTab(newValue);
+  }
 
   return (
     <>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-      <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+      <Tabs value={activeTab} onChange={handleChange} aria-label="basic tabs example">
         <Tab label="기안 문서"/>
          <Tab label={`반려 문서 (${rejectionListCount})`}/>
          <Tab label={`결재 대기 (${pendingListCount})`}/>
@@ -288,20 +332,20 @@ const ApproveList = () => {
          <Tab label={`결재 완료 (${completedListCount})`}/>
       </Tabs>
     </Box>
-    <TabPanel value={value} index={0}>
+    <TabPanel value={activeTab} index={0}>
     <DfraftDocumentList />
     </TabPanel>
-    <TabPanel value={value} index={1}>
-    <RejectionDocumentList />
+    <TabPanel value={activeTab} index={1}>
+    <RejectionDocumentList ListCountData={ListCountData} />
     </TabPanel>
-    <TabPanel value={value} index={2}>
-      <ApprovalPendingList />
+    <TabPanel value={activeTab} index={2}>
+      <ApprovalPendingList ListCountData={ListCountData} />
     </TabPanel>
-    <TabPanel value={value} index={3}>
-    <ApprovalScheduledList />
+    <TabPanel value={activeTab} index={3}>
+    <ApprovalScheduledList ListCountData={ListCountData} />
     </TabPanel>
-    <TabPanel value={value} index={4}>
-    <ApprovalCompletedList />
+    <TabPanel value={activeTab} index={4}>
+    <ApprovalCompletedList ListCountData={ListCountData} />
     </TabPanel>
     
     </>
@@ -321,8 +365,9 @@ function TabPanel(props) {
   );
 }
 
+
 TabPanel.propTypes = {
   children: PropTypes.node,
   value: PropTypes.number.isRequired,
-  index: PropTypes.number.isRequired
-};
+  index: PropTypes.number.isRequired,
+}

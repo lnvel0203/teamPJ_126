@@ -180,6 +180,18 @@ const applications = {
           title: <FormattedMessage id="급여수정" />,
           type: 'item',
           url: '/apps/invoice/edit/1'
+        },
+        {
+          id: 'BaseSalaryList',
+          title: <FormattedMessage id="기본급" />,
+          type: 'item',
+          url: '/apps/invoice/BaseSalaryList'
+        },
+        {
+          id: 'SalaryChart',
+          title: <FormattedMessage id="급여 차트" />,
+          type: 'item',
+          url: '/apps/invoice/SalaryChart'
         }
       ]
     } : 

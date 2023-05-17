@@ -3,6 +3,7 @@ package springBoot_team_pj_126.auth.serivce;
 import java.nio.CharBuffer;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,11 +11,12 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import springBoot_team_pj_126.auth.dto.CredentialsDTO;
 import springBoot_team_pj_126.auth.dto.SignDTO;
-import springBoot_team_pj_126.auth.dto.UserDTO;
 import springBoot_team_pj_126.auth.entities.User;
 import springBoot_team_pj_126.auth.exception.AppException;
+import springBoot_team_pj_126.dao.SalaryMapper;
 import springBoot_team_pj_126.dao.UserMapper;
 import springBoot_team_pj_126.dao.UserRepository;
+import springBoot_team_pj_126.dto.SalaryInfoDTO;
 
 //로그인 및 회원가입 처리를 한다.
 @RequiredArgsConstructor
@@ -24,6 +26,8 @@ public class UserService {
 	private final UserRepository userRepository;
 	private final UserMapper userMapper;
 	private final PasswordEncoder passwordEncoder;
+	@Autowired
+	private SalaryMapper salaryMapper;
 
 	public User findById(String id) {
 
@@ -66,6 +70,7 @@ public class UserService {
 		Optional<User> optionalUser = userMapper.selectId(userDTO.getId());
 		System.out.println("optionalUser : "  + optionalUser);
 
+		salaryMapper.setBaseSalary(userDTO.getId());
 
 		if(optionalUser.isPresent()) {
 			throw new AppException("Login already exists", HttpStatus.BAD_REQUEST);

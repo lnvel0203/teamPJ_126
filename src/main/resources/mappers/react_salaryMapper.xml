@@ -201,5 +201,42 @@
       ON sr.salaryRecordId = dt.salaryRecordId
       WHERE sr.salaryRecordId = #{id}
    </select>
-
+   <!--  -->
+   
+   <!-- 기본급 관리 리스트 -->
+   <select id="baseSalaryList" resultType="java.util.Map">
+      SELECT si.infoId, si.baseSalary, si. regularweeklyHours, e.id, e.no, e.name
+     FROM SALARY_INFO_TBL si 
+     JOIN EMPLOYEES_TBL e 
+     ON si.id = e.id
+   </select>
+   
+   <!-- 기본급 업데이트 -->
+   <update id="updateBaseSalary" parameterType="java.util.Map">
+    UPDATE SALARY_INFO_TBL
+   SET BASESALARY=#{formValue}
+   WHERE INFOID=#{infoId}
+   </update>
+   
+   <insert id="setBaseSalary" parameterType="springBoot_team_pj_126.dto.SalaryInfoDTO">
+   	INSERT INTO SALARY_INFO_TBL VALUES ((SELECT nvl(max(infoId)+1,1) FROM SALARY_INFO_TBL), 1500000, 40, #{id})
+   </insert>
+   
+   <!--  -->
+   <!-- 부서별 급여 퍼센트  -->
+   <select id="getChartData" resultType="springBoot_team_pj_126.dto.ChartDTO">
+       SELECT D.DEPTNAME AS label, SUM(S.NETSALARY) AS value
+       FROM SALARY_RECORDS_TBL S
+       JOIN EMPLOYEES_TBL E ON S.ID = E.ID
+       JOIN DEPARTMENT_TBL D ON E.DEPTID = D.DEPTID
+       GROUP BY D.DEPTNAME
+   </select>
+   
+   <select id="getChartData2" resultType="springBoot_team_pj_126.dto.ChartDTO">
+      SELECT D.DEPTNAME, ROUND(AVG(S.NETSALARY)) AS AVERAGE_SALARY, MAX(S.NETSALARY) AS MAX_SALARY, MIN(S.NETSALARY) AS MIN_SALARY
+      FROM SALARY_RECORDS_TBL S
+      JOIN EMPLOYEES_TBL E ON S.ID = E.ID
+      JOIN DEPARTMENT_TBL D ON E.DEPTID = D.DEPTID
+      GROUP BY D.DEPTNAME
+   </select>
 </mapper>

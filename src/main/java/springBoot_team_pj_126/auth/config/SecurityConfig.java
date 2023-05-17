@@ -31,7 +31,8 @@ public class SecurityConfig {
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)	//스프링에게 세션과 쿠키를 생성하지 않고 jwt가 직접 들고다닌다.
 			.and()
 			.authorizeHttpRequests((requests) -> requests
-					.antMatchers(HttpMethod.GET, "/images/**").permitAll()
+
+					.antMatchers(HttpMethod.GET, "/images/**", "/파일저장/**").permitAll()
 					.antMatchers(HttpMethod.POST, "/members/login", "/members/register", "/members/dupleChk").permitAll()		
 					.anyRequest().authenticated()
 					//.anyRequest().permitAll()	

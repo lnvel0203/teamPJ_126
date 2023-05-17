@@ -5,8 +5,9 @@ import 'react-quill/dist/quill.snow.css';
 import "react-datepicker/dist/react-datepicker.css";
 import axios from 'axios';
 import {useLocation } from 'react-router-dom';
-import { request, getAuthToken } from '../../utils/axios';
-// import { parseISO } from 'date-fns';      
+import DatePicker from "react-datepicker";
+import { getAuthToken , request } from '../../utils/axios';
+import { parseISO } from 'date-fns';      
 const DocumentDetail = () => {
   
   const [documentType,setDocumentType] = useState('');
@@ -32,12 +33,14 @@ const DocumentDetail = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [vacationDate, setVacationDate] = useState(null);
+  const [restVacation, setRestVacation] = useState(null);
+  const [annualCount, setAnnualCount] = useState(null);
 
   const [firstApproverStemp, setFirstApproverStemp] = useState(null);
   const [secondApproverStemp, setSecondApproverStemp] = useState(null);
   const [thirdApproverStemp, setThirdApproverStemp] = useState(null);
   const [fourthApproverStemp, setFourthApproverStemp] = useState(null);
-  
+
   const [firstApproverId, setFirstApproverId] = useState(null);
   const [secondApproverId, setSecondApproverId] = useState(null);
   const [thirdApproverId, setThirdApproverId] = useState(null);
@@ -60,7 +63,6 @@ const DocumentDetail = () => {
     const query = useQuery();
     const documentNo = query.get('documentNo');
 
-    useEffect(() => {
   const fetchData = async () => {
     try {
       const response = await axios.get('http://localhost:8081/members/documentDetail/'+documentNo, {
@@ -83,10 +85,27 @@ const DocumentDetail = () => {
       setContent(data.content);
       setFilePath(data.filePath);
       setDocumentState(data.documentState);
-      setStartDate(response.data.startDate);
-      setEndDate(response.data.endDate);
-      setVacationDate(response.data.vacationDate);
-      
+      if (data.vacationDate) {
+        console.log('이거타야지 그러면 ')
+        const getAnnualCount = async () => {
+          try {
+            const userResponse = await request('GET', `/members/getAnnualCount/${id}`);
+            const userData = userResponse.data;
+            console.log('userResponse',userResponse.data)
+            setAnnualCount(userData.annualCount);
+          } catch (error) {
+            console.error('Failed to fetch user data:', error);
+          }
+        };
+        getAnnualCount();
+
+        setVacationDate(data.vacationDate);
+        if (response.data.startDate && response.data.endDate) {
+          
+            setStartDate(parseISO(response.data.startDate));
+            setEndDate(parseISO(response.data.endDate));
+        }
+      }
       if (data.rejectionReason) {
         setRejectionReason(data.rejectionReason);
       }
@@ -94,12 +113,7 @@ const DocumentDetail = () => {
       console.error(error);
     }
   };
-  fetchData();
-}, []);
-
-      console.log('밖endDate',endDate);
-      console.log('밖documentType',documentType);
-      console.log(typeof startDate,typeof endDate, typeof documentType)
+  
   const fetchApproversInfo = async (approverNos) => {
     try {
       const response = await axios.get("http://localhost:8081/members/approverInfo", {
@@ -107,9 +121,11 @@ const DocumentDetail = () => {
           approverNos: approverNos.join(","),
           documentNo: documentNo,
         },
+        
           headers: {
             Authorization: 'Bearer ' + getAuthToken(),
-        }
+          }
+        
       });
       if (response.data[0]) {
         setFirstApproverId(response.data[0].id);
@@ -148,11 +164,9 @@ const DocumentDetail = () => {
     ].filter((no) => no !== null);
 
     if (approverIds.includes(id) || documentState !== "반려됨") {
-      console.log("보여줘")
       setShowEditCancelButtons(true);
       setShowFilePath(true);
     } else {
-      console.log("보여주지마")
       setShowEditCancelButtons(false);
       setShowFilePath(false);
     }
@@ -180,9 +194,14 @@ const DocumentDetail = () => {
     }
     
   }, [firstApproverNo, secondApproverNo, thirdApproverNo, fourthApproverNo,]);
+  
+
+
+  useEffect(() => {
+    fetchData();
+  }, [documentType,author,retentionPeriod,securityLevel]);
 
   const handleDocumentTypeChange = (event) => {
-    console.log('documendddddddddtTYpe',event.target.value)
     setDocumentType(event.target.value);
   };
   
@@ -242,6 +261,49 @@ const DocumentDetail = () => {
   };
   
   
+    useEffect(() => {
+      if (startDate && endDate) {
+        const diffTime = Math.abs(endDate - startDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        setRestVacation(annualCount-diffDays);
+        if(documentState!='반려됨') {
+          if (diffDays>annualCount) {
+            window.alert('휴가가 부족합니다')
+            setEndDate(null);
+            setVacationDate(0);          
+          }
+        }
+          else {
+            setVacationDate(diffDays);
+          } 
+        
+      }
+    
+    }, [startDate, endDate]);
+  
+
+  const handleStartDateChange = (date) => {
+    const today = new Date();
+  
+    if (endDate && date > endDate) {
+      window.alert('휴가 시작 날짜는 종료 날짜보다 이전이어야 합니다');
+    } else if (date.setHours(0,0,0,0) < today.setHours(0,0,0,0)) {  // 날짜 비교를 위해 시간을 0으로 설정
+      window.alert('휴가 시작 날짜는 오늘 날짜보다 이전이면 안됩니다');
+    } else {
+      setStartDate(date);
+      console.log('시작날짜', date)
+    }
+  };
+  
+  const handleEndDateChange = (date) => {
+    if (startDate && date < startDate) {
+      window.alert('휴가 종료 날짜는 시작 날짜보다 이후이어야 합니다');
+    } else {
+      setEndDate(date);
+      console.log('종료날짜',date)
+    }
+  };
+
   const modules = {
     toolbar: [
       [{ font: [] }],
@@ -326,27 +388,27 @@ const DocumentDetail = () => {
               console.log("전송시작")
             
               try {
-                await request(
+                const response = await request(
                   'POST',
-                  '/members/updateDocument/', formData
+                  '/members/updateVacationDocument', formData
                 );
-            
-                console.log('Update success:', response.data);
-                window.alert('수정되었습니다.')
-            
-                // 현재 창을 닫은 후, 부모 창의 URL에 query parameter 추가
-                let newUrl = new URL(window.opener.location.href);
-                newUrl.searchParams.set('refresh', 'true');
-                newUrl.searchParams.set('tab', 'update');
-                window.opener.location.href = newUrl.href;
-            
-                window.close();
-                // 이후 처리 (예: 페이지 이동 등)
-            } catch (error) {
-                console.log("되겠냐고 ㅋ ");
-                console.error('Insert error:', error);
-                // 이후 처리 (예: 에러 메시지 표시 등)
-            }
+    //const response = await axios.post('http://localhost:8081/members/updateVacationDocument', formData);
+    console.log('Update success:', response.data);
+    window.alert('수정되었습니다.')
+
+    // 현재 창을 닫은 후, 부모 창의 URL에 query parameter 추가
+    let newUrl = new URL(window.opener.location.href);
+    newUrl.searchParams.set('refresh', 'true');
+    newUrl.searchParams.set('tab', 'update');
+    window.opener.location.href = newUrl.href;
+
+    window.close();
+    // 이후 처리 (예: 페이지 이동 등)
+} catch (error) {
+    console.log("되겠냐고 ㅋ ");
+    console.error('Insert error:', error);
+    // 이후 처리 (예: 에러 메시지 표시 등)
+}
             }
             else {
               window.alert("진행중이거나,완료된 문서는 수정할 수 없습니다.")
@@ -364,13 +426,13 @@ const DocumentDetail = () => {
               'POST',
               '/members/approve/'+id+'/'+documentNo
             );
-          
+            //await axios.post('http://localhost:8081/members/approve/'+id+'/'+documentNo);
             window.alert('결재승인 되었습니다')
 
             // 현재 창을 닫은 후, 부모 창의 URL에 query parameter 추가
             let newUrl = new URL(window.opener.location.href);
             newUrl.searchParams.set('refresh', 'true');
-            newUrl.searchParams.set('tab', 'approve');
+            newUrl.searchParams.set('tab', 'pending');
             window.opener.location.href = newUrl.href;
 
             window.close();
@@ -391,14 +453,12 @@ const handleRejectionButtonClick = async () => {
       const rejectionReason = window.prompt('반려 사유를 입력해주세요');
       if (rejectionReason) {
           try {
-
               console.log('vacationDate보낸다', vacationDate);
-
               await request(
                 'POST',
-                '/members/addRejectionReason/'+ rejectionReason + '/' + id + '/' + documentNo + '/' + vacationDate,
+                '/members/addRejectionReason/' + rejectionReason + '/' + id + '/' + documentNo + '/' + vacationDate
               );
-
+              //await axios.post('http://localhost:8081/members/addRejectionReason/' + rejectionReason + '/' + id + '/' + documentNo + '/' + vacationDate);
               window.alert('반려처리 되었습니다');
               
               let newUrl = new URL(window.opener.location.href);
@@ -425,29 +485,6 @@ function getFileName(filePath) {
     return "";
   }
 }
-
-//파일 다운 
-const handleDownload = async () => {
-  try {
-    const response = await axios.get(`http://localhost:8081/members/downloadFile/${encodeURIComponent(getFileName(filePath))}`, {
-      responseType: 'blob',
-    }, {
-      headers: {
-        Authorization: 'Bearer ' + getAuthToken(),
-      }
-    });
-
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', getFileName(filePath));
-    document.body.appendChild(link);
-    link.click();
-  } catch (error) {
-    console.error('Download Error:', error);
-  }
-};
-
   
   return (
     
@@ -527,6 +564,22 @@ const handleDownload = async () => {
           </tr>
         )}
 
+      {documentType === '휴가' && documentState === '반려됨' && (
+        <tr className="tr-1">
+          <td>휴가 시작 날짜</td>
+          <td className="write-td">
+            <DatePicker selected={startDate} onChange={handleStartDateChange} />
+          </td>
+          <td>휴가 종료 날짜</td>
+          <td className="write-td">
+            <DatePicker selected={endDate} onChange={handleEndDateChange} dateFormat="yyyy/MM/dd" />
+          </td>
+          <td>사용 가능 휴가: {annualCount}</td>
+          <td>사용할 휴가: {vacationDate}</td>
+          <td>남는 휴가 : {restVacation < 0 ? annualCount - vacationDate : restVacation}</td>
+        </tr>
+      )}
+
         </tbody>
       </table>
       <br />
@@ -571,11 +624,14 @@ const handleDownload = async () => {
             {showFilePath ? (
             <>
                 <td colSpan="4" className="file">
-                  <button onClick={handleDownload}>
-                    {getFileName(filePath)}
-                  </button>
+                <button onClick={() => window.open(
+                  
+                  `http://localhost:8081/members/downloadFile/${encodeURIComponent(getFileName(filePath))}`, '_blank', 'noopener,noreferrer'
+                  
+                  )}>
+                  {getFileName(filePath)}
+                </button>
                 </td>
-
             </>
             ) : (
                 <>
@@ -594,8 +650,6 @@ const handleDownload = async () => {
         <label htmlFor="document-title">제목: </label>
         <input type="text" id="document-title" className="title-input" value={title} onChange={handleTitleChange} />
       </div>
-
-
       
     <div style={{ height: '650px', width: '900px' }}>
       <ReactQuill

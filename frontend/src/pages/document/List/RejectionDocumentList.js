@@ -68,7 +68,6 @@ import {  PlusOutlined   } from '@ant-design/icons';
 function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,handleAdd}) {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'));
-
   const filterTypes = useMemo(() => renderFilterTypes, []);
   const sortBy = { id: 'fatherName', desc: false };
 
@@ -78,8 +77,6 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,handl
     headerGroups,
     prepareRow,
     setHiddenColumns,
-    //5월 4일 김성훈 수정 
-    //allColumns,
     visibleColumns,
     rows,
     page,
@@ -88,9 +85,6 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,handl
     state: { globalFilter, selectedRowIds, pageIndex, pageSize, expanded },
     preGlobalFilteredRows,
     setGlobalFilter,
-    //5월 4일 김성훈 수정
-    //setSortBy,
-    //selectedFlatRows
   } = useTable(
     {
       columns,
@@ -117,10 +111,28 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,handl
     // eslint-disable-next-line
   }, [matchDownSM]);
 
-  const handleTitleClick = (documentNo) => {
-    console.log('documentNo',documentNo)
-    window.open('/apps/document/documentDetail?documentNo='+documentNo, '_blank', 'width=1200,height=900,top=300,left=300');
+  const handleTitleClick = async (documentNo) => {
+    try {
+      const response = await axios.get('http://localhost:8081/members/documentDetail/' + documentNo, {
+        headers: {
+          Authorization: 'Bearer ' + getAuthToken(),
+        }
+      });
+      const data = response.data;
+      console.log('ddddddddddddddddddddddddddd', data.documentType);
+  
+      if (data.documentType === '휴가') {
+        window.open('/apps/document/vacationDocumentDetail?documentNo=' + documentNo, '_blank', 'width=1200,height=900,top=300,left=300');
+      } else {
+        window.open('/apps/document/documentDetail?documentNo=' + documentNo, '_blank', 'width=1200,height=900,top=300,left=300');
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
+  
+
+  
 
   return (
     <>
@@ -271,6 +283,8 @@ SelectionHeader.propTypes = {
 
 
 const RejectionDocumentList = () => {
+
+  
   
   
     const id = localStorage.getItem('id');

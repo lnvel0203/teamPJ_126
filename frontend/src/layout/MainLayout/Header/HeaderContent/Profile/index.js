@@ -7,8 +7,8 @@ import { useTheme } from '@mui/material/styles';
 import { Box, ButtonBase, CardContent, ClickAwayListener, Grid, Paper, Popper, Stack, Tab, Tabs, Tooltip, Typography } from '@mui/material';
 
 // project import
-import ProfileTab from './ProfileTab';
-import SettingTab from './SettingTab';
+//import ProfileTab from './ProfileTab';
+//import SettingTab from './SettingTab';
 import Avatar from 'components/@extended/Avatar';
 import MainCard from 'components/MainCard';
 import Transitions from 'components/@extended/Transitions';
@@ -198,10 +198,10 @@ const Profile = () => {
                     </Tabs>
                   </Box>
                   <TabPanel value={value} index={0} dir={theme.direction}>
-                    <ProfileTab handleLogout={handleLogout} />
+                    {/* <ProfileTab handleLogout={handleLogout} /> */}
                   </TabPanel>
                   <TabPanel value={value} index={1} dir={theme.direction}>
-                    <SettingTab />
+                    {/* <SettingTab /> */}
                   </TabPanel>
                 </MainCard>
               </ClickAwayListener>

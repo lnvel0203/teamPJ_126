@@ -2,6 +2,7 @@ package springBoot_team_pj_126.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import springBoot_team_pj_126.dto.ChartDTO;
 import springBoot_team_pj_126.dto.EmployeeSalaryDTO;
 import springBoot_team_pj_126.dto.SalaryInfoDTO;
 import springBoot_team_pj_126.dto.SalaryRecordsDTO;
@@ -125,7 +127,47 @@ public class SalaryController {
 
 	
 	// ========================================================
-	
+	   // 기본급 관리 리스트
+	   @GetMapping("/baseSalaryList")
+	   public ArrayList<Map<String, Object>> baseSalaryList() {
+	      logger.info("SalaryController - baseSalaryList()");
+	      
+	      ArrayList<Map<String, Object>> map = service.baseSalaryList();
+	      
+	      return map;
+	   }
+	   
+	   // 기본급 업데이트
+	   @PutMapping("/updateBaseSalary")
+	   public void updateBaseSalary(@RequestBody Map<String, Object> map){
+	      logger.info("SalaryController - updateBaseSalary()");
+	      System.out.println(map);
+	      
+	      service.updateBaseSalary(map);
+	   }
+	   
+	// ========================================================
+	   // 차트
+	   
+	   // 부서별 급여 비율
+	   @GetMapping("/deptList")
+	   public List<ChartDTO> getChartData() {
+	      logger.info("SalaryController - getChartData()");
+	      
+	      List<ChartDTO> list = service.getChartData();
+	      
+	       return list;
+	   }
+	   
+	   // 부서별 급여 평균, 최저, 최고
+	   @GetMapping("/deptList2")
+	   public List<ChartDTO> getChartData2() {
+	      logger.info("SalaryController - getChartData2()");
+	      
+	      List<ChartDTO> list = service.getChartData2();
+	      
+	      return list;
+	   }
 }
 
 

@@ -1,15 +1,6 @@
 // Import Axios Services
 import axios from 'axios';
 import { getAuthToken, request } from '../../../utils/axios';
-
-
-
-
-
-
-
-
-
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useMemo, useState, Fragment } from 'react';
 
@@ -264,31 +255,31 @@ const ActionCell = (row) => {
     };
 
     await axios
-      .put(`http://localhost:8081/department/updatePosition`, { sendData }, {
-        headers: {
-          Authorization: 'Bearer ' + getAuthToken(),
-        }
-      })
-      .then((response) => {
-        console.log(response);
-        window.location.reload();
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    .put(`http://localhost:8081/department/updatePosition`, { sendData }, {
+      headers: {
+        Authorization: 'Bearer ' + getAuthToken(),
+      }
+    })
+    .then((response) => {
+      console.log(response);
+      window.location.reload();
+    })
+    .catch((error) => {
+      console.error(error);
+    });
   };
 
-  // 부서 삭제
-  const handleDelete = (deptid) => {
-    request('DELETE', `department/deleteDepartment/${deptid}`, deptid)
-      .then((response) => {
-        console.log(response.data); // logs the updated user data
-        window.location.reload(); // 자동 새로고침
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
+ // 부서 삭제
+ const handleDelete = (deptid) => {
+  request('DELETE', `department/deleteDepartment/${deptid}`, deptid)
+    .then((response) => {
+      console.log(response.data); // logs the updated user data
+      window.location.reload(); // 자동 새로고침
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
 
   return (
     <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
@@ -346,16 +337,16 @@ const Departloaletext = () => {
 
   const [userData, setUserData] = useState([]);
 
-  // 서버에서 회원 정보를 패치해옴
-  const fetchUserData = useCallback(async () => {
-    try {
-      request('GET', 'department').then((response) => {
-        setUserData(response.data);
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
+ // 서버에서 회원 정보를 패치해옴
+ const fetchUserData = useCallback(async () => {
+  try {
+    request('GET', 'department').then((response) => {
+      setUserData(response.data);
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}, []);
 
   useEffect(() => {
     fetchUserData();

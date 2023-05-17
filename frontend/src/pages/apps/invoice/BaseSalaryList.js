@@ -1,10 +1,8 @@
 // Import Axios Services
+import { getAuthToken } from '../../../utils/axios';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useMemo, useState, Fragment } from 'react';
 import axios from 'axios';
-import { getAuthToken } from '../../../utils/axios';
-import { format } from 'date-fns';
-
 // material-ui
 import { alpha, useTheme } from '@mui/material/styles';
 import {
@@ -17,10 +15,10 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  //5월 8일 수정 김성훈  삭제 요청
   // Tooltip,
   Typography,
-  useMediaQuery
+  useMediaQuery,
+  TextField
 } from '@mui/material';
 
 // third-party
@@ -28,44 +26,25 @@ import NumberFormat from 'react-number-format';
 import { useFilters, useExpanded, useGlobalFilter, useRowSelect, useSortBy, useTable, usePagination } from 'react-table';
 
 // project import
-import Write from '../Write';
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
-
-//5월 8일 수정 김성훈  삭제 요청
 // import IconButton from 'components/@extended/IconButton';
 import { PopupTransition } from 'components/@extended/Transitions';
 import {
-  //CSVExport,
+  //   CSVExport,
   HeaderSort,
   IndeterminateCheckbox,
-  //5월4일 김성훈 수정 삭제 요청 
-  //SortingSelect,
   TablePagination,
   TableRowSelection
 } from 'components/third-party/ReactTable';
 
-
 import CustomerView from 'sections/apps/customer/CustomerView';
-import AlertCustomerDelete from 'sections/apps/customer/AlertCustomerDelete';
 
-// import makeData from 'data/react-table';
 import { renderFilterTypes, GlobalFilter } from 'utils/react-table';
 
-// assets
-//5월 4일 김성훈 PlusQutlined,삭제 요청 
-import {  PlusOutlined   } from '@ant-design/icons';
-
-//5월 8일 김성훈 수정 ,삭제 요청 
-//import { CloseOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
-
-
 // ==============================|| REACT TABLE ||============================== //
-//5월 4일 김성훈 handleAdd,삭제
-//function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, handleAdd })
 
-//5월 8일 김성훈 직원 팀 선택하기 
-function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,handleAdd}) {
+function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent }) {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -78,8 +57,6 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,handl
     headerGroups,
     prepareRow,
     setHiddenColumns,
-    //5월 4일 김성훈 수정 
-    //allColumns,
     visibleColumns,
     rows,
     page,
@@ -87,10 +64,7 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,handl
     setPageSize,
     state: { globalFilter, selectedRowIds, pageIndex, pageSize, expanded },
     preGlobalFilteredRows,
-    setGlobalFilter,
-    //5월 4일 김성훈 수정
-    //setSortBy,
-    //selectedFlatRows
+    setGlobalFilter
   } = useTable(
     {
       columns,
@@ -117,11 +91,6 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,handl
     // eslint-disable-next-line
   }, [matchDownSM]);
 
-  const handleTitleClick = (documentNo) => {
-    console.log('documentNo',documentNo)
-    window.open('/apps/document/documentDetail?documentNo='+documentNo, '_blank', 'width=1200,height=900,top=300,left=300');
-  };
-
   return (
     <>
       <TableRowSelection selected={Object.keys(selectedRowIds).length} />
@@ -139,14 +108,6 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,handl
             setGlobalFilter={setGlobalFilter}
             size="small"
           />
-          <Stack direction={matchDownSM ? 'column' : 'row'} alignItems="center" spacing={1}>
-            {/* <SortingSelect sortBy={sortBy.id} setSortBy={setSortBy} allColumns={allColumns} /> */}
-            {/*  5월 4일 김성훈 Add Custorme 제거   사용안함 삭제 요청 */ }
-            <Button variant="contained" startIcon={<PlusOutlined />} onClick={handleAdd} size="small">
-              서류 작성
-            </Button>
-            {/* <CSVExport data={selectedFlatRows.length > 0 ? selectedFlatRows.map((d) => d.original) : data} filename={'customer-list.csv'} /> */}
-          </Stack>
         </Stack>
 
         <Table {...getTableProps()}>
@@ -171,19 +132,12 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,handl
                   <TableRow
                     {...row.getRowProps()}
                     onClick={() => {
-                      handleTitleClick(row.original.documentNo);
+                      row.toggleRowSelected();
                     }}
                     sx={{ cursor: 'pointer', bgcolor: row.isSelected ? alpha(theme.palette.primary.lighter, 0.35) : 'inherit' }}
                   >
                     {row.cells.map((cell, index) => (
-                      <TableCell
-                        key={index}
-                        {...cell.getCellProps([{ className: cell.column.className }])}
-                        onClick={cell.column.id === 'selection' ? (e) => {
-                          e.stopPropagation();
-                          row.toggleRowSelected();
-                        } : undefined}
-                      >
+                      <TableCell key={index} {...cell.getCellProps([{ className: cell.column.className }])}>
                         {cell.render('Cell')}
                       </TableCell>
                     ))}
@@ -248,6 +202,54 @@ const StatusCell = ({ value }) => {
   }
 };
 
+// const ActionCell = (row, setCustomer, setCustomerDeleteId, handleClose) => {
+const ActionCell = (row) => {
+  const [inputValue, setInputValue] = useState('');
+
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleButtonClick = async (infoId) => {
+    console.log(infoId);
+
+    const sendData = {
+      infoId: infoId,
+      formValue: inputValue
+    };
+
+    await axios
+      .put(`http://localhost:8081/members/updateBaseSalary`, { sendData }, {
+        headers: {
+          Authorization: 'Bearer ' + getAuthToken(),
+        }
+      })
+      .then((response) => {
+        console.log(response);
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  return (
+    <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
+      <TextField
+        id="outlined-number"
+        value={inputValue}
+        type="number"
+        onChange={handleInputChange}
+        InputLabelProps={{
+          shrink: true
+        }}
+      />
+      <Button variant="contained" onClick={() => handleButtonClick(row.original.INFOID)}>
+        변경
+      </Button>
+    </Stack>
+  );
+};
 
 StatusCell.propTypes = {
   value: PropTypes.number
@@ -269,49 +271,42 @@ SelectionHeader.propTypes = {
   getToggleAllPageRowsSelectedProps: PropTypes.func
 };
 
+const BaseSalaryList = () => {
+  const theme = useTheme();
+  const [BaseSalaryData, setBaseSalaryData] = useState([]);
 
-const ApprovalCompletedList = () => {
-  
-  
-    const id = localStorage.getItem('id');
-    const theme = useTheme();
-    const closecheck = localStorage.getItem("closeCheck")
-    const [userData, setUserData] = useState([]);
-  
-    // Fetch user data from the server
-    const fetchUserData = useCallback(async () => {
-      try {
-        const response = await axios.get('http://localhost:8081/members/ApprovalCompletedList/'+id, {
-          headers: {
-            Authorization: 'Bearer ' + getAuthToken(),
-          }
-        });
-        localStorage.setItem('completedListCount',response.data.length);
-        setUserData(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    }, []);
+  // 서버에서 회원 정보를 패치해옴
+  const fetchUserData = useCallback(async () => {
+    try {
+      const response = await axios.get('http://localhost:8081/members/baseSalaryList', {
+        headers: {
+          Authorization: 'Bearer ' + getAuthToken(),
+        }
+      }); //컨트롤러 url로 변경
+      setBaseSalaryData(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
 
   useEffect(() => {
     fetchUserData();
-  }, [fetchUserData,closecheck]);
+  }, [fetchUserData]);
 
-  const data = useMemo(() => userData, [userData]);
+  const data = useMemo(() => BaseSalaryData, [BaseSalaryData]); //리스트
+
+  // # 삭제 : 테스트 리스트 출력
+  console.log(data);
 
   const [add, setAdd] = useState(false);
-  const [open, setOpen] = useState(false);
   const [customer, setCustomer] = useState();
-  const [customerDeleteId] = useState();
 
   const handleAdd = () => {
     setAdd(!add);
     if (customer && !add) setCustomer(null);
   };
 
-  const handleClose = () => {
-    setOpen(!open);
-  };
+  const formatter = new Intl.NumberFormat('ko-KR');
 
   const columns = useMemo(
     () => [
@@ -323,33 +318,33 @@ const ApprovalCompletedList = () => {
         disableSortBy: true
       },
       {
-        Header: '상태',
-        accessor: 'documentState',
-        className: 'cell-left'
+        Header: 'INFOID',
+        accessor: 'INFOID'
       },
       {
-        Header: '문서번호',
-        accessor: 'documentNo',
-        className: 'cell-left'
+        Header: 'ID',
+        accessor: 'ID'
       },
       {
-        Header: '작성자',
-        accessor: 'author',
-        className: 'cell-left'
+        Header: '이름',
+        accessor: 'NAME'
       },
       {
-        Header: '제목',
-        accessor: 'title',
-      }
-      ,
+        Header: '기본급',
+        disableSortBy: true,
+        accessor: 'BASESALARY',
+        Cell: ({ value }) => <span>{formatter.format(value)}</span>
+      },
       {
-        Header: '작성일',
-        accessor: 'draftDate',
-        className: 'cell-left',
-        Cell: ({ value }) => format(new Date(value), 'yyyy-mm-dd HH:mm:ss')
+        Header: '주당시간',
+        accessor: 'REGULARWEEKLYHOURS'
+      },
 
+      {
+        Header: 'Actions',
+        disableSortBy: true,
+        Cell: ({ row }) => ActionCell(row, theme)
       }
-      
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [theme]
@@ -362,14 +357,13 @@ const ApprovalCompletedList = () => {
       <ScrollX>
         <ReactTable
           columns={columns}
-          data={userData}
+          data={BaseSalaryData}
           handleAdd={handleAdd}
           getHeaderProps={(column) => column.getSortByToggleProps()}
           renderRowSubComponent={renderRowSubComponent}
         />
       </ScrollX>
-      <AlertCustomerDelete title={customerDeleteId} open={open} handleClose={handleClose} />
-      {/* add user dialog */}
+
       <Dialog
         maxWidth="sm"
         TransitionComponent={PopupTransition}
@@ -379,11 +373,9 @@ const ApprovalCompletedList = () => {
         open={add}
         sx={{ '& .MuiDialog-paper': { p: 0 }, transition: 'transform 225ms' }}
         aria-describedby="alert-dialog-slide-description"
-      >
-        <Write customer={customer} onCancel={handleAdd} />
-      </Dialog>
+      ></Dialog>
     </MainCard>
   );
 };
 
-export default ApprovalCompletedList;
+export default BaseSalaryList;

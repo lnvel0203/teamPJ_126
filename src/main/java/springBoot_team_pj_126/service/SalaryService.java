@@ -1,8 +1,10 @@
 package springBoot_team_pj_126.service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import springBoot_team_pj_126.dto.ChartDTO;
 import springBoot_team_pj_126.dto.EmployeeSalaryDTO;
 import springBoot_team_pj_126.dto.SalaryInfoDTO;
 import springBoot_team_pj_126.dto.SalaryRecordsDTO;
@@ -33,6 +35,17 @@ public interface SalaryService {
 
 	// 지급 상태 업데이트
 	public int updateSalaryStatus(int salaryRecordId);
+	   // 기본급 관리 리스트
+	   public ArrayList<Map<String, Object>> baseSalaryList();
 
+	   // 기본급 업데이트
+	   public void updateBaseSalary(Map<String, Object> map);
 	// ========================================================
+	    // 차트
+	    
+	    // 부서별 급여 퍼센트
+	   public List<ChartDTO> getChartData();
+
+	   // 부서별 급여 평균, 최저, 최고
+	   public List<ChartDTO> getChartData2();
 }

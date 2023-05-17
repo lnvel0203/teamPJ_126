@@ -4,8 +4,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import {getAuthToken } from '../../utils/axios';
-import axios from 'axios';
+import { request, getAuthToken } from '../../utils/axios';
 import { useNavigate } from 'react-router-dom';
 const DocumentWritePage = () => {
 
@@ -20,9 +19,10 @@ const DocumentWritePage = () => {
   const [title, setTitle] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [vacationDate, setVacationDate] = useState(0);
+  const [vacationDate, setVacationDate] = useState(null);
   const [name, setName] = useState('');
-  const [a, setA] = useState(0);
+  const [restVacation, setRestVacation] = useState(0);
+
 
   useEffect(() => {
     // 서버에서 이름과 남은 휴가일수를 가져오는 함수 호출
@@ -31,7 +31,7 @@ const DocumentWritePage = () => {
 
   const fetchUserData = async () => {
     try {
-      const response = await axios.get(`http://localhost:8081/members/getAnnualCount/${id}`, {
+      const response = await request('GET', `/members/getAnnualCount/${id}`, {
         headers: {
           Authorization: 'Bearer ' + getAuthToken(),
         }
@@ -51,23 +51,19 @@ const DocumentWritePage = () => {
       setVacationDate(true);
       setRetentionPeriod('');
       setSecurityLevel('');
-    } else {
-      setVacationDate(false);
-    }
+    } 
     console.log('타입',documentType)
   };
 
+  
+
   useEffect(() => {
-    setA(annualCount);
+    setRestVacation(annualCount);
     if (startDate && endDate) {
-      
       const diffTime = Math.abs(endDate - startDate);
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      //부석현
-      
-      setA(annualCount - diffDays);
-      
       setVacationDate(diffDays);
+      setRestVacation(annualCount-diffDays);
     }
   }, [startDate, endDate]);
 
@@ -79,7 +75,7 @@ const DocumentWritePage = () => {
     setSecurityLevel(event.target.value);
     console.log('write로컬',localStorage.getItem("approver"))
   };
-//2번
+
   const handleAddButtonClick = () => {
     let width = 530;
     let height = 710;
@@ -163,7 +159,7 @@ const DocumentWritePage = () => {
     
     const storedApprover = JSON.parse(localStorage.getItem('approver')) || [];
     setApprover(storedApprover);
-     //7번 -- 값
+    
     const formData = new FormData();
 
     storedApprover.forEach((apv, index) => {
@@ -178,13 +174,12 @@ const DocumentWritePage = () => {
     formData.append('author', name);
     formData.append('retentionPeriod', retentionPeriod);
     formData.append('securityLevel', securityLevel);
-    formData.append('VacationStartDate',startDate);
-    formData.append('VacationDedtDate',endDate);
+    formData.append('startDate',startDate);
+    formData.append('endDate',endDate);
     formData.append('vacationDate', vacationDate);
     formData.append('title', title);
     formData.append('content', value); 
 
-    //결제자 -> 
     storedApprover.forEach((apv, index) => {
       formData.append(`storedApprover${index}`, JSON.stringify(apv));
     });
@@ -194,38 +189,59 @@ const DocumentWritePage = () => {
     }
 
     for (const [key, value] of formData.entries()) {
-      console.log('aasdlf;kajdsjlk;',`${key}: ${value}`);
+      console.log('formData',`${key}: ${value}`);
     }
     console.log('selectedFile',selectedFile)
     console.log("전송시작")
- 
-    //8번 컨트롤러 0
+  
+//  const response = await axios.post('http://localhost:8081/members/addDocument', formData, {
+//         headers: {
+//           Authorization: 'Bearer ' + getAuthToken(),
+//         }
+//       });
+
+    if(documentType=='휴가') {
     try {
-      // request(
-      //   'POST',
-      //   '/members/addDocument', formData
-      // ).then(response => {
-      //   console.log('Insert success:', response.data);
-      //   console.log("성공한듯 ? ")        
-      //   navigate('/apps/document/documentList', { state: { id: id } });
-      // })
-      const response = await axios.post('http://localhost:8081/members/addDocument', formData, {
-        headers: {
-          Authorization: 'Bearer ' + getAuthToken(),
-        }
-      });
-      console.log('Insert success:', response.data);
-      navigate('/apps/document/documentList', { state: { id: id } });
+      request(
+        'POST',
+        '/members/addVacationDocument', formData
+      ).then(response => {
+        console.log('Insert success:', response.data);
+        console.log("성공한듯 ? ")        
+        navigate('/apps/document/documentList', { state: { id: id } });
+      })
       
-      // 이후 처리 (예: 페이지 이동 등)
+
+
     } catch (error) {
+      console.log("되겠냐고 ㅋ ");
       console.error('Insert error:', error);
       // 이후 처리 (예: 에러 메시지 표시 등)
     }
+  } else {
+    try {
+      request(
+        'POST',
+        '/members/addDocument', formData
+      ).then(response => {
+        console.log('Insert success:', response.data);
+        console.log("성공한듯 ? ")        
+        navigate('/apps/document/documentList', { state: { id: id } });
+      })
+      
+
+
+    } catch (error) {
+      console.log("되겠냐고 ㅋ ");
+      console.error('Insert error:', error);
+      // 이후 처리 (예: 에러 메시지 표시 등)
+    }
+
+  }
   };
 
   
-//휴가 계산
+
   useEffect(() => {
     if (startDate && endDate) {
       const diffTime = Math.abs(endDate - startDate);
@@ -242,10 +258,15 @@ const DocumentWritePage = () => {
   }, [startDate, endDate]);
 
   const handleStartDateChange = (date) => {
+    const today = new Date();
+  
     if (endDate && date > endDate) {
       window.alert('휴가 시작 날짜는 종료 날짜보다 이전이어야 합니다');
+    } else if (date.setHours(0,0,0,0) < today.setHours(0,0,0,0)) {  // 날짜 비교를 위해 시간을 0으로 설정
+      window.alert('휴가 시작 날짜는 오늘 날짜보다 이전이면 안됩니다');
     } else {
       setStartDate(date);
+      console.log('시작날짜', date)
     }
   };
   
@@ -254,9 +275,12 @@ const DocumentWritePage = () => {
       window.alert('휴가 종료 날짜는 시작 날짜보다 이후이어야 합니다');
     } else {
       setEndDate(date);
+      console.log('종료날짜',date)
     }
   };
   
+  
+  console.log(typeof annualCount, typeof vacationDate, typeof restVacation);
     return (
     
       <div style={{ marginLeft: '' }}>      
@@ -316,14 +340,13 @@ const DocumentWritePage = () => {
             </td>
             <td>사용 가능 휴가: {annualCount}</td>
             <td>사용할 휴가: {vacationDate}</td>
-            <td>남는 휴가 : {a}</td>
-            {/* <td>남는 휴가 : {annualCount - vacationDate}</td> */}
+            <td>남는 휴가 : {restVacation}</td>
           </tr>
                 )}
       </tbody>
     </table>
 
-          
+           
         <br />
         <br />
         <h1>결재선</h1>
@@ -347,6 +370,8 @@ const DocumentWritePage = () => {
               <td className="col-4">{approver[2] ? "(결재란)" : ""}</td>
               <td className="col-5">{approver[3] ? "(결재란)" : ""}</td>
             </tr>
+
+
             <tr className="tr-3">
               <td className="col-2">{approver[0] ? approver[0].name : ""}</td>
               <td className="col-3">{approver[1] ? approver[1].name : ""}</td>

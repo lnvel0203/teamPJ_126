@@ -7,7 +7,6 @@ import { useMediaQuery, useTheme } from '@mui/material';
 // import NavCard from './NavCard';
 import Navigation from './Navigation';
 import SimpleBar from 'components/third-party/SimpleBar';
-import Chat from './Chat';
 
 // ==============================|| DRAWER CONTENT ||============================== //
 
@@ -28,7 +27,7 @@ const DrawerContent = () => {
       }}
     >
       <Navigation />
-      <Chat />
+      
       {drawerOpen && !matchDownMD}
     </SimpleBar>
   );

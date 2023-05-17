@@ -429,7 +429,7 @@ const List = () => {
     }
     setAlertPopup(false);
   };
-
+  const formatter = new Intl.NumberFormat('ko-KR');
   const columns = useMemo(
     () => [
       {
@@ -460,7 +460,8 @@ const List = () => {
       {
         Header: '지급액',
         accessor: 'NETSALARY',
-        disableFilters: true
+        disableFilters: true,
+        Cell: ({ value }) => <span>{formatter.format(value)}</span>
       },
       {
         Header: '지급날짜',
