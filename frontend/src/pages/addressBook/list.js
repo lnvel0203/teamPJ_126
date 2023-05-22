@@ -15,7 +15,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Tooltip,
+  //Tooltip,
   Typography,
   useMediaQuery
 } from '@mui/material';
@@ -27,7 +27,7 @@ import { useFilters, useExpanded, useGlobalFilter, useRowSelect, useSortBy, useT
 // project import
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
-import IconButton from 'components/@extended/IconButton';
+//import IconButton from 'components/@extended/IconButton';
 import { PopupTransition } from 'components/@extended/Transitions';
 import {
   //   CSVExport,
@@ -40,14 +40,14 @@ import {
 
 // import AddCustomer from 'sections/apps/customer/AddCustomer';
 import CustomerView from 'sections/apps/customer/CustomerView';
-import AlertCustomerDelete from 'sections/apps/customer/AlertCustomerDelete';
+//import AlertCustomerDelete from 'sections/apps/customer/AlertCustomerDelete';
 
 // import makeData from 'data/react-table';
 import { renderFilterTypes, GlobalFilter } from 'utils/react-table';
 
 // assets
 // import { CloseOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
-import { CloseOutlined, EyeTwoTone } from '@ant-design/icons';
+//import { CloseOutlined, EyeTwoTone } from '@ant-design/icons';
 
 // ==============================|| REACT TABLE ||============================== //
 
@@ -229,52 +229,52 @@ const StatusCell = ({ value }) => {
   }
 };
 
-const ActionCell = (row, setCustomer, setCustomerDeleteId, handleClose, theme) => {
-  const collapseIcon = row.isExpanded ? (
-    <CloseOutlined style={{ color: theme.palette.error.main }} />
-  ) : (
-    <EyeTwoTone twoToneColor={theme.palette.secondary.main} />
-  );
-  return (
-    <Stack direction="row" alignItems="center" justifyContent="center" spacing={0}>
-      <Tooltip title="View">
-        <IconButton
-          color="secondary"
-          onClick={(e) => {
-            e.stopPropagation();
-            row.toggleRowExpanded();
-          }}
-        >
-          {collapseIcon}
-        </IconButton>
-      </Tooltip>
-      {/* <Tooltip title="Edit">
-        <IconButton
-          color="primary"
-          onClick={(e) => {
-            e.stopPropagation();
-            setCustomer(row.values);
-            handleAdd();
-          }}
-        >
-          <EditTwoTone twoToneColor={theme.palette.primary.main} />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Delete">
-        <IconButton
-          color="error"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleClose();
-            setCustomerDeleteId(row.values.fatherName);
-          }}
-        >
-          <DeleteTwoTone twoToneColor={theme.palette.error.main} />
-        </IconButton>
-      </Tooltip> */}
-    </Stack>
-  );
-};
+// const ActionCell = (row, setCustomer, setCustomerDeleteId, handleClose, theme) => {
+//   const collapseIcon = row.isExpanded ? (
+//     <CloseOutlined style={{ color: theme.palette.error.main }} />
+//   ) : (
+//     <EyeTwoTone twoToneColor={theme.palette.secondary.main} />
+//   );
+//   return (
+//     <Stack direction="row" alignItems="center" justifyContent="center" spacing={0}>
+//       <Tooltip title="View">
+//         <IconButton
+//           color="secondary"
+//           onClick={(e) => {
+//             e.stopPropagation();
+//             row.toggleRowExpanded();
+//           }}
+//         >
+//           {collapseIcon}
+//         </IconButton>
+//       </Tooltip>
+//       <Tooltip title="Edit">
+//         <IconButton
+//           color="primary"
+//           onClick={(e) => {
+//             e.stopPropagation();
+//             setCustomer(row.values);
+//             handleAdd();
+//           }}
+//         >
+//           <EditTwoTone twoToneColor={theme.palette.primary.main} />
+//         </IconButton>
+//       </Tooltip>
+//       <Tooltip title="Delete">
+//         <IconButton
+//           color="error"
+//           onClick={(e) => {
+//             e.stopPropagation();
+//             handleClose();
+//             setCustomerDeleteId(row.values.fatherName);
+//           }}
+//         >
+//           <DeleteTwoTone twoToneColor={theme.palette.error.main} />
+//         </IconButton>
+//       </Tooltip>
+//     </Stack>
+//   );
+// };
 
 StatusCell.propTypes = {
   value: PropTypes.number
@@ -327,18 +327,18 @@ const CustomerListPage = () => {
   console.log(data);
 
   const [add, setAdd] = useState(false);
-  const [open, setOpen] = useState(false);
+  //const [open, setOpen] = useState(false);
   const [customer, setCustomer] = useState();
-  const [customerDeleteId, setCustomerDeleteId] = useState();
+  //const [customerDeleteId, setCustomerDeleteId] = useState();
 
   const handleAdd = () => {
     setAdd(!add);
     if (customer && !add) setCustomer(null);
   };
 
-  const handleClose = () => {
-    setOpen(!open);
-  };
+  // const handleClose = () => {
+  //   setOpen(!open);
+  // };
 
   const columns = useMemo(
     () => [
@@ -375,12 +375,12 @@ const CustomerListPage = () => {
         className: 'cell-center'
       },
 
-      {
-        Header: 'Actions',
-        className: 'cell-center',
-        disableSortBy: true,
-        Cell: ({ row }) => ActionCell(row, setCustomer, setCustomerDeleteId, handleClose, theme)
-      }
+      // {
+      //   Header: 'Actions',
+      //   className: 'cell-center',
+      //   disableSortBy: true,
+      //   Cell: ({ row }) => ActionCell(row, setCustomer, setCustomerDeleteId, handleClose, theme)
+      // }
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [theme]
@@ -400,7 +400,7 @@ const CustomerListPage = () => {
         />
       </ScrollX>
       {/* 이부분 주소록에서는 삭제 */}
-      <AlertCustomerDelete title={customerDeleteId} open={open} handleClose={handleClose} />
+      {/* <AlertCustomerDelete title={customerDeleteId} open={open} handleClose={handleClose} /> */}
       {/* add user dialog */}
       <Dialog
         maxWidth="sm"

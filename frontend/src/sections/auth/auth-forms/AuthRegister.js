@@ -1,24 +1,16 @@
-//import React, { Component, useState } from "react";
 import React, { useState } from 'react';
 import axios from 'axios'; 
 import AnimateButton from 'components/@extended/AnimateButton';
 
 import {
- // Box,
   Button,
- //Divider,
   FormControl,
   FormHelperText,
   Grid,
-  //Link,
- // InputAdornment,
   InputLabel,
- // OutlinedInput,
   Stack,
   Typography
 } from '@mui/material';
-
-//class AuthRegister extends Component {
 
   function AuthRegister() {
 
@@ -48,7 +40,6 @@ const onChangePassword = (e) => {
     setPassword(e.target.value);
 
 };
-
 const onChangeUserName = (e) => {
     setUserNameError(false);
     setUserName(e.target.value)
@@ -59,20 +50,15 @@ const onChangeEmail = (e) => {
     else setEmailError(true);
     setEmail(e.target.value);
 };
-
 const onChangeDate = (e) => {
-  
   setBirth(e.target.value);
  
 };
-
 const onChangeHp = (e) => {
-  
   setHp(e.target.value);
 
 };
 const onChangeAddress = (e) => {
-  
   setAddress(e.target.value);
 
 };
@@ -91,11 +77,8 @@ const validation = () => {
   }
 }
 
-
 const dupleChk = (e) =>{
-
   const MEMBER_API_BASE_URL = 'http://localhost:8081/members';
-  //const headers = {"Content-type":"application/x-www-form-urlencoded"}
   e.preventDefault();
 
   let memberId = {
@@ -108,14 +91,10 @@ const dupleChk = (e) =>{
 
     axios.post(MEMBER_API_BASE_URL+ "/dupleChk", memberId)
     .then(res => {
-     
         if(res.data === 0){
             alert("중복된 아이디입니다.");
-            
-
         }else{
             alert("사용 가능한 아이디입니다.");
-         
         }
      });
   }
@@ -317,9 +296,6 @@ const dupleChk = (e) =>{
                  <br />
                </form>
       </div>
-
     );
-  
 }
-
 export default AuthRegister;

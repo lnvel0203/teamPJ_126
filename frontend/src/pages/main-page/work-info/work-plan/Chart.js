@@ -5,7 +5,7 @@ import ApexRadialChart from './ApexRadialChart';
 import Hours from './Hours';
 import Vacation from './Vacation';
 import Application from './Application';
-import Weather from './Weather';
+//import Weather from './Weather';
 
 const Chart = () => {
   const [value, setValue] = useState(0);
@@ -20,7 +20,7 @@ const Chart = () => {
         <Tab label="근태현황" />
         <Tab label="근무시간" />
         <Tab label="신청" />
-        <Tab label="날씨" />
+        {/* <Tab label="날씨" /> */}
       </Tabs>
       <TabPanel value={value} index={0}>
         <ApexRadialChart />
@@ -38,10 +38,10 @@ const Chart = () => {
           </Grid>
         </Grid>
       </TabPanel>
-      <TabPanel value={value} index={3}>
-        {/* 여기에 날씨 웹 크롤링 넣기 */}
+      {/* <TabPanel value={value} index={3}>
+        
         <Weather />
-      </TabPanel>
+      </TabPanel> */}
     </Box>
   );
 };

@@ -4,7 +4,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { request, getAuthToken } from '../../utils/axios';
+import { request } from '../../utils/axios';
 import { useNavigate } from 'react-router-dom';
 const DocumentWritePage = () => {
 
@@ -23,19 +23,18 @@ const DocumentWritePage = () => {
   const [name, setName] = useState('');
   const [restVacation, setRestVacation] = useState(0);
 
+  const [value, setValue] = useState('');
 
+  // 서버에서 이름과 남은 휴가일수를 가져오는 함수 호출
   useEffect(() => {
-    // 서버에서 이름과 남은 휴가일수를 가져오는 함수 호출
     fetchUserData();
   }, []);
 
+
+  //id 값으로 휴가일수,이름을 가져오는 함수 
   const fetchUserData = async () => {
     try {
-      const response = await request('GET', `/members/getAnnualCount/${id}`, {
-        headers: {
-          Authorization: 'Bearer ' + getAuthToken(),
-        }
-      });
+      const response = await request('GET', `/members/getAnnualCount/${id}`);
       const userData = response.data;
       console.log('userdata',userData)
       setName(userData.name); 
@@ -44,28 +43,71 @@ const DocumentWritePage = () => {
       console.error('Failed to fetch user data:', error);
     }
   };
-  
+
+  //문서종류 휴가로 변경시 
   const handleDocumentTypeChange = (event) => {
     setDocumentType(event.target.value);
     if (event.target.value === '휴가') {
-      setVacationDate(true);
       setRetentionPeriod('');
       setSecurityLevel('');
     } 
-    console.log('타입',documentType)
   };
 
+// 휴가 시작 날짜 설정 
+const handleStartDateChange = (date) => {
+  const today = new Date();
   
+  if (endDate && date > endDate) {
+    window.alert('휴가 시작 날짜는 종료 날짜보다 이전이어야 합니다');
+  } else if (date.setHours(0,0,0,0) < today.setHours(0,0,0,0)) {  // 날짜 비교를 위해 시간을 0으로 설정
+    window.alert('휴가 시작 날짜는 오늘 날짜보다 이전이면 안됩니다');
+  } else {
+    setStartDate(date);
+  }
+};
 
-  useEffect(() => {
-    setRestVacation(annualCount);
-    if (startDate && endDate) {
-      const diffTime = Math.abs(endDate - startDate);
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      setVacationDate(diffDays);
-      setRestVacation(annualCount-diffDays);
+// 휴가 종료 날짜 설정 
+const handleEndDateChange = (date) => {
+  if (startDate && date < startDate) {
+    window.alert('휴가 종료 날짜는 시작 날짜보다 이후이어야 합니다');
+  } else {
+    setEndDate(date);
+  }
+};
+
+// 이 함수는 날짜가 주말인지 확인합니다.
+const isWeekend = (date) => {
+  const day = date.getDay();
+  return day === 0 || day === 6;  // 0은 일요일, 6은 토요일
+}
+
+// 휴가 시작 날짜와 종료 날짜 사이의 휴가일수를 계산
+useEffect(() => {
+  if (startDate && endDate) {
+    let diffDays = 0;
+    let currentDate = new Date(startDate);
+      
+    while(currentDate <= endDate) {
+      // 주말이 아닐 경우에만 diffDays를 증가시킵니다.
+      if(!isWeekend(currentDate)) {
+        diffDays++;
+      }
+      
+      // currentDate를 다음 날로 업데이트합니다.
+      currentDate.setDate(currentDate.getDate() + 1);
     }
-  }, [startDate, endDate]);
+      
+    if (diffDays > annualCount) {
+      window.alert('휴가가 부족합니다')
+      setEndDate(null);
+      setVacationDate(0);
+    } else {
+      setVacationDate(diffDays);
+      setRestVacation(annualCount - diffDays);
+    }
+  }
+}, [startDate, endDate]);
+
 
   const handleRetentionPeriodChange = (event) => {
     setRetentionPeriod(event.target.value);
@@ -73,9 +115,19 @@ const DocumentWritePage = () => {
 
   const handleSecurityLevelChange = (event) => {
     setSecurityLevel(event.target.value);
-    console.log('write로컬',localStorage.getItem("approver"))
   };
 
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+    console.log('Selected file:', file);
+  };  
+
+  const handleTitleChange = (event) => {
+    setTitle(event.target.value);
+  };
+
+  // 팝업으로 결재자 목록 
   const handleAddButtonClick = () => {
     let width = 530;
     let height = 710;
@@ -85,43 +137,27 @@ const DocumentWritePage = () => {
     window.open('/apps/document/AddApprover', '_blank', `width=${width},height=${height},top=${top},left=${left}`);
   };
 
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    setSelectedFile(file);
-    console.log('Selected file:', file);
-    // Add logic to upload file to server or do something with it
-  };  
 
   useEffect(() => {
+    // 로컬 스토리지에서 'approver' 항목을 가져와 JSON 형식으로 파싱합니다.
     const storedApprover = JSON.parse(localStorage.getItem('approver')) || [];
-    setApprover(storedApprover);
-    console.log(storedApprover)
-  }, [localStorage.getItem('approver')]);
 
-  useEffect(() => {
-    const storedApprover = JSON.parse(localStorage.getItem('approver')) || [];
+    // 가져온 'approver' 항목을 상태 변수 approver에 설정합니다.
     setApprover(storedApprover);
+
     const handleStorageChange = () => {
+      
       const storedApprover = JSON.parse(localStorage.getItem('approver')) || [];
       setApprover(storedApprover);
     };
+    // window 객체에 이벤트 리스너로 로컬 스토리지의 변경을 감지
     window.addEventListener('storage', handleStorageChange);
     return () => {
       window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
 
-  useEffect(() => {
-    
-    // Add logic to upload file to server or do something with it
-  }, [selectedFile]);
-
-  const handleTitleChange = (event) => {
-    setTitle(event.target.value);
-  };
   
-
-  const [value, setValue] = useState('');
 
   const modules = {
     toolbar: [
@@ -162,11 +198,12 @@ const DocumentWritePage = () => {
     
     const formData = new FormData();
 
+   
     storedApprover.forEach((apv, index) => {
     formData.append(`storedApprover${index}`, JSON.stringify(apv));
     // Add approver number to formData
     formData.append(`approverNo${index}`, apv.no);
-  });
+    });
     
     //if(documentType=='휴가')
     formData.append('id',id);
@@ -191,15 +228,6 @@ const DocumentWritePage = () => {
     for (const [key, value] of formData.entries()) {
       console.log('formData',`${key}: ${value}`);
     }
-    console.log('selectedFile',selectedFile)
-    console.log("전송시작")
-  
-//  const response = await axios.post('http://localhost:8081/members/addDocument', formData, {
-//         headers: {
-//           Authorization: 'Bearer ' + getAuthToken(),
-//         }
-//       });
-
     if(documentType=='휴가') {
     try {
       request(
@@ -207,14 +235,9 @@ const DocumentWritePage = () => {
         '/members/addVacationDocument', formData
       ).then(response => {
         console.log('Insert success:', response.data);
-        console.log("성공한듯 ? ")        
         navigate('/apps/document/documentList', { state: { id: id } });
-      })
-      
-
-
+      })     
     } catch (error) {
-      console.log("되겠냐고 ㅋ ");
       console.error('Insert error:', error);
       // 이후 처리 (예: 에러 메시지 표시 등)
     }
@@ -225,14 +248,12 @@ const DocumentWritePage = () => {
         '/members/addDocument', formData
       ).then(response => {
         console.log('Insert success:', response.data);
-        console.log("성공한듯 ? ")        
         navigate('/apps/document/documentList', { state: { id: id } });
       })
       
 
 
     } catch (error) {
-      console.log("되겠냐고 ㅋ ");
       console.error('Insert error:', error);
       // 이후 처리 (예: 에러 메시지 표시 등)
     }
@@ -242,42 +263,9 @@ const DocumentWritePage = () => {
 
   
 
-  useEffect(() => {
-    if (startDate && endDate) {
-      const diffTime = Math.abs(endDate - startDate);
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      if (diffDays>annualCount) {
-        window.alert('휴가가 부족합니다')
-        setEndDate(null);
-        setVacationDate(0);
-      }
-      else {
-        setVacationDate(diffDays);
-      } 
-    }
-  }, [startDate, endDate]);
+  
 
-  const handleStartDateChange = (date) => {
-    const today = new Date();
   
-    if (endDate && date > endDate) {
-      window.alert('휴가 시작 날짜는 종료 날짜보다 이전이어야 합니다');
-    } else if (date.setHours(0,0,0,0) < today.setHours(0,0,0,0)) {  // 날짜 비교를 위해 시간을 0으로 설정
-      window.alert('휴가 시작 날짜는 오늘 날짜보다 이전이면 안됩니다');
-    } else {
-      setStartDate(date);
-      console.log('시작날짜', date)
-    }
-  };
-  
-  const handleEndDateChange = (date) => {
-    if (startDate && date < startDate) {
-      window.alert('휴가 종료 날짜는 시작 날짜보다 이후이어야 합니다');
-    } else {
-      setEndDate(date);
-      console.log('종료날짜',date)
-    }
-  };
   
   
   console.log(typeof annualCount, typeof vacationDate, typeof restVacation);
@@ -304,6 +292,8 @@ const DocumentWritePage = () => {
               </td>
             </tr>
             
+
+            {/* 문서종류가 휴가가 아닐떄  */}
             {documentType !== '휴가' && (
             <tr className="tr-1">
               <td>보존 연한</td>
@@ -328,6 +318,8 @@ const DocumentWritePage = () => {
               </td>
             </tr>
             )}
+
+            {/* 문서종류가 휴가 일때   */}
             {documentType === '휴가' && (
             <tr className="tr-1">
             <td>휴가 시작 날짜</td>

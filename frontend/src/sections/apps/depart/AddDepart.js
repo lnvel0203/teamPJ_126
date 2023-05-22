@@ -55,16 +55,10 @@ const AddCustomer = ({ customer, onCancel }) => {
   const addDepartment = (e) => {
     e.preventDefault();
     console.log(dept);
-
-
-
     request(
       'POST',
       '/department/addDepartment/',dept
     )
-
-
-
    // axios.post(API_BASE_URL + '/addDepartment', dept)
 
     .then((response) => {

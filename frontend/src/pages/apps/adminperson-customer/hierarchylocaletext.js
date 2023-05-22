@@ -34,7 +34,6 @@ import ScrollX from 'components/ScrollX';
 // import IconButton from 'components/@extended/IconButton';
 import { PopupTransition } from 'components/@extended/Transitions';
 import {
-  CSVExport,
   HeaderSort,
   IndeterminateCheckbox,
   //5월4일 김성훈 수정 삭제 요청 
@@ -49,22 +48,6 @@ import AlertCustomerDelete from 'sections/apps/customer/AlertCustomerDelete';
 
 // import makeData from 'data/react-table';
 import { renderFilterTypes, GlobalFilter } from 'utils/react-table';
-
-// assets
-//5월 4일 김성훈 PlusQutlined,삭제 요청 
-//import { CloseOutlined, PlusOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
-
-//5월 8일 김성훈 수정 ,삭제 요청 
-//import { CloseOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
-
-
-// ==============================|| REACT TABLE ||============================== //
-//5월 4일 김성훈 handleAdd,삭제
-//function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, handleAdd })
-
-//5월 4일 김성훈 직원 직급 선택하기 
-
-
 function SelectCell({ positionName, onChange }) {
   return (
     <select value={positionName} onChange={e => onChange(e.target.value)}>
@@ -115,8 +98,6 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,}) {
     headerGroups,
     prepareRow,
     setHiddenColumns,
-    //5월 4일 김성훈 수정 
-    //allColumns,
     visibleColumns,
     rows,
     page,
@@ -125,9 +106,6 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,}) {
     state: { globalFilter, selectedRowIds, pageIndex, pageSize, expanded },
     preGlobalFilteredRows,
     setGlobalFilter,
-    //5월 4일 김성훈 수정
-    //setSortBy,
-    selectedFlatRows
   } = useTable(
     {
       columns,
@@ -172,12 +150,6 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,}) {
             size="small"
           />
           <Stack direction={matchDownSM ? 'column' : 'row'} alignItems="center" spacing={1}>
-            {/* <SortingSelect sortBy={sortBy.id} setSortBy={setSortBy} allColumns={allColumns} /> */}
-            {/*  5월 4일 김성훈 Add Custorme 제거   사용안함 삭제 요청 */ }
-            {/* <Button variant="contained" startIcon={<PlusOutlined />} onClick={handleAdd} size="small">
-              Add Customer
-            </Button> */}
-            <CSVExport data={selectedFlatRows.length > 0 ? selectedFlatRows.map((d) => d.original) : data} filename={'customer-list.csv'} />
           </Stack>
         </Stack>
 

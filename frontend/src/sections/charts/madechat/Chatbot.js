@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 const chat = () =>{
-  const features = "width=400,height=600,top=100,left=100";
-  //window.open("apps/chatbot", "_blank", features);
+  //const features = "width=400,height=600,top=100,left=100";
+  //window.open("apps/chatbot", "_blank", "width=400,height=600,top=100,left=100");
 }
 class Chatbot extends Component {
 

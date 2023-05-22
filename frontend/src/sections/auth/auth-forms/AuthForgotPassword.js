@@ -1,86 +1,61 @@
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 
 // material-ui
-import { Button, FormHelperText, Grid, InputLabel, OutlinedInput, Stack, Typography } from '@mui/material';
-
+import { Button, FormHelperText, Grid, InputLabel, OutlinedInput, Stack } from '@mui/material';
+import { request } from '../../../utils/axios';
 // third party
-import * as Yup from 'yup';
+//import * as Yup from 'yup';
 import { Formik } from 'formik';
 
 // project import
-import useAuth from 'hooks/useAuth';
-import useScriptRef from 'hooks/useScriptRef';
+
 import AnimateButton from 'components/@extended/AnimateButton';
-import { openSnackbar } from 'store/reducers/snackbar';
+
 
 // ============================|| FIREBASE - FORGOT PASSWORD ||============================ //
 
 const AuthForgotPassword = () => {
-  const scriptedRef = useScriptRef();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const { isLoggedIn, resetPassword } = useAuth();
 
   return (
     <>
       <Formik
         initialValues={{
-          email: '',
+          pwd: '',
+          confirmpwd:'',
+          email:'',
           submit: null
         }}
-        validationSchema={Yup.object().shape({
-          email: Yup.string().email('Must be a valid email').max(255).required('Email is required')
-        })}
-        onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+        // validationSchema={Yup.object().shape({
+        //   email: Yup.string().email('Must be a valid email').max(255).required('Email is required')
+        // })}
+        onSubmit={async (values) => {
           try {
-            await resetPassword(values.email).then(
-              () => {
-                setStatus({ success: true });
-                setSubmitting(false);
-                dispatch(
-                  openSnackbar({
-                    open: true,
-                    message: 'Check mail for reset password link',
-                    variant: 'alert',
-                    alert: {
-                      color: 'success'
-                    },
-                    close: false
-                  })
-                );
-                setTimeout(() => {
-                  navigate(isLoggedIn ? '/auth/check-mail' : '/check-mail', { replace: true });
-                }, 1500);
-
-                // WARNING: do not set any formik state here as formik might be already destroyed here. You may get following error by doing so.
-                // Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application.
-                // To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function.
-                // github issue: https://github.com/formium/formik/issues/2430
-              },
-              (err) => {
-                setStatus({ success: false });
-                setErrors({ submit: err.message });
-                setSubmitting(false);
+              await request(
+              'POST',
+              '/members/passwordChange',
+              {
+                pwd:values.pwd,
+                email:values.email,
               }
-            );
+            ).then((response) => {
+
+              if(response.data === 1){
+                alert("비밀번호가 변경되었습니다.");
+                window.close();
+              }else{
+                alert("비밀번호가 변경되지 않았습니다.");
+              }})
+
           } catch (err) {
-            console.error(err);
-            if (scriptedRef.current) {
-              setStatus({ success: false });
-              setErrors({ submit: err.message });
-              setSubmitting(false);
-            }
+            console.log(err);
           }
         }}
       >
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
           <form noValidate onSubmit={handleSubmit}>
             <Grid container spacing={3}>
-              <Grid item xs={12}>
+            <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="email-forgot">Email Address</InputLabel>
+                  <InputLabel htmlFor="email-forgot">이메일</InputLabel>
                   <OutlinedInput
                     fullWidth
                     error={Boolean(touched.email && errors.email)}
@@ -90,7 +65,7 @@ const AuthForgotPassword = () => {
                     name="email"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    placeholder="Enter email address"
+                    placeholder="이메일을 입력하세요."
                     inputProps={{}}
                   />
                   {touched.email && errors.email && (
@@ -105,13 +80,64 @@ const AuthForgotPassword = () => {
                   <FormHelperText error>{errors.submit}</FormHelperText>
                 </Grid>
               )}
-              <Grid item xs={12} sx={{ mb: -2 }}>
-                <Typography variant="caption">Do not forgot to check SPAM box.</Typography>
+              <Grid item xs={12}>
+                <Stack spacing={1}>
+                  <InputLabel htmlFor="email-forgot">비밀번호</InputLabel>
+                  <OutlinedInput
+                    fullWidth
+                    error={Boolean(touched.email && errors.pwd)}
+                    id="email-forgot"
+                    type="password"
+                    value={values.pwd}
+                    name="pwd"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    placeholder="비밀번호를 입력하세요"
+                    inputProps={{}}
+                  />
+                  {touched.email && errors.email && (
+                    <FormHelperText error id="helper-text-email-forgot">
+                      {errors.email}
+                    </FormHelperText>
+                  )}
+                </Stack>
               </Grid>
+              {errors.submit && (
+                <Grid item xs={12}>
+                  <FormHelperText error>{errors.submit}</FormHelperText>
+                </Grid>
+              )}
+               <Grid item xs={12}>
+                <Stack spacing={1}>
+                  <InputLabel htmlFor="email-forgot">비밀번호 재확인</InputLabel>
+                  <OutlinedInput
+                    fullWidth
+                    error={Boolean(touched.email && errors.confirmpwd)}
+                    id="email-forgot"
+                    type="password"
+                    value={values.confirmpwd}
+                    name="confirmpwd"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    placeholder="동일한 비밀번호를 입력하세요"
+                    inputProps={{}}
+                  />
+                  {touched.email && errors.email && (
+                    <FormHelperText error id="helper-text-email-forgot">
+                      {errors.email}
+                    </FormHelperText>
+                  )}
+                </Stack>
+              </Grid>
+              {errors.submit && (
+                <Grid item xs={12}>
+                  <FormHelperText error>{errors.submit}</FormHelperText>
+                </Grid>
+              )}
               <Grid item xs={12}>
                 <AnimateButton>
                   <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">
-                    Send Password Reset Email
+                    비밀번호 변경
                   </Button>
                 </AnimateButton>
               </Grid>

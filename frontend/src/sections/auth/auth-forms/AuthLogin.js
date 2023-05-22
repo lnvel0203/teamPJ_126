@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
-//import qs from 'qs';
-//import { Box} from "@mui/material";
-//import axios from 'axios';
 import { request, setAuthToken, setId } from '../../../utils/axios';
-
 import { InputLabel, Grid, Stack, Button, Divider, Typography, Link } from '@mui/material';
-
 import AnimateButton from 'components/@extended/AnimateButton';
 
 class AuthLogin extends Component {
@@ -17,15 +12,13 @@ class AuthLogin extends Component {
       message: null
     };
   }
-
   onChange = (e) => {
     this.setState({
       [e.target.name]: e.target.value
     });
   };
-
   pwdChange = () => {
-    alert('1');
+    window.open("forgot-password", "_blank", "width=400,height=600,top=100,left=100");
   };
 
   onKeyPress=(e)=>{
@@ -62,7 +55,7 @@ class AuthLogin extends Component {
       height: 50
     };
 
-    return (
+      return (
       <div>
         <form className="login_btn">
           <Grid container spacing={3}>
@@ -104,16 +97,10 @@ class AuthLogin extends Component {
             </Grid>
             <Grid item xs={12}>
               <AnimateButton>
-                <Button disableElevation fullWidth size="large" type="button" variant="contained" color="primary" onClick={this.onKeyPress}>
+                <Button disableElevation fullWidth size="large" type="button" variant="contained" color="primary" onClick={this.login}>
                   Login
                 </Button>
               </AnimateButton>
-              {/* <button 
-          style={style2}
-          onClick={this.login}
-          className="login_btn">
-             로그인
-              </button> */}
             </Grid>
             <Grid item xs={12}>
               <Divider>
@@ -132,5 +119,4 @@ class AuthLogin extends Component {
     );
   }
 }
-
 export default AuthLogin;

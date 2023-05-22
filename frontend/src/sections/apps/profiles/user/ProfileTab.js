@@ -6,9 +6,13 @@ import { useTheme } from '@mui/material/styles';
 import { List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 
 // assets
-import { CreditCardOutlined, LockOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { CreditCardOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
 
 function getPathIndex(pathname) {
+
+  //url에 있는 userid 받아서 const userid에 저장 
+  
+
   let selectedTab = 0;
   switch (pathname) {
     case '/apps/profiles/user/payment':
@@ -30,9 +34,21 @@ function getPathIndex(pathname) {
 // ==============================|| USER PROFILE - TAB ||============================== //
 
 const ProfileTab = () => {
+
+  function useQuery() {
+    return new URLSearchParams(useLocation().search);
+  }
+  const query = useQuery();
+  const userId = query.get('userId');
+  const id = localStorage.getItem('id');
+
   const theme = useTheme();
   const navigate = useNavigate();
   const { pathname } = useLocation();
+
+  if(userId) {
+    console.log('존재 userId',userId,'Id',id)
+  }
 
   const [selectedIndex, setSelectedIndex] = useState(getPathIndex(pathname));
   const handleListItemClick = (index, route) => {
@@ -52,26 +68,25 @@ const ProfileTab = () => {
         </ListItemIcon>
         <ListItemText primary="내정보" />
       </ListItemButton>
-      <ListItemButton selected={selectedIndex === 1} onClick={() => handleListItemClick(1, '/apps/profiles/user/payment')}>
-        <ListItemIcon>
-          <CreditCardOutlined />
-        </ListItemIcon>
-        <ListItemText primary="월급명세서" />
-      </ListItemButton>
-      <ListItemButton selected={selectedIndex === 2} onClick={() => handleListItemClick(2, '/apps/profiles/user/password')}>
-        <ListItemIcon>
-          <LockOutlined />
-        </ListItemIcon>
-        <ListItemText primary="비밀번호 변경" />
-      </ListItemButton>
-      <ListItemButton selected={selectedIndex === 3} onClick={() => handleListItemClick(3, '/apps/profiles/user/settings')}>
-        <ListItemIcon>
-          <SettingOutlined />
-        </ListItemIcon>
-        <ListItemText primary="설정" />
-      </ListItemButton>
+      {!(userId && userId !== id) && (
+        <>
+          <ListItemButton selected={selectedIndex === 1} onClick={() => handleListItemClick(1, '/apps/profiles/user/payment')}>
+            <ListItemIcon>
+              <CreditCardOutlined />
+            </ListItemIcon>
+            <ListItemText primary="월급명세서" />
+          </ListItemButton>
+          <ListItemButton selected={selectedIndex === 2} onClick={() => handleListItemClick(2, '/apps/profiles/user/password')}>
+            <ListItemIcon>
+              <LockOutlined />
+            </ListItemIcon>
+            <ListItemText primary="비밀번호 변경" />
+          </ListItemButton>
+        </>
+      )}
     </List>
   );
+  
 };
 
 export default ProfileTab;

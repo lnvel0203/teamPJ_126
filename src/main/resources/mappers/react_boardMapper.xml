@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+     
+<mapper namespace="springBoot_team_pj_126.dao.BoardMapper">
+
+	<select id="boardList" resultType="springBoot_team_pj_126.dto.BoardDTO">
+	
+		select * from board order by boardNo
+	</select>
+
+	<insert id="insertBoard" parameterType="springBoot_team_pj_126.dto.BoardDTO">
+		insert into board values((SELECT nvl(max(boardNo)+1,1) from board), #{title}, #{content}, #{id}, default)
+	</insert>
+
+	<select id="getBoard" parameterType="int" resultType="springBoot_team_pj_126.dto.BoardDTO">
+		select * from board where boardNo = #{boardNo}
+	</select>
+	
+	 <delete id="deleteBoard" parameterType="int">
+		delete from board where boardNo = #{boardNo}  
+	</delete> 
+</mapper>

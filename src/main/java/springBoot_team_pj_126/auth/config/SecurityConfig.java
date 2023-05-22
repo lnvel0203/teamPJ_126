@@ -33,10 +33,12 @@ public class SecurityConfig {
 			.authorizeHttpRequests((requests) -> requests
 
 					.antMatchers(HttpMethod.GET, "/images/**", "/파일저장/**").permitAll()
-					.antMatchers(HttpMethod.POST, "/members/login", "/members/register", "/members/dupleChk").permitAll()		
-					.anyRequest().authenticated()
-					//.anyRequest().permitAll()	
+					.antMatchers(HttpMethod.POST, "/members/login", "/members/register", "/members/dupleChk", "/members/passwordChange").permitAll()		
+					//.anyRequest().authenticated()
+					.anyRequest().permitAll()	
+					
 			);
+			
 			
 		return http.build();
 	}

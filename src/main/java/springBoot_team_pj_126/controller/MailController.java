@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import springBoot_team_pj_126.dto.MailDTO;
-import springBoot_team_pj_126.service.MailServiceImpl;
+import springBoot_team_pj_126.service.MailService;
 
 
 @RequestMapping(value="/mail")
@@ -24,7 +24,7 @@ import springBoot_team_pj_126.service.MailServiceImpl;
 public class MailController {
 
 	@Autowired
-	private MailServiceImpl service;
+	private MailService service;
 
 	private static final Logger logger = LoggerFactory.getLogger(MypageController.class);
 
@@ -65,7 +65,16 @@ public class MailController {
 		return list;
 	}
 
-
+	@GetMapping("/getMail/{mailNo}")
+	public MailDTO getMail(@PathVariable int mailNo) throws ServletException, IOException{
+		
+		logger.info("MailController - getMail()");
+		
+		MailDTO mail = service.getMail(mailNo);
+		
+		return mail;
+	}
+	
 
 
 }

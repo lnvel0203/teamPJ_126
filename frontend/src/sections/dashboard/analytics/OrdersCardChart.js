@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
-
+import { request } from '../../../utils/axios';
+import {useLocation } from 'react-router-dom';
 // material-ui
+
 import { useTheme } from '@mui/material/styles';
 
 // project import
@@ -9,11 +11,21 @@ import useConfig from 'hooks/useConfig';
 // third-party
 import ReactApexChart from 'react-apexcharts';
 
-// ==============================|| ORDERS CARD CHART ||============================== //
+// ==============================|| USER CARD CHART ||============================== //
 
 const OrdersCardChart = () => {
   const theme = useTheme();
   const { mode } = useConfig();
+  const [totalHours, setTotalHours] = useState(null);
+  const [totalDays, setTotalDays] = useState(null);
+
+  function useQuery() {
+    return new URLSearchParams(useLocation().search);
+  }
+
+    const query = useQuery();
+    const ids =  query.get('userId');
+
 
   // chart options
   const areaChartOptions = {
@@ -23,67 +35,37 @@ const OrdersCardChart = () => {
         enabled: true
       },
       height: 100,
-      type: 'area',
+      type: 'bar',
       toolbar: {
         show: false
-      }
-    },
-    plotOptions: {
-      bar: {
-        borderRadius: 0
       }
     },
     dataLabels: {
       enabled: false
     },
-
-    xaxis: {
-      axisBorder: {
-        show: false
-      },
-      axisTicks: {
-        show: false
-      },
-      labels: {
-        show: false
-      },
-      crosshairs: {
-        fill: {
-          type: 'gradient',
-          gradient: {
-            colorFrom: '#D8E3F0',
-            colorTo: '#BED1E6',
-            stops: [0, 100],
-            opacityFrom: 0.4,
-            opacityTo: 0.5
-          }
-        }
-      },
-      tooltip: {
-        enabled: false
+    plotOptions: {
+      bar: {
+        columnWidth: '80%'
       }
     },
-    yaxis: {
-      axisBorder: {
-        show: false
-      },
-      axisTicks: {
-        show: false
-      },
-      labels: {
-        show: false
+    xaxis: {
+      crosshairs: {
+        width: 1
       }
     },
     tooltip: {
-      theme: mode === 'dark' ? 'dark' : 'light',
+      fixed: {
+        enabled: false
+      },
       x: {
         show: false
+      },
+      marker: {
+        show: false
       }
-    },
-    grid: {
-      show: false
     }
   };
+
   const { primary, secondary } = theme.palette.text;
   const line = theme.palette.divider;
 
@@ -92,21 +74,43 @@ const OrdersCardChart = () => {
   useEffect(() => {
     setOptions((prevState) => ({
       ...prevState,
-      colors: [theme.palette.error.main],
+      colors: [theme.palette.secondary.main, theme.palette.secondary[700]],
       tooltip: {
         theme: mode === 'dark' ? 'dark' : 'light'
       }
     }));
   }, [mode, primary, secondary, line, theme]);
 
-  const [series] = useState([
-    {
-      name: 'Orders',
-      data: [1800, 1500, 1800, 1700, 1400, 1200, 1000, 800, 600, 500, 600, 800, 500, 700, 400, 600, 500, 600]
-    }
-  ]);
+  useEffect(() => {
+    request(
+      'GET',
+      `members/getHour?id=${ids}`
+    ).then((response) => {
+      let hours = Math.round(response.data.totalHours / 60);
+      setTotalHours(hours);
+      setTotalDays(response.data.totalDays);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 
-  return <ReactApexChart options={options} series={series} type="area" height={100} />;
+}, []);
+
+
+     // const [series, setSeries] = useState([0, 0, 0, 0]);
+
+      const series = ([
+        {
+          name: '총일수 | 총 근무시간',
+          data: [
+          totalDays, totalHours
+          ]
+        }
+   
+      ]);
+
+  return <ReactApexChart options={options} series={series} type="bar" height={100} />;
 };
 
 export default OrdersCardChart;
+

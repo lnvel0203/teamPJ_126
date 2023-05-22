@@ -71,8 +71,11 @@ export default function CustomizedAccordions() {
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget.
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget.
+          <br/>
+          구분	기준액	보험료율	근로자	사업주<br/>
+          건강보험료	보수월액	7.09%	3.55%	3.55%<br/>
+          장기요양보험료	보수월액	0.91%	0.45%	0.45%<br/>
+
           </Typography>
         </AccordionDetails>
       </Accordion>
@@ -82,8 +85,10 @@ export default function CustomizedAccordions() {
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget.
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget.
+          <br/>
+          보험료 식: 보수총액(월평균보수) × 보험료율 ÷ 1,000<br/>			
+          산재보험료율은 천분위로 표시<br/>		
+
           </Typography>
         </AccordionDetails>
       </Accordion>

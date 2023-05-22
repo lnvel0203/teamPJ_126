@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-
+import axios from 'axios';
 // material-ui
 import {
   Box,
@@ -34,6 +34,7 @@ import { CheckOutlined, EyeOutlined, EyeInvisibleOutlined, LineOutlined } from '
 // ==============================|| TAB - PASSWORD CHANGE ||============================== //
 
 const TabPassword = () => {
+  const id = localStorage.getItem('id');
   const dispatch = useDispatch();
 
   const [showOldPassword, setShowOldPassword] = useState(false);
@@ -59,13 +60,13 @@ const TabPassword = () => {
       <Formik
         initialValues={{
           old: '',
-          password: '',
+          pwd: '',
           confirm: '',
           submit: null
         }}
         validationSchema={Yup.object().shape({
           old: Yup.string().required('Old Password is required'),
-          password: Yup.string()
+          pwd: Yup.string()
             .required('New Password is required')
             .matches(
               /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
@@ -73,14 +74,16 @@ const TabPassword = () => {
             ),
           confirm: Yup.string()
             .required('Confirm Password is required')
-            .oneOf([Yup.ref('password'), null], "Passwords don't match.")
+            .oneOf([Yup.ref('pwd'), null], "Passwords don't match.")
         })}
         onSubmit={async (values, { resetForm, setErrors, setStatus, setSubmitting }) => {
           try {
+            const pwd ={
+              id:id,
+              pwd:values.pwd
+            }
 
-
-
-            
+            await axios.post('http://localhost:8081/members/passwordChange', pwd);
             dispatch(
               openSnackbar({
                 open: true,
@@ -89,10 +92,6 @@ const TabPassword = () => {
                 alert: {
                   color: 'success'
                 },
-                //ㅁ
-
-
-
                 close: false
               })
             );
@@ -151,9 +150,9 @@ const TabPassword = () => {
                     <OutlinedInput
                       placeholder="Enter New Password"
                       id="password-password"
-                      type={showNewPassword ? 'text' : 'password'}
+                      type={showNewPassword ? 'text' : 'pwd'}
                       value={values.password}
-                      name="password"
+                      name="pwd"
                       onBlur={handleBlur}
                       onChange={handleChange}
                       endAdornment={
@@ -172,9 +171,9 @@ const TabPassword = () => {
                       }
                       inputProps={{}}
                     />
-                    {touched.password && errors.password && (
+                    {touched.pwd && errors.pwd && (
                       <FormHelperText error id="password-password-helper">
-                        {errors.password}
+                        {errors.pwd}
                       </FormHelperText>
                     )}
                   </Stack>
@@ -219,32 +218,32 @@ const TabPassword = () => {
                   <Typography variant="h5">New password must contain:</Typography>
                   <List sx={{ p: 0, mt: 1 }}>
                     <ListItem divider>
-                      <ListItemIcon sx={{ color: minLength(values.password) ? 'success.main' : 'inherit' }}>
-                        {minLength(values.password) ? <CheckOutlined /> : <LineOutlined />}
+                      <ListItemIcon sx={{ color: minLength(values.pwd) ? 'success.main' : 'inherit' }}>
+                        {minLength(values.pwd) ? <CheckOutlined /> : <LineOutlined />}
                       </ListItemIcon>
                       <ListItemText primary="At least 8 characters" />
                     </ListItem>
                     <ListItem divider>
-                      <ListItemIcon sx={{ color: isLowercaseChar(values.password) ? 'success.main' : 'inherit' }}>
-                        {isLowercaseChar(values.password) ? <CheckOutlined /> : <LineOutlined />}
+                      <ListItemIcon sx={{ color: isLowercaseChar(values.pwd) ? 'success.main' : 'inherit' }}>
+                        {isLowercaseChar(values.pwd) ? <CheckOutlined /> : <LineOutlined />}
                       </ListItemIcon>
                       <ListItemText primary="At least 1 lower letter (a-z)" />
                     </ListItem>
                     <ListItem divider>
-                      <ListItemIcon sx={{ color: isUppercaseChar(values.password) ? 'success.main' : 'inherit' }}>
-                        {isUppercaseChar(values.password) ? <CheckOutlined /> : <LineOutlined />}
+                      <ListItemIcon sx={{ color: isUppercaseChar(values.pwd) ? 'success.main' : 'inherit' }}>
+                        {isUppercaseChar(values.pwd) ? <CheckOutlined /> : <LineOutlined />}
                       </ListItemIcon>
                       <ListItemText primary="At least 1 uppercase letter (A-Z)" />
                     </ListItem>
                     <ListItem divider>
-                      <ListItemIcon sx={{ color: isNumber(values.password) ? 'success.main' : 'inherit' }}>
-                        {isNumber(values.password) ? <CheckOutlined /> : <LineOutlined />}
+                      <ListItemIcon sx={{ color: isNumber(values.pwd) ? 'success.main' : 'inherit' }}>
+                        {isNumber(values.pwd) ? <CheckOutlined /> : <LineOutlined />}
                       </ListItemIcon>
                       <ListItemText primary="At least 1 number (0-9)" />
                     </ListItem>
                     <ListItem>
-                      <ListItemIcon sx={{ color: isSpecialChar(values.password) ? 'success.main' : 'inherit' }}>
-                        {isSpecialChar(values.password) ? <CheckOutlined /> : <LineOutlined />}
+                      <ListItemIcon sx={{ color: isSpecialChar(values.pwd) ? 'success.main' : 'inherit' }}>
+                        {isSpecialChar(values.pwd) ? <CheckOutlined /> : <LineOutlined />}
                       </ListItemIcon>
                       <ListItemText primary="At least 1 special characters" />
                     </ListItem>

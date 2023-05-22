@@ -7,7 +7,8 @@
 <mapper namespace="springBoot_team_pj_126.dao.UserMapper">
 
 <insert id="join" parameterType="springBoot_team_pj_126.auth.entities.User">
- 	INSERT INTO EMPLOYEES_TBL(NO, ID,PWD ,NAME,BIRTH, EMAIL,ADDRESS,HP,hireDate,STATE,annualCount,welfarePoint,ROLE) values((select nvl(max(no)+1,1)from EMPLOYEES_TBL),#{id}, #{pwd}, #{name}, #{birth}, #{email}, #{address}, #{hp}, default, default, default, default, default)
+ 	INSERT INTO EMPLOYEES_TBL(NO, ID,PWD ,NAME,BIRTH, EMAIL,ADDRESS,HP,hireDate,STATE,annualCount,welfarePoint,ROLE)
+ 	values((select nvl(max(no)+1,1)from EMPLOYEES_TBL),#{id}, #{pwd}, #{name}, #{birth}, #{email}, #{address}, #{hp}, default, default, default, default, default)
 
 </insert>
  
@@ -26,49 +27,13 @@
 <select id="selectId" parameterType="String" resultType="springBoot_team_pj_126.auth.entities.User">
 	select * from EMPLOYEES_TBL where id=#{id}
 </select>
-<!--  
- <insert id="join" parameterType="springBoot_team_pj_126.auth.entities.User">
-INSERT INTO react_login_tbl values((select nvl(max(no)+1,1)from react_login_tbl), #{id}, #{password}, #{firstName}, #{lastName}, null)
-</insert>
-  -->
- 
-<!-- 
-<select id="login" resultType="springBoot_team_pj_126.dto.UserDTO">
-	select * from EMPLOYEES_TBL where name ={#name}
-</select>
-<select id="findPassword" resultType="springBoot_team_pj_126.dto.UserDTO">
-	select pwd from EMPLOYEES_TBL where name ={#name}
-</select>
 
-
-
-<select id="memberList" resultType="com.example.react.dto.MemberDTO">
-	select * from mvc_member_tbl order by id desc
-</select>
-
-<insert id="insertMember" parameterType="com.example.react.dto.MemberDTO">
-	INSERT INTO mvc_member_tbl values((select nvl(max(id)+1,1)from mvc_member_tbl), #{password}, #{username},#{age},#{email},#{address},#{salary})
-</insert>	
-
-<update id="updateMember" parameterType="com.example.react.dto.MemberDTO">
-	update mvc_member_tbl
-	set password = #{password},
-		username = #{username},
-		age = #{age},
-		email = #{email},
-		address = #{address},
-		salary = #{salary}
-	where id=#{id}
+<update id="passwordChangeId" parameterType="java.util.Map">
+	update EMPLOYEES_TBL set pwd =#{pwd} where id =#{id}
 </update>
 
-<delete id="deleteById" parameterType="int">
-	delete from mvc_member_tbl where id=#{id} 
-</delete>
-		
-<select id="findById" parameterType="com.example.react.dto.MemberDTO" resultType="com.example.react.dto.MemberDTO">
-	select * from mvc_member_tbl where id=#{id} AND password =#{password}
-</select>
-
- -->
+<update id="passwordChange" parameterType= "java.util.Map" >
+	update EMPLOYEES_TBL set pwd =#{pwd} where email =#{email}
+</update>
 
 </mapper>

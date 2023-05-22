@@ -14,4 +14,5 @@ public interface MailMapper {
 	public List<MailDTO> mailList(String id);
 	public List<MailDTO> reMailList(String id);
 	public List<MailDTO> reqMailList(String id);
+	public MailDTO getMail(int mailNo);
 }

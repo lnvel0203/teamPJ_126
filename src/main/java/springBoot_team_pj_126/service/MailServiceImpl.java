@@ -44,4 +44,12 @@ public class MailServiceImpl implements MailService{
 		List<MailDTO> list = mapper.reqMailList(id);
 		return list;
 	}
+
+	@Override
+	public MailDTO getMail(int mailNo) {
+	
+		MailDTO mail = mapper.getMail(mailNo);
+		return mail;
+		
+	}
 }

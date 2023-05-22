@@ -16,8 +16,6 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  //5월 8일 수정 김성훈  삭제 요청
-  // Tooltip,
   Typography,
   useMediaQuery
 } from '@mui/material';
@@ -29,15 +27,10 @@ import { useFilters, useExpanded, useGlobalFilter, useRowSelect, useSortBy, useT
 // project import
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
-//5월 8일 수정 김성훈  삭제 요청
-// import IconButton from 'components/@extended/IconButton';
 import { PopupTransition } from 'components/@extended/Transitions';
 import {
-  //CSVExport,
   HeaderSort,
   IndeterminateCheckbox,
-  //5월4일 김성훈 수정 삭제 요청 
-  //SortingSelect,
   TablePagination,
   TableRowSelection
 } from 'components/third-party/ReactTable';
@@ -46,28 +39,20 @@ import Mailwrite from 'pages/apps/mail/Mailwrite';
 import CustomerView from 'sections/apps/customer/CustomerView';
 import AlertCustomerDelete from 'sections/apps/customer/AlertCustomerDelete';
 
-// import makeData from 'data/react-table';
 import { renderFilterTypes, GlobalFilter } from 'utils/react-table';
 
 // assets
-//5월 4일 김성훈 PlusQutlined,삭제 요청 
 import {  PlusOutlined   } from '@ant-design/icons';
 
-//5월 8일 김성훈 수정 ,삭제 요청 
-//import { CloseOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
 
 
 // ==============================|| REACT TABLE ||============================== //
-//5월 4일 김성훈 handleAdd,삭제
-//function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, handleAdd })
-
-//5월 8일 김성훈 직원 팀 선택하기 
 function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,handleAdd}) {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'));
 
   const filterTypes = useMemo(() => renderFilterTypes, []);
-  const sortBy = { id: 'fatherName', desc: false };
+  const sortBy = { id: 'mailNo', desc: false };
 
   const {
     getTableProps,
@@ -75,8 +60,6 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,handl
     headerGroups,
     prepareRow,
     setHiddenColumns,
-    //5월 4일 김성훈 수정 
-    //allColumns,
     visibleColumns,
     rows,
     page,
@@ -85,9 +68,6 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,handl
     state: { globalFilter, selectedRowIds, pageIndex, pageSize, expanded },
     preGlobalFilteredRows,
     setGlobalFilter,
-    //5월 4일 김성훈 수정
-    //setSortBy,
-    //selectedFlatRows
   } = useTable(
     {
       columns,
@@ -114,6 +94,11 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,handl
     // eslint-disable-next-line
   }, [matchDownSM]);
 
+  const handleTitleClick = (mailNo) => {
+    console.log('mailNo',mailNo)
+    window.open('/apps/mailDetail?mailNo='+mailNo, '_blank', 'width=1200,height=900,top=300,left=300');
+  };
+
   return (
     <>
       <TableRowSelection selected={Object.keys(selectedRowIds).length} />
@@ -132,12 +117,9 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,handl
             size="small"
           />
           <Stack direction={matchDownSM ? 'column' : 'row'} alignItems="center" spacing={1}>
-            {/* <SortingSelect sortBy={sortBy.id} setSortBy={setSortBy} allColumns={allColumns} /> */}
-            {/*  5월 4일 김성훈 Add Custorme 제거   사용안함 삭제 요청 */ }
             <Button variant="contained" startIcon={<PlusOutlined />} onClick={handleAdd} size="small">
               메일 쓰기
             </Button>
-            {/* <CSVExport data={selectedFlatRows.length > 0 ? selectedFlatRows.map((d) => d.original) : data} filename={'customer-list.csv'} /> */}
           </Stack>
         </Stack>
 
@@ -161,10 +143,10 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,handl
               return (
                 <Fragment key={i}>
                   <TableRow
-                    {...row.getRowProps()}
-                    onClick={() => {
-                      row.toggleRowSelected();
-                    }}
+                       {...row.getRowProps()}
+                       onClick={() => {
+                         handleTitleClick(row.original.mailNo);
+                       }}
                     sx={{ cursor: 'pointer', bgcolor: row.isSelected ? alpha(theme.palette.primary.lighter, 0.35) : 'inherit' }}
                   >
                     {row.cells.map((cell, index) => (
@@ -307,24 +289,29 @@ const CustomerListPage = () => {
         disableSortBy: true
       },
       {
+        Header: '번호',
+        accessor: 'mailNo',
+        className: 'cell-left'
+      },
+      {
         Header: '분류',
         accessor: 'documentType', // 테이블 컬럼명
-        className: 'cell-center'
+ 
       },
       {
         Header: '제목',
         accessor: 'title',
-        className: 'cell-center'
+        
       },
       {
         Header: '보낸이',
         accessor: 'id',
-        className: 'cell-center'
+     
       },
       {
         Header: '보낸날짜',
         accessor: 'mailDate',
-        className: 'cell-center'
+       
       },
  
     ],

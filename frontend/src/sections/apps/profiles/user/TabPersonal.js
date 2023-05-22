@@ -3,7 +3,7 @@ import axios from 'axios';
 import { request } from '../../../../utils/axios';
 // material-ui
 import { useOutletContext } from 'react-router';
-import { getAuthToken } from '../../../../utils/axios';
+import {useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 // material-ui
@@ -42,8 +42,16 @@ function useInputRef() {
 
 const TabPersonal = () => {
 
-
+  //url에 있는 userid 받아서 const userid에 저장 
+  function useQuery() {
+    return new URLSearchParams(useLocation().search);
+  }
+  const query = useQuery();
+  
+  const userId = query.get('userId');
+  
   const id = localStorage.getItem("id");
+
   console.log('id',id)
   const maxDate = new Date();
   maxDate.setFullYear(maxDate.getFullYear() - 18);
@@ -62,12 +70,8 @@ const TabPersonal = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-
-        await request('GET', '/members/mypage/'+ id , {
-          headers: {
-            Authorization: 'Bearer ' + getAuthToken(),
-          }
-        }
+        const targetId = userId && userId !== id ? userId : id;
+        await request('GET', '/members/mypage/'+ targetId
         
         ).then((response) => {
 
@@ -78,18 +82,8 @@ const TabPersonal = () => {
           console.log("성공",response.data)
           console.log("입사일",response.data.hireDate)
           //format(new Date(hireDate), 'yyyy-MM-dd')
-
          
         });
-
-
-        // const response = await axios.get('http://localhost:8081/members/mypage/'+id);
-        // setFetchedData(response.data);
-        // console.log("성공",response.data)
-        // console.log("입사일",response.data.hireDate)
-        // setHireDate(response.data.hireDate)
-        // setName(response.data.name)
-        // format(new Date(hireDate), 'yyyy-MM-dd')
 
         setIsLoading(false); // 추가 폼 렌더링 관련
         // console.log(response.data.name);
@@ -109,7 +103,6 @@ const TabPersonal = () => {
         console.log('NewLists:', JSON.stringify(NewLists, null, 2));
         const response = await axios.post(`http://localhost:8081/members/userInfoUpdate/${id}`, NewLists, {
           headers: {
-            Authorization: 'Bearer ' + getAuthToken(),
             'Content-Type': 'application/json'
           }
         });

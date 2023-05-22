@@ -13,4 +13,6 @@ public interface MailService {
 	public List<MailDTO> reMailList(String id);
 	
 	public List<MailDTO> reqMailList(String id);
+	
+	public MailDTO getMail(int mailNo);
 }

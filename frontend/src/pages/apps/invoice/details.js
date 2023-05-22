@@ -53,12 +53,6 @@ const Details = () => {
           Authorization: 'Bearer ' + getAuthToken(),
     
         }
-      }
-      ,{
-        headers : {
-          Authorization: 'Bearer ' + getAuthToken(),
-          
-        }
       })
       .then((response) => {
         setList(response.data); // 데이터를 상태에 설정

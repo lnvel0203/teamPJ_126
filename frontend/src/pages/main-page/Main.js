@@ -12,7 +12,7 @@ import CheckCard from './work-info/work-check/CheckCard';
 // 캘린더 변경
 import AppCalendar from 'pages/calendar/Calender1';
 import Chart from './work-info/work-plan/Chart';
-import Chatbot from 'sections/charts/madechat/Chatbot';
+//import Chatbot from 'sections/charts/madechat/Chatbot';
 
 const Main = () => {
   const [refreshStatus, setRefreshStatus] = useState(false);
@@ -48,7 +48,7 @@ const Main = () => {
         <Grid item xs={12}>
           <MainCard>
             <AppCalendar />
-            <Chatbot/>
+            {/* <Chatbot/> */}
           </MainCard>
         </Grid>
       </Grid>

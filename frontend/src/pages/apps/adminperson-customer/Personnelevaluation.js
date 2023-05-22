@@ -1,12 +1,13 @@
 // Import Axios Services
 import axios from 'axios';
+import { getAuthToken } from '../../../utils/axios';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useMemo, useState, Fragment } from 'react';
-import { getAuthToken } from '../../../utils/axios';
+
 // material-ui
 import { alpha, useTheme } from '@mui/material/styles';
 import {
-  Button,
+ // Button,
   Chip,
   Dialog,
   Stack,
@@ -30,7 +31,7 @@ import ScrollX from 'components/ScrollX';
 import IconButton from 'components/@extended/IconButton';
 import { PopupTransition } from 'components/@extended/Transitions';
 import {
-  CSVExport,
+//  CSVExport,
   HeaderSort,
   IndeterminateCheckbox,
   // SortingSelect,
@@ -46,11 +47,11 @@ import AlertCustomerDelete from 'sections/apps/customer/AlertCustomerDelete';
 import { renderFilterTypes, GlobalFilter } from 'utils/react-table';
 
 // assets
-import { CloseOutlined, PlusOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
+import { CloseOutlined, EyeTwoTone, EditTwoTone } from '@ant-design/icons';
 
 // ==============================|| REACT TABLE ||============================== //
 
-function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, handleAdd }) {
+function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent }) {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -73,7 +74,7 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
     preGlobalFilteredRows,
     setGlobalFilter,
     // setSortBy,
-    selectedFlatRows
+    //selectedFlatRows
   } = useTable(
     {
       columns,
@@ -93,9 +94,9 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
 
   useEffect(() => {
     if (matchDownSM) {
-      setHiddenColumns(['age', 'contact', 'visits', 'email', 'status', 'avatar']);
+      setHiddenColumns(['age', 'contact', 'visits', 'status', 'avatar']);
     } else {
-      setHiddenColumns(['avatar', 'email']);
+      setHiddenColumns(['avatar']);
     }
     // eslint-disable-next-line
   }, [matchDownSM]);
@@ -119,10 +120,10 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
           />
           <Stack direction={matchDownSM ? 'column' : 'row'} alignItems="center" spacing={1}>
             {/* <SortingSelect sortBy={sortBy.id} setSortBy={setSortBy} allColumns={allColumns} /> */}
-            <Button variant="contained" startIcon={<PlusOutlined />} onClick={handleAdd} size="small">
+            {/* <Button variant="contained" startIcon={<PlusOutlined />} onClick={handleAdd} size="small">
               Add Customer
             </Button>
-            <CSVExport data={selectedFlatRows.length > 0 ? selectedFlatRows.map((d) => d.original) : data} filename={'customer-list.csv'} />
+            <CSVExport data={selectedFlatRows.length > 0 ? selectedFlatRows.map((d) => d.original) : data} filename={'customer-list.csv'} /> */}
           </Stack>
         </Stack>
 
@@ -204,6 +205,18 @@ const CustomCell = ({ row }) => {
   );
 };
 
+const handleTitleClick = (id) => {
+  console.log('id',id)
+  window.open('/apps/profiles/user/personal?userId='+id, '_blank', 'width=1200,height=900,top=300,left=300');
+};
+
+const handlePEClick = (id) => {
+  console.log('id',id)
+  // window.open('/widget/chart?userId='+id, '_blank', 'width=1200,height=900,top=300,left=300');
+  
+  window.location.href = '/widget/chart?userId='+id;
+};
+
 const NumberFormatCell = ({ value }) => <NumberFormat displayType="text" format="+1 (###) ###-####" mask="_" defaultValue={value} />;
 
 const StatusCell = ({ value }) => {
@@ -229,9 +242,8 @@ const ActionCell = (row, setCustomer, setCustomerDeleteId, handleClose, theme) =
       <Tooltip title="View">
         <IconButton
           color="secondary"
-          onClick={(e) => {
-            e.stopPropagation();
-            row.toggleRowExpanded();
+          onClick={() => {
+            handleTitleClick(row.original.id);
           }}
         >
           {collapseIcon}
@@ -240,16 +252,14 @@ const ActionCell = (row, setCustomer, setCustomerDeleteId, handleClose, theme) =
       <Tooltip title="Edit">
         <IconButton
           color="primary"
-          onClick={(e) => {
-            e.stopPropagation();
-            setCustomer(row.values);
-            handleAdd();
+          onClick={() => {
+            handlePEClick(row.original.id);
           }}
         >
           <EditTwoTone twoToneColor={theme.palette.primary.main} />
         </IconButton>
       </Tooltip>
-      <Tooltip title="Delete">
+      {/* <Tooltip title="Delete">
         <IconButton
           color="error"
           onClick={(e) => {
@@ -260,7 +270,7 @@ const ActionCell = (row, setCustomer, setCustomerDeleteId, handleClose, theme) =
         >
           <DeleteTwoTone twoToneColor={theme.palette.error.main} />
         </IconButton>
-      </Tooltip>
+      </Tooltip> */}
     </Stack>
   );
 };
@@ -293,7 +303,7 @@ const CustomerListPage = () => {
   // 서버에서 회원 정보를 패치해옴
   const fetchUserData = useCallback(async () => {
     try {
-      const response = await axios.get('http://localhost:8081/',
+      const response = await axios.get('http://localhost:8081/members/',
       {
         headers : {
           Authorization: 'Bearer ' + getAuthToken(),
@@ -339,41 +349,30 @@ const CustomerListPage = () => {
         disableSortBy: true
       },
       {
-        Header: '#',
-        accessor: 'id',
-        className: 'cell-center'
+        Header: '아이디',
+        accessor: 'id'
       },
       {
-        Header: 'User Name',
-        accessor: 'fatherName',
+        Header: '이메일',
+        accessor: 'email',
         Cell: CustomCell
       },
       {
-        Header: 'Email',
-        accessor: 'email'
+        Header: '이름',
+        accessor: 'name'
       },
       {
-        Header: 'Contact',
-        accessor: 'contact',
-        Cell: NumberFormatCell
+        Header: '생년월일',
+        accessor: 'hireDate',
+        
       },
       {
-        Header: 'Age',
-        accessor: 'age',
-        className: 'cell-right'
-      },
-      {
-        Header: 'Country',
-        accessor: 'country'
-      },
-      {
-        Header: 'Status',
-        accessor: 'status',
-        Cell: StatusCell
+        Header: '상태',
+        accessor: 'state',
+     
       },
       {
         Header: 'Actions',
-        className: 'cell-center',
         disableSortBy: true,
         Cell: ({ row }) => ActionCell(row, setCustomer, setCustomerDeleteId, handleClose, theme)
       }

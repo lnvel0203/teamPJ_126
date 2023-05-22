@@ -1,5 +1,4 @@
 // Import Axios Services
-// import axios from 'axios';
 import { request } from '../../../utils/axios';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useMemo, useState, Fragment } from 'react';
@@ -17,8 +16,6 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  //5월 8일 수정 김성훈  삭제 요청
-  // Tooltip,
   Typography,
   useMediaQuery
 } from '@mui/material';
@@ -30,15 +27,11 @@ import { useFilters, useExpanded, useGlobalFilter, useRowSelect, useSortBy, useT
 // project import
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
-//5월 8일 수정 김성훈  삭제 요청
-// import IconButton from 'components/@extended/IconButton';
+
 import { PopupTransition } from 'components/@extended/Transitions';
 import {
-  CSVExport,
   HeaderSort,
   IndeterminateCheckbox,
-  //5월4일 김성훈 수정 삭제 요청 
-  //SortingSelect,
   TablePagination,
   TableRowSelection
 } from 'components/third-party/ReactTable';
@@ -47,22 +40,10 @@ import AddCustomer from 'sections/apps/customer/AddCustomer';
 import CustomerView from 'sections/apps/customer/CustomerView';
 import AlertCustomerDelete from 'sections/apps/customer/AlertCustomerDelete';
 
-// import makeData from 'data/react-table';
 import { renderFilterTypes, GlobalFilter } from 'utils/react-table';
 
-// assets
-//5월 4일 김성훈 PlusQutlined,삭제 요청 
-//import { CloseOutlined, PlusOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
-
-//5월 8일 김성훈 수정 ,삭제 요청 
-//import { CloseOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
-
-
 // ==============================|| REACT TABLE ||============================== //
-//5월 4일 김성훈 handleAdd,삭제
-//function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, handleAdd })
 
-//5월 8일 김성훈 직원 팀 선택하기 
 function SelectCell({ deptname, onChange, options }) {
   const handleDeptChange = (event) => {
     const newValue = event.target.value;
@@ -102,18 +83,6 @@ const Cell = ({ value, row, setValue }) => {
           const deptNames = deptData.map((dept) => dept.deptname);
           setDeptList(deptNames);
         })
-
-
-
-        // const response = await axios.get('http://localhost:8081/department');
-        // const deptData = response.data;
-        // const deptNames = deptData.map((dept) => dept.deptname);
-        // setDeptList(deptNames);
-
-
-
-
-
       } catch (error) {
         console.error(error);
       }
@@ -128,11 +97,10 @@ const Cell = ({ value, row, setValue }) => {
     </div>
   );
 };
-//5월 8일 김성훈 팀 등록 백엔드로 보내기 
+
 function handleEdit(rowData) {
   const { id, DeptName } = rowData;
   console.log(id, DeptName);
-
 
   request(
     'PUT',
@@ -145,17 +113,6 @@ function handleEdit(rowData) {
     console.error('수정 실패', error);
   });
 
-
-
-  // axios
-  //   .put(`http://localhost:8081/members/editDeptname/${id}/${DeptName}`)
-  //   .then(() => {
-  //     console.log('수정 성공');
-  //      window.location.reload(); 
-  //   })
-  //   .catch((error) => {
-  //     console.error('수정 실패', error);
-  //   });
 }
 
 
@@ -172,8 +129,6 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,}) {
     headerGroups,
     prepareRow,
     setHiddenColumns,
-    //5월 4일 김성훈 수정 
-    //allColumns,
     visibleColumns,
     rows,
     page,
@@ -182,9 +137,7 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,}) {
     state: { globalFilter, selectedRowIds, pageIndex, pageSize, expanded },
     preGlobalFilteredRows,
     setGlobalFilter,
-    //5월 4일 김성훈 수정
-    //setSortBy,
-    selectedFlatRows
+    //selectedFlatRows
   } = useTable(
     {
       columns,
@@ -208,7 +161,6 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,}) {
     } else {
       setHiddenColumns(['avatar', 'email']);
     }
-    // eslint-disable-next-line
   }, [matchDownSM]);
 
   return (
@@ -229,12 +181,6 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent,}) {
             size="small"
           />
           <Stack direction={matchDownSM ? 'column' : 'row'} alignItems="center" spacing={1}>
-            {/* <SortingSelect sortBy={sortBy.id} setSortBy={setSortBy} allColumns={allColumns} /> */}
-            {/*  5월 4일 김성훈 Add Custorme 제거   사용안함 삭제 요청 */ }
-            {/* <Button variant="contained" startIcon={<PlusOutlined />} onClick={handleAdd} size="small">
-              Add Customer
-            </Button> */}
-            <CSVExport data={selectedFlatRows.length > 0 ? selectedFlatRows.map((d) => d.original) : data} filename={'customer-list.csv'} />
           </Stack>
         </Stack>
 
@@ -329,54 +275,6 @@ const StatusCell = ({ value }) => {
       return <Chip color="info" label="Pending" size="small" variant="light" />;
   }
 };
-
-//    5월 8일 수정   사용 안함 삭제 
-// const ActionCell = (row, setCustomer, setCustomerDeleteId, handleClose, theme) => {
-//   const collapseIcon = row.isExpanded ? (
-//     <CloseOutlined style={{ color: theme.palette.error.main }} />
-//   ) : (
-//     <EyeTwoTone twoToneColor={theme.palette.secondary.main} />
-//   );
-//   return (
-//     <Stack direction="row" alignItems="center" justifyContent="center" spacing={0}>
-//       <Tooltip title="View">
-//         <IconButton
-//           color="secondary"
-//           onClick={(e) => {
-//             e.stopPropagation();
-//             row.toggleRowExpanded();
-//           }}
-//         >
-//           {collapseIcon}
-//         </IconButton>
-//       </Tooltip>
-//       <Tooltip title="Edit">
-//         <IconButton
-//           color="primary"
-//           onClick={(e) => {
-//             e.stopPropagation();
-//             setCustomer(row.values);
-//             handleAdd();
-//           }}
-//         >
-//           <EditTwoTone twoToneColor={theme.palette.primary.main} />
-//         </IconButton>
-//       </Tooltip>
-//       <Tooltip title="Delete">
-//         <IconButton
-//           color="error"
-//           onClick={(e) => {
-//             e.stopPropagation();
-//             handleClose();
-//             setCustomerDeleteId(row.values.fatherName);
-//           }}
-//         >
-//           <DeleteTwoTone twoToneColor={theme.palette.error.main} />
-//         </IconButton>
-//       </Tooltip>
-//     </Stack>
-//   );
-// };
 
 StatusCell.propTypes = {
   value: PropTypes.number

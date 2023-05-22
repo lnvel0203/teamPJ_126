@@ -7,7 +7,7 @@
 <mapper namespace="springBoot_team_pj_126.dao.MemberRepository">
 
 <select id="memberList" resultType="springBoot_team_pj_126.dto.UserDTO">
-	SELECT * FROM EMPLOYEES_TBL
+	SELECT * FROM EMPLOYEES_TBL order by no
 </select>
 
 
@@ -34,6 +34,7 @@
 	FROM employees_tbl e
 	LEFT join department_tbl d on e.deptid = d.deptid
 	LEFT join position_tbl p on e.positionid = p.positionid
+	order by no
 </select>
 
 <!-- 5월 4일 김성훈 추가 직급  수정 -->

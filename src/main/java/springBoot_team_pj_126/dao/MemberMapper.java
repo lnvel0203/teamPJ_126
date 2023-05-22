@@ -9,7 +9,7 @@ import springBoot_team_pj_126.dto.UserDTO;
 @Mapper
 public interface MemberMapper {
 
-	//부석현ㄴ
+	//부석현
 	@Select("SELECT * FROM EMPLOYEES_TBL WHERE id = #{id}")
 	public UserDTO findByUsername(String id);
 	

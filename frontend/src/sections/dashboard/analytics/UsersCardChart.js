@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
-
+import { request } from '../../../utils/axios';
+import {useLocation } from 'react-router-dom';
 // material-ui
+
 import { useTheme } from '@mui/material/styles';
 
 // project import
@@ -12,8 +14,20 @@ import ReactApexChart from 'react-apexcharts';
 // ==============================|| USER CARD CHART ||============================== //
 
 const UsersCardChart = () => {
+
+  const [earlyLeave, setEarlyLeave] = useState(0);
+  const [absence, setAbsence] = useState(0);
+  const [unchecked, setUnchecked] = useState(0);
+  const [tardy, setTardy] = useState(0);
   const theme = useTheme();
   const { mode } = useConfig();
+  function useQuery() {
+    return new URLSearchParams(useLocation().search);
+  }
+
+    const query = useQuery();
+    const ids =  query.get('userId');
+
 
   // chart options
   const areaChartOptions = {
@@ -69,14 +83,40 @@ const UsersCardChart = () => {
     }));
   }, [mode, primary, secondary, line, theme]);
 
-  const [series] = useState([
-    {
-      name: 'Users',
-      data: [
-        220, 230, 240, 220, 225, 215, 205, 195, 185, 150, 185, 195, 80, 205, 215, 225, 240, 225, 215, 205, 80, 215, 225, 240, 215, 210, 190
-      ]
-    }
-  ]);
+  const fetchData = async () => {
+
+    try {
+          request(
+            'GET',
+            `members/attendanceList?id=${ids}`
+          ).then((response) => {
+   
+            setEarlyLeave(response.data.earlyLeave);
+            setAbsence(response.data.absence);
+            setUnchecked(response.data.unchecked);
+            setTardy(response.data.tardy);
+ 
+          });
+         
+        } catch (error) {
+           console.error('Error fetching data:', error);
+        }
+      };
+    
+      useEffect(() => {
+        fetchData();
+      }, []);
+     // const [series, setSeries] = useState([0, 0, 0, 0]);
+
+      const series = ([
+        {
+          name: '근태체크',
+          data: [
+            earlyLeave , absence,  unchecked ,tardy,
+          ]
+        }
+   
+      ]);
 
   return <ReactApexChart options={options} series={series} type="bar" height={100} />;
 };

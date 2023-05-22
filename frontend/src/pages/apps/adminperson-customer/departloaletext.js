@@ -34,7 +34,7 @@ import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
 import { PopupTransition } from 'components/@extended/Transitions';
 import {
-  CSVExport,
+  //CSVExport,
   HeaderSort,
   IndeterminateCheckbox,
   //   SortingSelect,
@@ -76,7 +76,7 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
     preGlobalFilteredRows,
     setGlobalFilter,
     // setSortBy,
-    selectedFlatRows
+    //selectedFlatRows
   } = useTable(
     {
       columns,
@@ -125,10 +125,9 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent, hand
             <Button variant="contained" startIcon={<PlusOutlined />} onClick={handleAdd} size="small">
               부서 신설
             </Button>
-            <CSVExport data={selectedFlatRows.length > 0 ? selectedFlatRows.map((d) => d.original) : data} filename={'customer-list.csv'} />
+            {/* <CSVExport data={selectedFlatRows.length > 0 ? selectedFlatRows.map((d) => d.original) : data} filename={'customer-list.csv'} /> */}
           </Stack>
         </Stack>
-
         <Table {...getTableProps()}>
           <TableHead>
             {headerGroups.map((headerGroup, i) => (
@@ -359,6 +358,7 @@ const Departloaletext = () => {
   const [customer, setCustomer] = useState();
   const [customerDeleteId, setCustomerDeleteId] = useState();
 
+  
   const handleAdd = () => {
     setAdd(!add);
     if (customer && !add) setCustomer(null);

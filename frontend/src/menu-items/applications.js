@@ -84,6 +84,20 @@ const applications = {
       ]
     },
     {
+      id: 'board',
+      title: <FormattedMessage id="사내게시판" />,
+      type: 'collapse',
+      icon: icons.BoardOutlined,
+      children: [
+        {
+          id: 'boardList',
+          title: <FormattedMessage id="사내공지" />,
+          type: 'item',
+          url: '/apps/board'
+        },
+      ]
+    },
+    {
       id: 'chat',
       title: <FormattedMessage id="chat" />,
       type: 'item',
@@ -121,15 +135,6 @@ const applications = {
         }
       ]
     },
-    // {
-    //   id: 'kanban',
-    //   title: <FormattedMessage id="kanban" />,
-    //   type: 'item',
-    //   icon: BuildOutlined,
-    //   url: '/apps/kanban/board'
-    // },
-
-    // 전승연(수정 - 230428)
     {
       id: 'customer',
       title: <FormattedMessage id="customer" />,
@@ -156,7 +161,7 @@ const applications = {
 
         },
       ]
-    }, // 여기까지 변겅
+    }, 
 
    // 재인님
    ids.match('inV') ?
@@ -175,24 +180,24 @@ const applications = {
           url: '/apps/invoice/create'
         },
 
-        {
-          id: 'edit',
-          title: <FormattedMessage id="급여수정" />,
-          type: 'item',
-          url: '/apps/invoice/edit/1'
-        },
+        // {
+        //   id: 'edit',
+        //   title: <FormattedMessage id="급여수정" />,
+        //   type: 'item',
+        //   url: '/apps/invoice/edit/1'
+        // },
         {
           id: 'BaseSalaryList',
           title: <FormattedMessage id="기본급" />,
           type: 'item',
           url: '/apps/invoice/BaseSalaryList'
         },
-        {
-          id: 'SalaryChart',
-          title: <FormattedMessage id="급여 차트" />,
-          type: 'item',
-          url: '/apps/invoice/SalaryChart'
-        }
+        // {
+        //   id: 'SalaryChart',
+        //   title: <FormattedMessage id="급여 차트" />,
+        //   type: 'item',
+        //   url: '/apps/invoice/SalaryChart'
+        // }
       ]
     } : 
     {        
@@ -234,28 +239,16 @@ const applications = {
           url: '/apps/adminperson-customer/hierarchylocaletext'
         },
         {
-            // 인사평가 추가(2023-05-04 김희수)
-            id: 'Personnelevaluation',
-            title: <FormattedMessage id="인사평가" />,
-            type: 'item',
-            url: '/widget/chart',
-            // type: 'item',
-            // url: '/apps/adminperson-customer/Personnelevaluation'
-        },
-        // {
-        //   // 인사평가 추가(2023-05-04 김희수)
-        //   id: 'Personnelevaluation',
-        //   title: <FormattedMessage id="인사평가" />,
-        //   type: 'item',
-        //   url: '/apps/adminperson-customer/Personnelevaluation'
-        // },
-        // {
-        //   // 근태 관리
-        //   id: 'AttendanceList',
-        //   title: <FormattedMessage id="근태 관리" />,
-        //   type: 'item',
-        //   url: '/apps/adminperson-customer/AttendanceList'
-        // }
+          // 인사평가 추가(2023-05-04 김희수)
+          id: 'Personnelevaluation',
+          title: <FormattedMessage id="인사평가" />,
+          type: 'item',
+          // url: '/apps/adminperson-customer/PerCustomlocaletext'
+          // // url: '/widget/chart',
+          // type: 'item',
+          url: '/apps/adminperson-customer/Personnelevaluation'
+      },
+
       ]
     }
     : 

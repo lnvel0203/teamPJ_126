@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 //따라서 Filter는 인증된 사용자의 개체를 Controller에 제공한다. 인증빈을 반환하기 위해
 
 //JWT 엄청 중요한녀석이다 잘 알아둬라
+//초기화 되지않은 final 필드나, @NonNull 이 붙은 필드에 대해 생성자를 생성해 줍니다.
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {	//요청당 한번만  사용되기를 원하므로 - OncePerRequestFilter
 	
@@ -26,18 +27,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {	//요청당 한번만 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-	
+		
 		System.out.println("JwtAuthFilter - doFilterIntenal");
-		
 		String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-		
-		
 		if(header != null) {	// 길이가 정확해야한다 Bearer 토큰이여야한다.
-			
 			String[] elements = header.split(" ");
 			//Bearer jwtToken 이니까 0,1의 배열을 갖는다.
 			if(elements.length == 2 && "Bearer".equals(elements[0])) {	//0번째가 Bearer 이고 1번부터 jwt이다.
-				
 				try {
 					// 자격증명이 유효하다. 보안컨택스트에 인증빈을 추가한다.
 					SecurityContextHolder.getContext().setAuthentication(userAuthProvider.validateToken(elements[1]));	

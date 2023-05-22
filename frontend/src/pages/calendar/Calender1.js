@@ -193,14 +193,14 @@ function Calendar() {
     };
     eventEl.appendChild(deleteBtn);
   };
-  const eventContent = (eventInfo) => {
+  const eventContent = (e) => {
     return (
       <>
-        <b>{eventInfo.timeText}</b>
+        <b>{e.timeText}</b>
         <p>
-          <h3>{eventInfo.event.title}</h3>
+          <h3>{e.event.title}</h3>
         </p>
-        <p>{eventInfo.event.extendedProps.description}</p>
+        <p>{e.event.extendedProps.description}</p>
       </>
     );
   };

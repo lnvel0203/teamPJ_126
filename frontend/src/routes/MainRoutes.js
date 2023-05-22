@@ -128,6 +128,8 @@ const MailDetail = Loadable(lazy(() => import('pages/apps/mail/MailDetail')));
 const BaseSalaryList = Loadable(lazy(() => import('pages/apps/invoice/BaseSalaryList')));
 const SalaryChart = Loadable(lazy(() => import('pages/apps/invoice/SalaryChart')));
 //const Chatbot1 = Loadable(lazy(() => import('sections/charts/madechat/Chatbot1')));
+const BoardList = Loadable(lazy(() => import('pages/apps/board/BoardList')));
+const BoardDetail = Loadable(lazy(() => import('pages/apps/board/BoardDetail')));
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -136,24 +138,12 @@ const MainRoutes = {
     {
       path: '/',
       element: (
-        //  <AuthGuard>
+ 
         <MainLayout />
-        // </AuthGuard>
+       
       ),
       children: [
-        // {
-        //   path: 'dashboard',
-        //   children: [
-        //     {
-        //       path: 'default',
-        //       element: <DashboardDefault />
-        //     },
-        //     {
-        //       path: 'analytics',
-        //       element: <DashboardAnalytics />
-        //     }
-        //   ]
-        // },
+  
         {
           path: 'widget',
           children: [
@@ -178,11 +168,6 @@ const MainRoutes = {
               path: 'main-page',
               element: <MainPage />
             },
-            // {
-            //   path: 'chatbot',
-            //   element: <Chatbot1 />,
-            // },
-
             {
               path: 'mail',
               element: <Mail />,
@@ -199,31 +184,23 @@ const MainRoutes = {
               path: 'mailDetail',
               element: <MailDetail />,
             },
-
-            
-            // {
-            //   path: 'chat',
-            //   element: <AppChat />
-            // },
+            {
+              path: 'mailDetail',
+              element: <MailDetail />,
+            },
+            {
+              path: 'board',
+              element: <BoardList />,
+            },
+            {
+              path: 'boardDetail',
+              element: <BoardDetail />,
+            },
             {
               path: 'calendar',
               element: <AppCalendar />
             },
-            // {
-            //   path: 'kanban',
-            //   element: <AppKanban />,
-            //   children: [
-            //     {
-            //       path: 'backlogs',
-            //       element: <AppKanbanBacklogs />
-            //     },
-            //     {
-            //       path: 'board',
-            //       element: <AppKanbanBoard />
-            //     }
-            //   ]
-            // },
-            // 추가
+   
             {
               path: 'document',
               children: [

@@ -23,6 +23,7 @@
     OR (ThirdApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND THIRDAPPROVERSTATE = '대기중')
     OR (FourthApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND FOURTHAPPROVERSTATE = '대기중'))
     AND DOCUMENTSTATE != '반려됨'
+    order by documentNo
 </select>
 
 <select id="approvalCompletedList" resultType="springBoot_team_pj_126.dto.DocumentDTO">
@@ -31,18 +32,21 @@
 	   OR (SecondApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND SecondAPPROVERSTATE = '결재완료')
 	   OR (ThirdApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND THIRDAPPROVERSTATE = '결재완료')
 	   OR (FourthApproverNo IN (SELECT NO FROM Employees_tbl WHERE id = #{id}) AND FOURTHAPPROVERSTATE = '결재완료')
+	   order by documentNo
 </select>
 
 <select id="draftDocumentList" resultType="springBoot_team_pj_126.dto.DocumentDTO">
     SELECT * FROM DOCUMENT_TBL 
     WHERE AUTHOR = (SELECT name FROM EMPLOYEES_TBL WHERE id=#{id})
     AND documentState != '반려됨'
+    order by documentNo
 </select>
 
 <select id="rejectionDocumentList" resultType="springBoot_team_pj_126.dto.DocumentDTO">
 	SELECT * FROM DOCUMENT_TBL 
      WHERE AUTHOR = (SELECT name FROM EMPLOYEES_TBL WHERE id=#{id})
      AND DOCUMENTSTATE = '반려됨'
+     order by documentNo
 </select>
 
 

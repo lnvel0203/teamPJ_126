@@ -25,7 +25,7 @@ public class UserAuthenticationEntryPoint implements AuthenticationEntryPoint{
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException, ServletException {
-	
+		//토큰 인증이 불허할 경우
 		System.out.println("UserAuthenticationEntryPoint - commence");
 		
 		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);// 승인되지않은 HTTP코드를 반환한다.
@@ -33,9 +33,4 @@ public class UserAuthenticationEntryPoint implements AuthenticationEntryPoint{
 		OBJECT_MAPPER.writeValue(response.getOutputStream(), new ErrorDTO("Unauthorized path"));
 		
 	}
-	
-	
-
-	
-	
 }

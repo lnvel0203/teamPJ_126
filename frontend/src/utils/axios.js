@@ -71,6 +71,21 @@ export const request = (method, url, data) => {
   });
 };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const requestMy = (method, url, data) => {
   let headers = {};
 

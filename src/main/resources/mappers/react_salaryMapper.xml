@@ -219,7 +219,7 @@
    </update>
    
    <insert id="setBaseSalary" parameterType="springBoot_team_pj_126.dto.SalaryInfoDTO">
-   	INSERT INTO SALARY_INFO_TBL VALUES ((SELECT nvl(max(infoId)+1,1) FROM SALARY_INFO_TBL), 1500000, 40, #{id})
+      INSERT INTO SALARY_INFO_TBL VALUES ((SELECT nvl(max(infoId)+1,1) FROM SALARY_INFO_TBL), 1500000, 40, #{id})
    </insert>
    
    <!--  -->

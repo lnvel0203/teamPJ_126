@@ -22,5 +22,9 @@
  <select id="reqMailList" parameterType="String" resultType="springBoot_team_pj_126.dto.MailDTO">
  	select * from  MAIL_TBL where writer = #{writer}
  </select>
+ 
+ <select id="getMail" parameterType="int" resultType="springBoot_team_pj_126.dto.MailDTO">
+ 	select * from  MAIL_TBL where mailNo = #{mailNo}
+ </select>
 
 </mapper>

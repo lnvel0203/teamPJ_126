@@ -1,5 +1,3 @@
-// Import Axios Services
-//import axios from 'axios';
 import { request } from '../../../utils/axios';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useMemo, useState, Fragment } from 'react';
@@ -7,7 +5,6 @@ import { useCallback, useEffect, useMemo, useState, Fragment } from 'react';
 // material-ui
 import { alpha, useTheme } from '@mui/material/styles';
 import {
-  //   Button,
   Chip,
   Dialog,
   Stack,
@@ -31,10 +28,8 @@ import ScrollX from 'components/ScrollX';
 import IconButton from 'components/@extended/IconButton';
 import { PopupTransition } from 'components/@extended/Transitions';
 import {
-  CSVExport,
   HeaderSort,
   IndeterminateCheckbox,
-  //   SortingSelect,
   TablePagination,
   TableRowSelection
 } from 'components/third-party/ReactTable';
@@ -43,7 +38,6 @@ import AddCustomer from 'sections/apps/customer/AddCustomer';
 import CustomerView from 'sections/apps/customer/CustomerView';
 import AlertCustomerDelete from 'sections/apps/customer/AlertCustomerDelete';
 
-// import makeData from 'data/react-table';
 import { renderFilterTypes, GlobalFilter } from 'utils/react-table';
 
 // assets
@@ -53,8 +47,6 @@ import { CloseOutlined, EyeTwoTone, EditTwoTone, DeleteTwoTone } from '@ant-desi
 
 const handleClick = (no) => {
   //미승인 상태 사원 -> 승인상태로 변경 및 승인버튼 삭제
-
-
   request(
     'PUT',
     `members/editEmployee/${no}`, no
@@ -66,6 +58,11 @@ const handleClick = (no) => {
     console.error(error);
   });
 
+};
+
+const handleTitleClick = (id) => {
+  console.log('id',id)
+  window.open('/apps/profiles/user/personal?userId='+id, '_blank', 'width=1200,height=900,top=300,left=300');
 };
 
 function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent }) {
@@ -81,7 +78,6 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent }) {
     headerGroups,
     prepareRow,
     setHiddenColumns,
-    // allColumns,
     visibleColumns,
     rows,
     page,
@@ -90,8 +86,6 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent }) {
     state: { globalFilter, selectedRowIds, pageIndex, pageSize, expanded },
     preGlobalFilteredRows,
     setGlobalFilter,
-    // setSortBy,
-    selectedFlatRows
   } = useTable(
     {
       columns,
@@ -108,6 +102,8 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent }) {
     usePagination,
     useRowSelect
   );
+
+  
 
   useEffect(() => {
     if (matchDownSM) {
@@ -136,11 +132,7 @@ function ReactTable({ columns, data, getHeaderProps, renderRowSubComponent }) {
             size="small"
           />
           <Stack direction={matchDownSM ? 'column' : 'row'} alignItems="center" spacing={1}>
-            {/* <SortingSelect sortBy={sortBy.id} setSortBy={setSortBy} allColumns={allColumns} /> */}
-            {/* <Button variant="contained" startIcon={<PlusOutlined />} onClick={handleAdd} size="small">
-            Add Customer
-          </Button> */}
-            <CSVExport data={selectedFlatRows.length > 0 ? selectedFlatRows.map((d) => d.original) : data} filename={'customer-list.csv'} />
+              
           </Stack>
         </Stack>
 
@@ -242,14 +234,16 @@ const ActionCell = (row, setCustomer, setCustomerDeleteId, handleClose, theme) =
   ) : (
     <EyeTwoTone twoToneColor={theme.palette.secondary.main} />
   );
+
+  
+
   return (
     <Stack direction="row" alignItems="center" justifyContent="center" spacing={0}>
       <Tooltip title="View">
         <IconButton
           color="secondary"
-          onClick={(e) => {
-            e.stopPropagation();
-            row.toggleRowExpanded();
+          onClick={() => {
+            handleTitleClick(row.original.id);
           }}
         >
           {collapseIcon}
@@ -259,14 +253,8 @@ const ActionCell = (row, setCustomer, setCustomerDeleteId, handleClose, theme) =
         {/* 승인버튼 클릭 이벤트 */}
         <IconButton
           color="primary"
-          // onClick={this.handleClick}
-          // onClick={async () => {
-          //   await handleClick(id);
-          // }}
-          // autoFocus
           onClick={(e) => {
             e.stopPropagation();
-            // setCustomer(row.values); // 이동
             handleClick(row.values.no);
           }}
         >
@@ -435,5 +423,6 @@ const CustomerListPage = () => {
     </MainCard>
   );
 };
+
 
 export default CustomerListPage;

@@ -29,10 +29,12 @@ const AddApprover = () => {
 
     setApprovers(updatedApprovers);
 
+    //직급 순으로 정렬 
     const selectedApprovers = updatedApprovers
       .filter(approver => approver.checked)
       .sort((a, b) => a.positionId - b.positionId);
 
+      // localStorage에 저장 
     localStorage.setItem("approver", JSON.stringify(selectedApprovers));
   };
 
@@ -89,6 +91,5 @@ const AddApprover = () => {
     </div>
   );
 };
-
 
 export default AddApprover;

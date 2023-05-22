@@ -7,7 +7,7 @@ import { getAuthToken } from '../../../../utils/axios';
 import { useTheme } from '@mui/material/styles';
 // import { Box, Divider, FormLabel, Grid, TextField, Menu, MenuItem, Stack, Typography } from '@mui/material';
 import { Box, Divider, FormLabel, Grid, TextField, Menu, MenuItem, Stack, Typography } from '@mui/material';
-
+import {useLocation } from 'react-router-dom';
 // project import
 import MainCard from 'components/MainCard';
 import IconButton from 'components/@extended/IconButton';
@@ -25,6 +25,14 @@ import { MoreOutlined, CameraOutlined } from '@ant-design/icons';
 
 const ProfileTabs = ({ focusInput }) => {
 
+  //url에 있는 userid 받아서 const userid에 저장 
+  function useQuery() {
+    return new URLSearchParams(useLocation().search);
+  }
+  const query = useQuery();
+  
+  const userId = query.get('userId');
+
   const id = localStorage.getItem("id");
   console.log('id',id)
   const [name, setName] = useState('');
@@ -37,7 +45,8 @@ const ProfileTabs = ({ focusInput }) => {
   const theme = useTheme();
   const [selectedImage, setSelectedImage] = useState(undefined);
   const [avatar, setAvatar] = useState('./default.png');
-  //const [isLoading, setIsLoading] = useState(true); // 추가 데이터를 가져오기 전까지 폼이 렌더링 되지 못하게 함
+  
+
   
   useEffect(() => {
     if (selectedImage) {
@@ -49,46 +58,46 @@ const ProfileTabs = ({ focusInput }) => {
       axios.post(`http://localhost:8081/members/mypage/${id}/photo`, formData, {
           headers : {
             Authorization: 'Bearer ' + getAuthToken(),
-            'Content-Type': 'multipart/form-data'
+              'Content-Type': 'multipart/form-data'
           }
       })
     }
   }, [selectedImage]);  
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get('http://localhost:8081/members/mypage/'+id 
-        , {
-          headers: {
-            Authorization: 'Bearer ' + getAuthToken(),
-            }
-        }
-        
-        
-        );
-        console.log("성공",response.data)
-        
-        if (response.data.photo) {
-            setAvatar(response.data.photo);
-        }
-        setName(response.data.name)
-        setPositionName(response.data.positionName)
-        setDeptName(response.data.deptName)
-        setAnnualCount(response.data.annualCount)
-        setTardy(response.data.tardy)
-        console.log("지각",response.data.tardy)
-        console.log('이름',response.data.name);
-       // setIsLoading(false); // 추가 폼 렌더링 관련
-         
-      } catch (error) {
-        console.error('Error fetching data', error);
-        //setIsLoading(false); // 추가 폼 렌더링 관련
-      }
-    }
 
-    fetchData();
-  }, []);
+  useEffect(() => {
+  async function fetchData() {
+    try {
+      const targetId = userId && userId !== id ? userId : id;
+      const response = await axios.get(`http://localhost:8081/members/mypage/${targetId}`, {
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`,
+        }
+      });
+
+      console.log("성공",response.data)
+      
+      if (response.data.photo) {
+          setAvatar(response.data.photo);
+      }
+      setName(response.data.name)
+      setPositionName(response.data.positionName)
+      setDeptName(response.data.deptName)
+      setAnnualCount(response.data.annualCount)
+      setTardy(response.data.tardy)
+      console.log("지각",response.data.tardy)
+      console.log('이름',response.data.name);
+      setIsLoading(false); // 추가 폼 렌더링 관련
+       
+    } catch (error) {
+      console.error('Error fetching data', error);
+      setIsLoading(false); // 추가 폼 렌더링 관련
+    }
+  }
+
+  fetchData();
+}, [id, userId]); // id or userId가 변경되면 재실행
+
 
 
   const [anchorEl, setAnchorEl] = useState(null);

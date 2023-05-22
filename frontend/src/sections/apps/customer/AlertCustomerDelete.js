@@ -1,6 +1,6 @@
 import axios from 'axios';
 import PropTypes from 'prop-types';
-
+import { getAuthToken } from '../../../utils/axios';
 // material-ui
 import { Button, Dialog, DialogContent, Stack, Typography } from '@mui/material';
 
@@ -14,7 +14,11 @@ import { DeleteFilled } from '@ant-design/icons';
 // ==============================|| CUSTOMER - DELETE ||============================== //
 const deleteCustomer = ( id ) => {
   try {
-    const response = axios.delete(`http://localhost:8081/members/deleteEmployee/${id}`, id);
+    const response = axios.delete(`http://localhost:8081/members/deleteEmployee/${id}`, {
+      headers: {
+        Authorization: 'Bearer ' + getAuthToken(),
+      }
+    }, id);
     //이거 필요해? 내일 삭제해
     if (response.status === 200) {
       console.log('Customer deleted successfully');

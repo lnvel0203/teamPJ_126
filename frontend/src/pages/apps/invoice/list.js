@@ -443,18 +443,18 @@ const List = () => {
       {
         Header: 'NO',
         accessor: 'SALARYRECORDID',
-        className: 'cell-center',
+  
         disableFilters: true
       },
       {
         Header: 'ID',
         accessor: 'ID',
-        className: 'cell-center'
+       
       },
       {
         Header: '이름',
         accessor: 'NAME',
-        className: 'cell-center',
+   
         disableFilters: true
       },
       {

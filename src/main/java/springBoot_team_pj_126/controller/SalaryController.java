@@ -66,7 +66,7 @@ public class SalaryController {
 	@GetMapping("/invoiceDetail")
 	public EmployeeSalaryDTO invoiceDetail(@RequestParam int id){
 		logger.info("SalaryController - invoiceDetail()");
-		
+		System.out.println("id : " + id);
 		EmployeeSalaryDTO dto = service.invoiceDetail(id);
 		System.out.println("dto: " + dto);
 		
